@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
+		<TrimMode>copyused</TrimMode>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+	</PropertyGroup>
+	<ItemGroup>
+		<Folder Include="Models\" />
+		<AvaloniaResource Include="Assets\**" />
+		<None Remove=".gitignore" />
+		<None Remove="Assets\NavIcons\about.png" />
+		<None Remove="Assets\NavIcons\close.png" />
+		<None Remove="Assets\NavIcons\help.png" />
+		<None Remove="Assets\NavIcons\limit.png" />
+		<None Remove="Assets\NavIcons\maximize.png" />
+		<None Remove="Assets\NavIcons\minimize.png" />
+		<None Remove="Assets\NavIcons\options.png" />
+		<None Remove="Assets\NavIcons\refresh.png" />
+		<None Remove="Assets\NavIcons\sniffer.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--This helps with theme dll-s trimming.
+	If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
+	https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
+		<TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+		<TrimmableAssembly Include="Avalonia.Themes.Default" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="0.10.13" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.13" />
+		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.13" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.13" />
+		<PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
+	</ItemGroup>
+	<ItemGroup>
+	  <AvaloniaResource Update="Assets\GlobalStyles\WindowStyles.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="Assets\NavIcons\scan.png">
+	    <CopyToOutputDirectory></CopyToOutputDirectory>
+	  </AvaloniaResource>
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Components\ImageButton.axaml.cs">
+	    <DependentUpon>ImageButton.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Components\TitleBar.axaml.cs">
+	    <DependentUpon>TitleBar.axaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Assets\GlobalStyles\WindowStyles.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
+	</ItemGroup>
+</Project>

@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:cmpts="using:NetStalkerAvalonia.Components"
+             mc:Ignorable="d"
+             x:Class="NetStalkerAvalonia.Components.Navbar"
+			 x:Name="navbar">
+
+	<Border Padding="5,10,5,10"
+			Width="65"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Stretch"
+			Background="{Binding ThemeColors.NavBackground}">
+
+		<StackPanel Spacing="5"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center">
+			<cmpts:ImageButton IconSource="/Assets/NavIcons/scan.png"
+							   Text="Scan"></cmpts:ImageButton>
+			<cmpts:ImageButton IconSource="/Assets/NavIcons/refresh.png"
+							   Text="Refresh"></cmpts:ImageButton>
+			<cmpts:ImageButton IconSource="/Assets/NavIcons/rules.png"
+							   Text="Rules"></cmpts:ImageButton>
+			<cmpts:ImageButton IconSource="/Assets/NavIcons/sniffer.png"
+							   Text="Sniffer"
+							   Command="{Binding GoToSniffer}"></cmpts:ImageButton>
+			<cmpts:ImageButton IconSource="/Assets/NavIcons/options.png"
+							   Text="Options"></cmpts:ImageButton>
+			<cmpts:ImageButton IconSource="/Assets/NavIcons/help.png"
+							   Text="Help"></cmpts:ImageButton>
+			<cmpts:ImageButton IconSource="/Assets/NavIcons/about.png"
+							   Text="About"></cmpts:ImageButton>
+		</StackPanel>
+	</Border>
+</UserControl>

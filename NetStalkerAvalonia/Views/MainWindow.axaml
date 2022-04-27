@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NetStalkerAvalonia.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:rxui="clr-namespace:Avalonia.ReactiveUI;assembly=Avalonia.ReactiveUI"
+		xmlns:cmpts="using:NetStalkerAvalonia.Components"
+		xmlns:rvws="using:NetStalkerAvalonia.Views.RoutedViews"
+		mc:Ignorable="d"
+        x:Class="NetStalkerAvalonia.Views.MainWindow"
+        Title="NetStalkerAvalonia">
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
+
+	<Window.Styles>
+		<StyleInclude Source="/Assets/GlobalStyles/WindowStyles.xaml" />
+	</Window.Styles>
+
+	<StackPanel Orientation="Vertical"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Background="{Binding ThemeColors.WindowBackground}">
+		<cmpts:TitleBar />
+		<rxui:RoutedViewHost Router="{Binding Router}">
+			<rxui:RoutedViewHost.DefaultContent>
+				<StackPanel>
+					<cmpts:Navbar Collapsed="{Binding NavEnabled}" />
+				</StackPanel>
+			</rxui:RoutedViewHost.DefaultContent>
+		</rxui:RoutedViewHost>
+	</StackPanel>
+</Window>

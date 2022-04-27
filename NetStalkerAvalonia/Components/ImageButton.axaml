@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:convs="using:NetStalkerAvalonia.Converters"
+			 xmlns:attProp="using:NetStalkerAvalonia.Helpers"
+             mc:Ignorable="d"
+             x:Class="NetStalkerAvalonia.Components.ImageButton">
+
+	<UserControl.Resources>
+		<convs:StringToImageSourceConverter x:Key="StrToImgSrcConv"/>
+		<ControlTemplate x:Key="NavBtn" TargetType="Button">
+			<Border
+				Padding="1"
+				BorderThickness="2"
+				CornerRadius="3"
+				Width="55"
+				Height="55"
+				Background="{Binding ThemeColors.NavElementBackground}"
+				BorderBrush="{Binding ThemeColors.NavElementBorder}">
+				<StackPanel>
+					<Image Source="{TemplateBinding attProp:AttachedProperties.Icon, Converter={StaticResource StrToImgSrcConv}}"
+						   Width="35"
+						   Height="35"
+						   HorizontalAlignment="Center"
+						   VerticalAlignment="Center"/>
+					<TextBlock Text="{TemplateBinding attProp:AttachedProperties.Text}"
+							   FontSize="9"
+							   Foreground="{Binding ThemeColors.NavElementText}"
+							   HorizontalAlignment="Center"
+							   Margin="0,2,0,0"/>
+				</StackPanel>
+			</Border>
+		</ControlTemplate>
+	</UserControl.Resources>
+
+	<Button
+		attProp:AttachedProperties.Text="{Binding $parent[UserControl].Text}"
+		attProp:AttachedProperties.Icon="{Binding $parent[UserControl].IconSource}"
+		Command="{Binding $parent[UserControl].Command}"
+		Template="{StaticResource NavBtn}"></Button>
+</UserControl>
