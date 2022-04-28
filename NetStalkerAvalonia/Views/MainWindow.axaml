@@ -15,20 +15,34 @@
 	</Design.DataContext>
 
 	<Window.Styles>
-		<StyleInclude Source="/Assets/GlobalStyles/WindowStyles.xaml" />
+		<Style Selector="Window">
+			<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+			<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>
+			<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>
+			<Setter Property="Width" Value="{Binding ThemeColors.WindowWidth}"/>
+			<Setter Property="Height" Value="{Binding ThemeColors.WindowHeight}"/>
+			<Setter Property="Icon" Value="/Assets/avalonia-logo.ico"/>
+		</Style>
 	</Window.Styles>
 
-	<StackPanel Orientation="Vertical"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				Background="{Binding ThemeColors.WindowBackground}">
-		<cmpts:TitleBar />
-		<rxui:RoutedViewHost Router="{Binding Router}">
+	<Grid	HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Background="{Binding ThemeColors.WindowBackground}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<cmpts:TitleBar Grid.Row="0" />
+		<rxui:RoutedViewHost
+			Router="{Binding Router}"
+			VerticalAlignment="Stretch"
+			VerticalContentAlignment="Stretch"
+			Grid.Row="1">
 			<rxui:RoutedViewHost.DefaultContent>
-				<StackPanel>
-					<cmpts:Navbar Collapsed="{Binding NavEnabled}" />
-				</StackPanel>
+				<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+					<cmpts:Navbar Grid.Column="0" Collapsed="{Binding NavEnabled}" />
+				</Grid>
 			</rxui:RoutedViewHost.DefaultContent>
 		</rxui:RoutedViewHost>
-	</StackPanel>
+	</Grid>
 </Window>
