@@ -2,6 +2,8 @@
 {
     public class Colors
     {
+        public static string WindowWidth => "800";
+        public static string WindowHeight => "600";
         public static string NavBackground => "#1F1F1F";
         public static string NavElementBackground => "#333333";
         public static string NavElementBorder => "#424242";
