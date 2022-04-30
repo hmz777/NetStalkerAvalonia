@@ -8,6 +8,7 @@
 		xmlns:rvws="using:NetStalkerAvalonia.Views.RoutedViews"
 		mc:Ignorable="d"
         x:Class="NetStalkerAvalonia.Views.MainWindow"
+		Name="mainWindow"
         Title="NetStalkerAvalonia">
 
 	<Design.DataContext>
@@ -19,29 +20,27 @@
 			<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
 			<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>
 			<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>
-			<Setter Property="Width" Value="{Binding ThemeColors.WindowWidth}"/>
-			<Setter Property="Height" Value="{Binding ThemeColors.WindowHeight}"/>
+			<Setter Property="Width" Value="{Binding Theme.WindowWidth}"/>
+			<Setter Property="Height" Value="{Binding Theme.WindowHeight}"/>
 			<Setter Property="Icon" Value="/Assets/avalonia-logo.ico"/>
 		</Style>
 	</Window.Styles>
 
 	<Grid	HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			Background="{Binding ThemeColors.WindowBackground}">
+			Background="{Binding Theme.WindowBackground}">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		<cmpts:TitleBar Grid.Row="0" />
+		<cmpts:TitleBar Grid.Row="0" ZIndex="2" />
 		<rxui:RoutedViewHost
 			Router="{Binding Router}"
 			VerticalAlignment="Stretch"
 			VerticalContentAlignment="Stretch"
-			Grid.Row="1">
+			Grid.Row="0"
+			ZIndex="1">
 			<rxui:RoutedViewHost.DefaultContent>
-				<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-					<cmpts:Navbar Grid.Column="0" Collapsed="{Binding NavEnabled}" />
-				</Grid>
+				<rvws:HomeView/>
 			</rxui:RoutedViewHost.DefaultContent>
 		</rxui:RoutedViewHost>
 	</Grid>
