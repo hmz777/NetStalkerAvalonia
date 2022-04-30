@@ -7,23 +7,38 @@
 
 	<UserControl.Styles>
 		<Style Selector="Border">
-			<Setter Property="Background" Value="{Binding ThemeColors.TitleBarBackColor}"/>
+			<Setter Property="Background" Value="{Binding Theme.TitleBarBackColor}"/>
 		</Style>
 		<Style Selector="Button.navBtn">
 			<Setter Property="Padding" Value="15,5,15,5"/>
 			<Setter Property="CornerRadius" Value="0"/>
 		</Style>
-		<Style Selector="Button.close" >
-			<Setter Property="Background" Value="Red"/>
-			<Setter Property="Foreground" Value="{Binding ThemeColors.TitleBarButtonFrontColor}"/>
-		</Style>
 		<Style Selector="Button.minimize" >
-			<Setter Property="Background" Value="{Binding ThemeColors.TitleBarButtonBackColor}"/>
-			<Setter Property="Foreground" Value="{Binding ThemeColors.TitleBarButtonFrontColor}"/>
+			<Setter Property="Background" Value="{Binding Theme.TitleBarButtonBackColor}"/>
+			<Setter Property="Foreground" Value="{Binding Theme.TitleBarButtonFrontColor}"/>
 		</Style>
 		<Style Selector="Button.maximize" >
-			<Setter Property="Background" Value="{Binding ThemeColors.TitleBarButtonBackColor}"/>
-			<Setter Property="Foreground" Value="{Binding ThemeColors.TitleBarButtonFrontColor}"/>
+			<Setter Property="Background" Value="{Binding Theme.TitleBarButtonBackColor}"/>
+			<Setter Property="Foreground" Value="{Binding Theme.TitleBarButtonFrontColor}"/>
+		</Style>
+		<Style Selector="Button.close" >
+			<Setter Property="Foreground" Value="{Binding Theme.TitleBarButtonFrontColor}"/>
+			<Setter Property="Template">
+				<ControlTemplate>
+					<ContentPresenter x:Name="PART_ContentPresenter"
+									  Background="{TemplateBinding Background}"
+									  BorderBrush="{TemplateBinding BorderBrush}"
+									  BorderThickness="{TemplateBinding BorderThickness}"
+									  Content="{TemplateBinding Content}"
+									  ContentTemplate="{TemplateBinding ContentTemplate}"
+									  Padding="{TemplateBinding Padding}"
+									  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+									  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+				</ControlTemplate>
+			</Setter>
+		</Style>
+		<Style Selector="Button.close:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Red" />
 		</Style>
 	</UserControl.Styles>
 
