@@ -16,8 +16,8 @@
 				CornerRadius="3"
 				Width="55"
 				Height="55"
-				Background="{Binding ThemeColors.NavElementBackground}"
-				BorderBrush="{Binding ThemeColors.NavElementBorder}">
+				Background="{Binding Theme.NavElementBackground}"
+				BorderBrush="{Binding Theme.NavElementBorder}">
 				<StackPanel>
 					<Image Source="{TemplateBinding attProp:AttachedProperties.Icon, Converter={StaticResource StrToImgSrcConv}}"
 						   Width="35"
@@ -26,7 +26,7 @@
 						   VerticalAlignment="Center"/>
 					<TextBlock Text="{TemplateBinding attProp:AttachedProperties.Text}"
 							   FontSize="9"
-							   Foreground="{Binding ThemeColors.NavElementText}"
+							   Foreground="{Binding Theme.NavElementText}"
 							   HorizontalAlignment="Center"
 							   Margin="0,2,0,0"/>
 				</StackPanel>
