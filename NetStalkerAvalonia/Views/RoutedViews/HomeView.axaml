@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:cmpts="using:NetStalkerAvalonia.Components"
+			 xmlns:cmptsDev="using:NetStalkerAvalonia.Components.DeviceList"
+			 mc:Ignorable="d"
+             x:Class="NetStalkerAvalonia.Views.RoutedViews.HomeView"
+			 Background="Transparent"
+			 Tag="Device List">
+	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+		<Border Grid.Row="0"
+				Margin="0,40,0,0">
+			<cmpts:PageTitle Text="{Binding $parent[UserControl].Tag}"/>
+		</Border>
+		<Border Grid.Row="1">
+			<StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<cmptsDev:DeviceListView/>
+			</StackPanel>
+		</Border>
+		<cmpts:Navbar Grid.Row="2"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Bottom"
+					  Collapsed="{Binding NavEnabled}" />
+	</Grid>
+</UserControl>
