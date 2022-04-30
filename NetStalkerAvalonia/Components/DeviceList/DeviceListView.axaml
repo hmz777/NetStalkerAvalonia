@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="NetStalkerAvalonia.Components.DeviceList.DeviceListView">
+	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+		<DataGrid Name="DeviceList"
+				  Items="{Binding Devices}"
+				  AutoGenerateColumns="False"
+				  CanUserReorderColumns="{Binding DeviceListViewSettings.UserCanReorderColumns}"
+				  CanUserResizeColumns="{Binding DeviceListViewSettings.UserCanResizeColumns}"
+				  CanUserSortColumns="{Binding DeviceListViewSettings.UserCanSortColumns}"
+				  Background="White">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="IP"  Binding="{Binding IP}" IsReadOnly="True"/>
+				<DataGridTextColumn Header="Mac" Binding="{Binding Mac}" IsReadOnly="True"/>
+				<DataGridCheckBoxColumn Header="Blocked"  Binding="{Binding Blocked}"/>
+				<DataGridCheckBoxColumn Header="Redirected"  Binding="{Binding Redirected}"/>
+				<DataGridTextColumn Header="Download"  Binding="{Binding Download}" IsReadOnly="True"/>
+				<DataGridTextColumn Header="Upload" Binding="{Binding Upload}" IsReadOnly="True"/>
+				<DataGridTextColumn Header="Name"  Binding="{Binding Name}" IsReadOnly="True"/>
+			</DataGrid.Columns>
+		</DataGrid>
+	</Grid>
+</UserControl>
