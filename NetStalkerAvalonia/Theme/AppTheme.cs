@@ -1,6 +1,6 @@
 ﻿namespace NetStalkerAvalonia.Theme
 {
-    public class Colors
+    public class AppTheme
     {
         public static string WindowWidth => "800";
         public static string WindowHeight => "600";
@@ -9,8 +9,10 @@
         public static string NavElementBorder => "#424242";
         public static string NavElementText => "white";
         public static string WindowBackground => "#000000";
-        public static string TitleBarBackColor => "#000000";
+        public static string TitleBarBackColor => "Red";
         public static string TitleBarButtonBackColor => "#000000";
         public static string TitleBarButtonFrontColor => "#FFFFFF";
+        public static string PageTitleColor => "white";
+        public static string PageTitleSize => "40";
     }
 }
