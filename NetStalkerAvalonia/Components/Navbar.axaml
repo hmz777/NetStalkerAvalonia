@@ -8,14 +8,12 @@
 			 x:Name="navbar">
 
 	<Border Padding="5,10,5,10"
-			Width="65"
-			HorizontalAlignment="Left"
-			VerticalAlignment="Stretch"
-			Background="{Binding ThemeColors.NavBackground}">
-
+			Height="65"
+			Background="{Binding Theme.NavBackground}">
 		<StackPanel Spacing="5"
 					HorizontalAlignment="Center"
-					VerticalAlignment="Center">
+					VerticalAlignment="Center"
+					Orientation="Horizontal">
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/scan.png"
 							   Text="Scan"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/refresh.png"
