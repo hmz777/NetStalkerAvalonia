@@ -9,7 +9,7 @@ namespace NetStalkerAvalonia.ViewModels
         {
         }
 
-        public Colors ThemeColors { get; set; } = new();
+        public AppTheme Theme { get; set; } = new();
 
         private bool navEnabled;
 
