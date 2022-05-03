@@ -6,24 +6,18 @@
 			 xmlns:cmptsDev="using:NetStalkerAvalonia.Components.DeviceList"
 			 mc:Ignorable="d"
              x:Class="NetStalkerAvalonia.Views.RoutedViews.HomeView"
-			 Background="Transparent"
-			 Tag="Device List">
+			 Background="Transparent">
 	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="auto"/>
 			<RowDefinition Height="*" />
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-		<Border Grid.Row="0"
-				Margin="0,40,0,0">
-			<cmpts:PageTitle Text="{Binding $parent[UserControl].Tag}"/>
-		</Border>
-		<Border Grid.Row="1">
+		<Border Grid.Row="0">
 			<StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 				<cmptsDev:DeviceListView/>
 			</StackPanel>
 		</Border>
-		<cmpts:Navbar Grid.Row="2"
+		<cmpts:Navbar Grid.Row="1"
 					  HorizontalAlignment="Stretch"
 					  VerticalAlignment="Bottom"
 					  Collapsed="{Binding NavEnabled}" />
