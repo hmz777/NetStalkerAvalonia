@@ -58,8 +58,6 @@ namespace NetStalkerAvalonia.Components
                 {
                     _window = (Application.Current?.ApplicationLifetime
                                  as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-
-                    return;
                 }
 
                 _window.BeginMoveDrag(e);
