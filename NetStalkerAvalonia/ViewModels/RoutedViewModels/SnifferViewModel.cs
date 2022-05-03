@@ -1,5 +1,4 @@
 ﻿using ReactiveUI;
-using System;
 
 namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 {
@@ -9,8 +8,8 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
         public IScreen HostScreen { get; }
 
         // Unique identifier for the routable view model.
-        public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
+        public string UrlPathSegment { get; } = "Packet Sniffer";
 
-        public SnifferViewModel(IScreen screen) => HostScreen = screen;
+        public SnifferViewModel(IScreen screen) { HostScreen = screen; }
     }
 }
