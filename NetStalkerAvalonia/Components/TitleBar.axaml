@@ -12,17 +12,6 @@
 		<Style Selector="Button.navBtn">
 			<Setter Property="Padding" Value="15,5,15,5"/>
 			<Setter Property="CornerRadius" Value="0"/>
-		</Style>
-		<Style Selector="Button.minimize" >
-			<Setter Property="Background" Value="{Binding Theme.TitleBarButtonBackColor}"/>
-			<Setter Property="Foreground" Value="{Binding Theme.TitleBarButtonFrontColor}"/>
-		</Style>
-		<Style Selector="Button.maximize" >
-			<Setter Property="Background" Value="{Binding Theme.TitleBarButtonBackColor}"/>
-			<Setter Property="Foreground" Value="{Binding Theme.TitleBarButtonFrontColor}"/>
-		</Style>
-		<Style Selector="Button.close" >
-			<Setter Property="Foreground" Value="{Binding Theme.TitleBarButtonFrontColor}"/>
 			<Setter Property="Template">
 				<ControlTemplate>
 					<ContentPresenter x:Name="PART_ContentPresenter"
@@ -30,12 +19,19 @@
 									  BorderBrush="{TemplateBinding BorderBrush}"
 									  BorderThickness="{TemplateBinding BorderThickness}"
 									  Content="{TemplateBinding Content}"
-									  ContentTemplate="{TemplateBinding ContentTemplate}"
-									  Padding="{TemplateBinding Padding}"
-									  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-									  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+									  Padding="{TemplateBinding Padding}"/>
 				</ControlTemplate>
 			</Setter>
+			<Setter Property="Foreground" Value="{Binding Theme.TitleBarButtonFrontColor}"/>
+		</Style>
+		<Style Selector="Button.minimize" >
+			<Setter Property="Background" Value="{Binding Theme.TitleBarButtonBackColor}"/>
+		</Style>
+		<Style Selector="Button.maximize" >
+			<Setter Property="Background" Value="{Binding Theme.TitleBarButtonBackColor}"/>
+		</Style>
+		<Style Selector="Button.navBtn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{Binding Theme.TitleBarButtonsHoverColor}" />
 		</Style>
 		<Style Selector="Button.close:pointerover /template/ ContentPresenter#PART_ContentPresenter">
 			<Setter Property="Background" Value="Red" />
@@ -45,18 +41,16 @@
 	<Border	Height="30"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Top">
-		<StackPanel
-			Orientation="Horizontal"
-			HorizontalAlignment="Right">
-			<Button Classes="navBtn minimize" Command="{Binding $parent[UserControl].MinimizeWindow}" CommandParameter="{Binding $parent[Window]}">
-				<Image Width="18" Height="18" Source="/Assets/TitleBarIcons/minimize.png"/>
-			</Button>
-			<Button Classes="navBtn maximize" Command="{Binding $parent[UserControl].MaximizeWindow}" CommandParameter="{Binding $parent[Window]}">
-				<Image Width="18" Height="18" Source="/Assets/TitleBarIcons/maximize.png"/>
-			</Button>
-			<Button Classes="navBtn close" Command="{Binding $parent[UserControl].CloseWindow}" CommandParameter="{Binding $parent[Window]}">
-				<Image Width="20" Height="20" Source="/Assets/TitleBarIcons/close.png"/>
-			</Button>
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">		 
+				<Button Classes="navBtn minimize" Command="{Binding $parent[UserControl].MinimizeWindow}" CommandParameter="{Binding $parent[Window]}">
+					<Image Width="18" Height="18" Source="/Assets/TitleBarIcons/minimize.png"/>
+				</Button>
+				<Button Classes="navBtn maximize" Command="{Binding $parent[UserControl].MaximizeWindow}" CommandParameter="{Binding $parent[Window]}">
+					<Image Width="18" Height="18" Source="/Assets/TitleBarIcons/maximize.png"/>
+				</Button>
+				<Button Classes="navBtn close" Command="{Binding $parent[UserControl].CloseWindow}" CommandParameter="{Binding $parent[Window]}">
+					<Image Width="20" Height="20" Source="/Assets/TitleBarIcons/close.png"/>
+				</Button>
 		</StackPanel>
 	</Border>
 </UserControl>
