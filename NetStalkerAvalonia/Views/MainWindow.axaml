@@ -30,15 +30,17 @@
 			VerticalAlignment="Stretch"
 			Background="{Binding Theme.WindowBackground}">
 		<Grid.RowDefinitions>
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		<cmpts:TitleBar Grid.Row="0" ZIndex="2" />
+		<cmpts:TitleBar Grid.Row="0"/>
+		<cmpts:PageTitle Grid.Row="1" Text="{Binding PageTitle}"/>
 		<rxui:RoutedViewHost
 			Router="{Binding Router}"
 			VerticalAlignment="Stretch"
 			VerticalContentAlignment="Stretch"
-			Grid.Row="0"
-			ZIndex="1">
+			Grid.Row="2">
 			<rxui:RoutedViewHost.DefaultContent>
 				<rvws:HomeView/>
 			</rxui:RoutedViewHost.DefaultContent>
