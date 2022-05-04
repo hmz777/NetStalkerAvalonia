@@ -9,5 +9,6 @@
         public string Download { get; set; }
         public string Upload { get; set; }
         public string Name { get; set; }
+        public DeviceType Type { get; set; }
     }
 }
