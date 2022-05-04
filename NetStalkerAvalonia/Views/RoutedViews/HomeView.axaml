@@ -12,11 +12,7 @@
 			<RowDefinition Height="*" />
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-		<Border Grid.Row="0">
-			<StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-				<cmptsDev:DeviceListView/>
-			</StackPanel>
-		</Border>
+		<cmptsDev:DeviceListView Grid.Row="0"/>
 		<cmpts:Navbar Grid.Row="1"
 					  HorizontalAlignment="Stretch"
 					  VerticalAlignment="Bottom"
