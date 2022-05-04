@@ -10,8 +10,7 @@
 				  AutoGenerateColumns="False"
 				  CanUserReorderColumns="{Binding DeviceListViewSettings.UserCanReorderColumns}"
 				  CanUserResizeColumns="{Binding DeviceListViewSettings.UserCanResizeColumns}"
-				  CanUserSortColumns="{Binding DeviceListViewSettings.UserCanSortColumns}"
-				  Background="White">
+				  CanUserSortColumns="{Binding DeviceListViewSettings.UserCanSortColumns}">
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="IP"  Binding="{Binding IP}" IsReadOnly="True"/>
 				<DataGridTextColumn Header="Mac" Binding="{Binding Mac}" IsReadOnly="True"/>

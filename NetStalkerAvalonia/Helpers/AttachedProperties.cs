@@ -21,13 +21,13 @@ namespace NetStalkerAvalonia.Helpers
                             "Icon", default(string), false, Avalonia.Data.BindingMode.OneWay, null);
 
         public static readonly AttachedProperty<string> TextProperty = AvaloniaProperty.RegisterAttached<AttachedProperties, Interactive, string>(
-                           "Text", default(string), false, Avalonia.Data.BindingMode.OneWay, null);
+                            "Text", default(string), false, Avalonia.Data.BindingMode.OneWay, null);
 
         public static readonly AttachedProperty<ICommand> CommandProperty = AvaloniaProperty.RegisterAttached<AttachedProperties, Interactive, ICommand>(
-               "Command", default(ICommand), false, BindingMode.OneTime);
+                            "Command", default(ICommand), false, BindingMode.OneTime);
 
         public static readonly AttachedProperty<object> CommandParameterProperty = AvaloniaProperty.RegisterAttached<AttachedProperties, Interactive, object>(
-                     "CommandParameter", default(object), false, BindingMode.OneWay, null);
+                            "CommandParameter", default(object), false, BindingMode.OneWay, null);
 
         /// <summary>
         /// Accessor for Attached property <see cref="IconProperty"/>.

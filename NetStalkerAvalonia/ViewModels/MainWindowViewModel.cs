@@ -63,7 +63,8 @@ namespace NetStalkerAvalonia.ViewModels
                          Redirected = i + 1 % 2 == 0,
                          Download = $"{i} Kb/s",
                          Upload = $"{i} Kb/s",
-                         Name = $"Dev {i}"
+                         Name = $"Dev {i}",
+                         Type = DeviceType.PC
                      });
             }
 
