@@ -7,12 +7,14 @@
              x:Class="NetStalkerAvalonia.Components.PageTitle">
 	<Border Margin="15">
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-			<Button Command="{Binding GoBackHandler}" IsVisible="{Binding CanGoBack}">
+			<Button Command="{Binding GoBackHandler}" IsVisible="{Binding CanGoBack}"
+					Background="Transparent">
 				<Image Source="/Assets/NavIcons/back.png"/>
 			</Button>
 			<TextBlock Text="{Binding $parent[UserControl].Text}"
 			   Foreground="{Binding Theme.PageTitleColor}"
-			   FontSize="{Binding Theme.PageTitleSize}"/>
+			   FontSize="{Binding Theme.PageTitleSize}"
+			   Margin="5,0,0,0"/>
 		</StackPanel>
 	</Border>
 </UserControl>
