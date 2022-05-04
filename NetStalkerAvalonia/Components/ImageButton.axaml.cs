@@ -17,14 +17,14 @@ namespace NetStalkerAvalonia.Components
             AvaloniaXamlLoader.Load(this);
         }
 
-        public string Text
+        public string TextContent
         {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            get { return (string)GetValue(TextContentProperty); }
+            set { SetValue(TextContentProperty, value); }
         }
 
-        public static readonly AttachedProperty<string> TextProperty =
-                      AttachedProperty<string>.RegisterAttached<ImageButton, string>(nameof(Text), typeof(ImageButton));
+        public static readonly AttachedProperty<string> TextContentProperty =
+                      AttachedProperty<string>.RegisterAttached<ImageButton, string>(nameof(TextContent), typeof(ImageButton));
 
         public string IconSource
         {

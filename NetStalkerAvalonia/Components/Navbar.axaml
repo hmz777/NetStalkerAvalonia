@@ -7,28 +7,29 @@
              x:Class="NetStalkerAvalonia.Components.Navbar"
 			 x:Name="navbar">
 
-	<Border Padding="5,10,5,10"
-			Height="65"
-			Background="{Binding Theme.NavBackground}">
+	<Border Height="80"
+			Background="{Binding Theme.NavBackground}"
+			BorderBrush="{Binding Theme.NavBorderColor}"
+			BorderThickness="0,2,0,0">
 		<StackPanel Spacing="5"
 					HorizontalAlignment="Center"
-					VerticalAlignment="Center"
+					VerticalAlignment="Stretch"
 					Orientation="Horizontal">
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/scan.png"
-							   Text="Scan"></cmpts:ImageButton>
+							   TextContent="Scan"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/refresh.png"
-							   Text="Refresh"></cmpts:ImageButton>
+							   TextContent="Refresh"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/rules.png"
-							   Text="Rules"></cmpts:ImageButton>
+							   TextContent="Rules"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/sniffer.png"
-							   Text="Sniffer"
+							   TextContent="Sniffer"
 							   Command="{Binding GoToSniffer}"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/options.png"
-							   Text="Options"></cmpts:ImageButton>
+							   TextContent="Options"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/help.png"
-							   Text="Help"></cmpts:ImageButton>
+							   TextContent="Help"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/about.png"
-							   Text="About"></cmpts:ImageButton>
+							   TextContent="About"></cmpts:ImageButton>
 		</StackPanel>
 	</Border>
 </UserControl>

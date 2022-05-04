@@ -28,6 +28,7 @@
 							   FontSize="9"
 							   Foreground="{Binding Theme.NavElementText}"
 							   HorizontalAlignment="Center"
+							   VerticalAlignment="Bottom"
 							   Margin="0,2,0,0"/>
 				</StackPanel>
 			</Border>
@@ -35,8 +36,8 @@
 	</UserControl.Resources>
 
 	<Button
-		attProp:AttachedProperties.Text="{Binding $parent[UserControl].Text}"
-		attProp:AttachedProperties.Icon="{Binding $parent[UserControl].IconSource}"
-		Command="{Binding $parent[UserControl].Command}"
-		Template="{StaticResource NavBtn}"></Button>
+			attProp:AttachedProperties.Text="{Binding $parent[UserControl].TextContent}"
+			attProp:AttachedProperties.Icon="{Binding $parent[UserControl].IconSource}"
+			Command="{Binding $parent[UserControl].Command}"
+			Template="{StaticResource NavBtn}"/>
 </UserControl>
