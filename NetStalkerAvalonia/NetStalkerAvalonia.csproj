@@ -50,5 +50,8 @@
 	  <Compile Update="Components\TitleBar.axaml.cs">
 	    <DependentUpon>TitleBar.axaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\RoutedViews\SnifferView.axaml.cs">
+	    <DependentUpon>SnifferView.axaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 </Project>

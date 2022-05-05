@@ -19,8 +19,7 @@ namespace NetStalkerAvalonia.Converters
 
             var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
 
-            return new Bitmap(assets.
-                Open(
+            return new Bitmap(assets.Open(
                 new Uri(
                     string.Format("avares://{0}{1}", Assembly.GetExecutingAssembly().GetName().Name, source))));
         }
