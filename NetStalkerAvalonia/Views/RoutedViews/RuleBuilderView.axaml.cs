@@ -1,15 +1,13 @@
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.ViewModels.RoutedViewModels;
-using ReactiveUI;
 
 namespace NetStalkerAvalonia.Views.RoutedViews
 {
-    public partial class Sniffer : ReactiveUserControl<SnifferViewModel>
+    public partial class RuleBuilderView : UserControl
     {
-        public Sniffer()
+        public RuleBuilderView()
         {
-            this.WhenActivated(disposables => { });
             InitializeComponent();
         }
 
