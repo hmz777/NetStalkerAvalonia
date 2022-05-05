@@ -2,8 +2,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:convs="using:NetStalkerAvalonia.Converters"
              mc:Ignorable="d"
+			 xmlns:models="using:NetStalkerAvalonia.Models"
              x:Class="NetStalkerAvalonia.Components.DeviceList.DeviceListView">
+
+	<UserControl.Resources>
+		<convs:ListTypeToIconConverter x:Key="TypeToIconConv"/>
+	</UserControl.Resources>
+
 	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 		<DataGrid Name="DeviceList"
 				  Items="{Binding Devices}"
@@ -12,6 +19,13 @@
 				  CanUserResizeColumns="{Binding DeviceListViewSettings.UserCanResizeColumns}"
 				  CanUserSortColumns="{Binding DeviceListViewSettings.UserCanSortColumns}">
 			<DataGrid.Columns>
+				<DataGridTemplateColumn Header="Type">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate DataType="models:Device">
+							<Image Source="{Binding Type, Converter={StaticResource TypeToIconConv}}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
 				<DataGridTextColumn Header="IP"  Binding="{Binding IP}" IsReadOnly="True"/>
 				<DataGridTextColumn Header="Mac" Binding="{Binding Mac}" IsReadOnly="True"/>
 				<DataGridCheckBoxColumn Header="Blocked"  Binding="{Binding Blocked}"/>
