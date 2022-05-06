@@ -24,13 +24,10 @@
 			</Setter>
 			<Setter Property="Foreground" Value="{Binding Theme.TitleBarButtonFrontColor}"/>
 		</Style>
-		<Style Selector="Button.minimize" >
+		<Style Selector="Button" >
 			<Setter Property="Background" Value="{Binding Theme.TitleBarButtonBackColor}"/>
 		</Style>
-		<Style Selector="Button.maximize" >
-			<Setter Property="Background" Value="{Binding Theme.TitleBarButtonBackColor}"/>
-		</Style>
-		<Style Selector="Button.navBtn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
 			<Setter Property="Background" Value="{Binding Theme.TitleBarButtonsHoverColor}" />
 		</Style>
 		<Style Selector="Button.close:pointerover /template/ ContentPresenter#PART_ContentPresenter">
@@ -41,16 +38,16 @@
 	<Border	Height="30"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Top">
-		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">		 
-				<Button Classes="navBtn minimize" Command="{Binding $parent[UserControl].MinimizeWindow}" CommandParameter="{Binding $parent[Window]}">
-					<Image Width="18" Height="18" Source="/Assets/TitleBarIcons/minimize.png"/>
-				</Button>
-				<Button Classes="navBtn maximize" Command="{Binding $parent[UserControl].MaximizeWindow}" CommandParameter="{Binding $parent[Window]}">
-					<Image Width="18" Height="18" Source="/Assets/TitleBarIcons/maximize.png"/>
-				</Button>
-				<Button Classes="navBtn close" Command="{Binding $parent[UserControl].CloseWindow}" CommandParameter="{Binding $parent[Window]}">
-					<Image Width="20" Height="20" Source="/Assets/TitleBarIcons/close.png"/>
-				</Button>
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+			<Button Classes="navBtn minimize" Command="{Binding $parent[UserControl].MinimizeWindow}" CommandParameter="{Binding $parent[Window]}">
+				<Image Width="18" Height="18" Source="/Assets/TitleBarIcons/minimize.png"/>
+			</Button>
+			<Button Classes="navBtn maximize" Command="{Binding $parent[UserControl].MaximizeWindow}" CommandParameter="{Binding $parent[Window]}">
+				<Image Width="18" Height="18" Source="/Assets/TitleBarIcons/maximize.png"/>
+			</Button>
+			<Button Classes="navBtn close" Command="{Binding $parent[UserControl].CloseWindow}" CommandParameter="{Binding $parent[Window]}">
+				<Image Width="20" Height="20" Source="/Assets/TitleBarIcons/close.png"/>
+			</Button>
 		</StackPanel>
 	</Border>
 </UserControl>
