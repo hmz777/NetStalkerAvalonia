@@ -1,2 +1,2 @@
 # NetStalker Avalonia
-NetStalker re-written in MVVM, Avalonia and Reactive UI.
+[NetStalker](https://github.com/hmz777/NetStalker) re-written in MVVM, Avalonia and Reactive UI.
