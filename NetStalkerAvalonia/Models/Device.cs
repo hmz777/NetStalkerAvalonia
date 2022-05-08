@@ -1,4 +1,6 @@
-﻿namespace NetStalkerAvalonia.Models
+﻿using System;
+
+namespace NetStalkerAvalonia.Models
 {
     public class Device
     {
@@ -10,5 +12,6 @@
         public string Upload { get; set; }
         public string Name { get; set; }
         public DeviceType Type { get; set; }
+        public DateTime DateAdded { get; set; }
     }
 }
