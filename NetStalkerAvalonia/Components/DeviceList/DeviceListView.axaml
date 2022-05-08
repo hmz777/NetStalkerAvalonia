@@ -11,6 +11,12 @@
 		<convs:ListTypeToIconConverter x:Key="TypeToIconConv"/>
 	</UserControl.Resources>
 
+	<UserControl.Styles>
+		<Style Selector="DataGrid#DeviceList DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+			<Setter Property="Fill" Value="OrangeRed"/>
+		</Style>
+	</UserControl.Styles>
+
 	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 		<DataGrid Name="DeviceList"
 				  Items="{Binding Devices}"
@@ -26,11 +32,11 @@
 						</DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
 				</DataGridTemplateColumn>
-				<DataGridTextColumn Header="IP"  Binding="{Binding IP}" IsReadOnly="True"/>
+				<DataGridTextColumn Header="IP" Binding="{Binding IP}" IsReadOnly="True"/>
 				<DataGridTextColumn Header="Mac" Binding="{Binding Mac}" IsReadOnly="True"/>
-				<DataGridCheckBoxColumn Header="Blocked"  Binding="{Binding Blocked}"/>
-				<DataGridCheckBoxColumn Header="Redirected"  Binding="{Binding Redirected}"/>
-				<DataGridTextColumn Header="Download"  Binding="{Binding Download}" IsReadOnly="True"/>
+				<DataGridCheckBoxColumn Header="Blocked" Binding="{Binding Blocked}"/>
+				<DataGridCheckBoxColumn Header="Redirected" Binding="{Binding Redirected}"/>
+				<DataGridTextColumn Header="Download" Binding="{Binding Download}" IsReadOnly="True"/>
 				<DataGridTextColumn Header="Upload" Binding="{Binding Upload}" IsReadOnly="True"/>
 				<DataGridTextColumn Header="Name"  Binding="{Binding Name}" IsReadOnly="True"/>
 			</DataGrid.Columns>
