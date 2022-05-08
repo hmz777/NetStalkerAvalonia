@@ -1,8 +1,13 @@
+using DynamicData;
+using DynamicData.Binding;
+using NetStalkerAvalonia.Compairers;
 using NetStalkerAvalonia.Components.DeviceList;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.ViewModels.RoutedViewModels;
 using ReactiveUI;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
 
@@ -30,11 +35,7 @@ namespace NetStalkerAvalonia.ViewModels
         private readonly ObservableAsPropertyHelper<bool> _canGoBack;
         public bool CanGoBack => _canGoBack.Value;
 
-        private Stack<string> ViewNames = new();
-
         #endregion
-
-        #region Properties
 
         #region UI Info
 
@@ -45,35 +46,17 @@ namespace NetStalkerAvalonia.ViewModels
 
         #region Devices List
 
-        public ICollection<Device> Devices { get; set; } = new List<Device>();
+        private readonly SourceCache<Device, string> devicesStore = new(device => device.Mac);
+        private readonly ReadOnlyObservableCollection<Device> devicesDisplay;
+        public ReadOnlyObservableCollection<Device> Devices => devicesDisplay;
+
         public DeviceListViewSettings DeviceListViewSettings { get; set; } = new();
 
-        #region Testing
-
-        private static ICollection<Device> PopulateDummyData(ICollection<Device> devices)
-        {
-            for (int i = 0; i < 50; i++)
-            {
-                devices.Add(
-                     new Device()
-                     {
-                         IP = $"192.168.1.{i}",
-                         Mac = $"fffffff{i}",
-                         Blocked = i % 2 == 0,
-                         Redirected = i + 1 % 2 == 0,
-                         Download = $"{i} Kb/s",
-                         Upload = $"{i} Kb/s",
-                         Name = $"Dev {i}",
-                         Type = DeviceType.PC
-                     });
-            }
-
-            return devices;
-        }
-
         #endregion
 
-        #endregion
+        #region Helpers
+
+        private IEqualityComparer<Device> DeviceEqualityComparer = new DeviceEqualityComparer();
 
         #endregion
 
@@ -92,11 +75,28 @@ namespace NetStalkerAvalonia.ViewModels
                              .ToProperty(this, x => x.CanGoBack);
 
             GoToSniffer = ReactiveCommand.CreateFromObservable(
-                () => { ViewNames.Push("Packet Sniffer"); return Router.Navigate.Execute(new SnifferViewModel(this)); });
+                () => Router.Navigate.Execute(new SnifferViewModel(this)));
 
+            // Device collection projection for UI
+            devicesStore
+                   .Connect()
+                   .Sort(SortExpressionComparer<Device>.Descending(device => device.DateAdded))
+                   .ObserveOn(RxApp.MainThreadScheduler)
+                   .Bind(out devicesDisplay)
+                   .Subscribe();
+
+            // Testing
             // Dummy data population
-            PopulateDummyData(Devices);
+            PopulateDummyData(devicesStore);
         }
+
+        #endregion
+
+        #region Event Handlers
+
+        #region Device List
+
+        #endregion
 
         #endregion
 
@@ -106,6 +106,36 @@ namespace NetStalkerAvalonia.ViewModels
         private static string GetPageNameFromViewModel(IRoutableViewModel routableViewModel)
         {
             return routableViewModel?.UrlPathSegment ?? "Device List";
+        }
+
+        #endregion
+
+        #region Testing
+
+        private void PopulateDummyData(ISourceCache<Device, string> devices)
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                devices.AddOrUpdate(
+                     new Device()
+                     {
+                         IP = $"192.168.1.{i}",
+                         Mac = $"fffffff{i}",
+                         Blocked = i % 2 == 0,
+                         Redirected = i + 1 % 2 == 0,
+                         Download = $"{i} Kb/s",
+                         Upload = $"{i} Kb/s",
+                         Name = $"Dev {i}",
+                         Type = DeviceType.PC,
+                         DateAdded = DateTime.Now
+                     }, DeviceEqualityComparer);
+            }
+        }
+
+        // For debugging
+        public void TestMethod()
+        {
+
         }
 
         #endregion
