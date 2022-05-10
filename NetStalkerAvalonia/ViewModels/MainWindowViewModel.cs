@@ -46,10 +46,16 @@ namespace NetStalkerAvalonia.ViewModels
 
         #region Devices List
 
+        // The data store for devices
         private readonly SourceCache<Device, string> devicesStore = new(device => device.Mac);
+
+        // Collection projected from source for UI
         private readonly ReadOnlyObservableCollection<Device> devicesDisplay;
+
+        // Accessor to expose the UI device list
         public ReadOnlyObservableCollection<Device> Devices => devicesDisplay;
 
+        // Configure the device list view
         public DeviceListViewSettings DeviceListViewSettings { get; set; } = new();
 
         #endregion
