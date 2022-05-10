@@ -17,30 +17,30 @@
 
 	<Window.Styles>
 		<Style Selector="Window">
+			<Setter Property="TransparencyLevelHint" Value="AcrylicBlur"/>
+			<Setter Property="Background" Value="{Binding Theme.WindowBackground}"/>
 			<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
-			<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>
-			<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>
+			<!--<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>-->
+			<!--<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>-->
 			<Setter Property="Width" Value="{Binding Theme.WindowWidth}"/>
 			<Setter Property="Height" Value="{Binding Theme.WindowHeight}"/>
 			<Setter Property="Icon" Value="/Assets/avalonia-logo.ico"/>
 		</Style>
 	</Window.Styles>
 
-	<Grid	HorizontalAlignment="Stretch"
-			VerticalAlignment="Stretch"
-			Background="{Binding Theme.WindowBackground}">
+	<Grid HorizontalAlignment="Stretch"
+		  VerticalAlignment="Stretch">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="auto" />
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		<cmpts:TitleBar Grid.Row="0"/>
-		<cmpts:PageTitle Grid.Row="1" Text="{Binding PageTitle}"/>
+		<!--<cmpts:TitleBar Grid.Row="0"/>-->
+		<cmpts:PageTitle Grid.Row="0" Text="{Binding PageTitle}"/>
 		<rxui:RoutedViewHost
 			Router="{Binding Router}"
 			VerticalAlignment="Stretch"
 			VerticalContentAlignment="Stretch"
-			Grid.Row="2">
+			Grid.Row="1">
 			<rxui:RoutedViewHost.DefaultContent>
 				<rvws:HomeView/>
 			</rxui:RoutedViewHost.DefaultContent>
