@@ -5,7 +5,7 @@
              mc:Ignorable="d"
 			 xmlns:cmpts="using:NetStalkerAvalonia.Components"
              x:Class="NetStalkerAvalonia.Components.PageTitle">
-	<Border Margin="15">
+	<Border Margin="15,30,15,15">
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 			<Button Command="{Binding GoBackHandler}" IsVisible="{Binding CanGoBack}"
 					Background="Transparent">
