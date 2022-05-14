@@ -6,7 +6,7 @@
 			 xmlns:attProp="using:NetStalkerAvalonia.Helpers"
              mc:Ignorable="d"
              x:Class="NetStalkerAvalonia.Components.ImageButton">
-
+	
 	<UserControl.Resources>
 		<convs:StringToImageSourceConverter x:Key="StrToImgSrcConv"/>
 		<ControlTemplate x:Key="NavBtn" TargetType="Button">
@@ -16,7 +16,6 @@
 				CornerRadius="3"
 				Width="55"
 				Height="55"
-				Background="{Binding Theme.NavElementBackground}"
 				BorderBrush="{Binding Theme.NavElementBorder}">
 				<StackPanel>
 					<Image Source="{TemplateBinding attProp:AttachedProperties.Icon, Converter={StaticResource StrToImgSrcConv}}"
@@ -35,7 +34,16 @@
 		</ControlTemplate>
 	</UserControl.Resources>
 
-	<Button
+	<UserControl.Styles>
+		<Style Selector="Button.hoverable /template/ Border">
+			<Setter Property="Background" Value="{Binding Theme.NavElementBackground}"/>
+		</Style>
+		<Style Selector="Button.hoverable /template/ Border:pointerover">
+			<Setter Property="Background" Value="{Binding Theme.AccentColor}"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Button Classes="hoverable"
 			attProp:AttachedProperties.Text="{Binding $parent[UserControl].TextContent}"
 			attProp:AttachedProperties.Icon="{Binding $parent[UserControl].IconSource}"
 			Command="{Binding $parent[UserControl].Command}"
