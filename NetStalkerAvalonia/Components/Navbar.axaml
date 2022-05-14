@@ -25,7 +25,8 @@
 							   TextContent="Sniffer"
 							   Command="{Binding GoToSniffer}"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/options.png"
-							   TextContent="Options"></cmpts:ImageButton>
+							   TextContent="Options"
+							   Command="{Binding GoToOptions}"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/help.png"
 							   TextContent="Help"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/about.png"
