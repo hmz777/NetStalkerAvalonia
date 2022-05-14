@@ -9,11 +9,13 @@
 
 	<UserControl.Resources>
 		<convs:ListTypeToIconConverter x:Key="TypeToIconConv"/>
+		<convs:PhysicalAddressToStringConverter x:Key="MacToStringConv"/>
+		<convs:IpAddressToStringConverter x:Key="IpToStringConv"/>
 	</UserControl.Resources>
 
 	<UserControl.Styles>
 		<Style Selector="DataGrid#DeviceList DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
-			<Setter Property="Fill" Value="OrangeRed"/>
+			<Setter Property="Fill" Value="{Binding $parent[Window].DataContext.Theme.ListRowSelectedBackColor}"/>
 		</Style>
 	</UserControl.Styles>
 
@@ -32,8 +34,8 @@
 						</DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
 				</DataGridTemplateColumn>
-				<DataGridTextColumn Header="IP" Binding="{Binding IP}" IsReadOnly="True"/>
-				<DataGridTextColumn Header="Mac" Binding="{Binding Mac}" IsReadOnly="True"/>
+				<DataGridTextColumn Header="IP" Binding="{Binding IP, Converter={StaticResource IpToStringConv}}" IsReadOnly="True"/>
+				<DataGridTextColumn Header="Mac" Binding="{Binding Mac, Converter={StaticResource MacToStringConv}}" IsReadOnly="True"/>
 				<DataGridCheckBoxColumn Header="Blocked" Binding="{Binding Blocked}"/>
 				<DataGridCheckBoxColumn Header="Redirected" Binding="{Binding Redirected}"/>
 				<DataGridTextColumn Header="Download" Binding="{Binding Download}" IsReadOnly="True"/>
