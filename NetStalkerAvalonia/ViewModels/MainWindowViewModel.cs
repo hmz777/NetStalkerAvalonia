@@ -8,6 +8,9 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Reactive;
 using System.Reactive.Linq;
 
@@ -47,7 +50,7 @@ namespace NetStalkerAvalonia.ViewModels
         #region Devices List
 
         // The data store for devices
-        private readonly SourceCache<Device, string> devicesStore = new(device => device.Mac);
+        private readonly SourceCache<Device, string> devicesStore = new(device => device.Mac.ToString());
 
         // Collection projected from source for UI
         private readonly ReadOnlyObservableCollection<Device> devicesDisplay;
@@ -82,6 +85,9 @@ namespace NetStalkerAvalonia.ViewModels
 
             GoToSniffer = ReactiveCommand.CreateFromObservable(
                 () => Router.Navigate.Execute(new SnifferViewModel(this)));
+
+            GoToOptions = ReactiveCommand.CreateFromObservable(
+                () => Router.Navigate.Execute(new OptionsViewModel(this)));
 
             // Device collection projection for UI
             devicesStore
@@ -123,18 +129,8 @@ namespace NetStalkerAvalonia.ViewModels
             for (int i = 0; i < 50; i++)
             {
                 devices.AddOrUpdate(
-                     new Device()
-                     {
-                         IP = $"192.168.1.{i}",
-                         Mac = $"fffffff{i}",
-                         Blocked = i % 2 == 0,
-                         Redirected = i + 1 % 2 == 0,
-                         Download = $"{i} Kb/s",
-                         Upload = $"{i} Kb/s",
-                         Name = $"Dev {i}",
-                         Type = DeviceType.PC,
-                         DateAdded = DateTime.Now
-                     }, DeviceEqualityComparer);
+                     new Device(IPAddress.Parse($"192.168.1.{i}"),
+                                PhysicalAddress.Parse(GetRandomMacAddress())), DeviceEqualityComparer);
             }
         }
 
@@ -142,6 +138,15 @@ namespace NetStalkerAvalonia.ViewModels
         public void TestMethod()
         {
 
+        }
+
+        private static string GetRandomMacAddress()
+        {
+            var random = new Random();
+            var buffer = new byte[6];
+            random.NextBytes(buffer);
+            var result = String.Concat(buffer.Select(x => string.Format("{0}:", x.ToString("X2"))).ToArray());
+            return result.TrimEnd(':');
         }
 
         #endregion
