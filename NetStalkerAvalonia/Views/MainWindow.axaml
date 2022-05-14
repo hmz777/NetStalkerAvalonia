@@ -26,6 +26,9 @@
 			<Setter Property="Height" Value="{Binding Theme.WindowHeight}"/>
 			<Setter Property="Icon" Value="/Assets/avalonia-logo.ico"/>
 		</Style>
+		<Style Selector="Window">
+			<Setter Property="FontFamily" Value="{Binding Theme.FontFamily}"/>
+		</Style>
 	</Window.Styles>
 
 	<Grid HorizontalAlignment="Stretch"
@@ -34,7 +37,6 @@
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		<!--<cmpts:TitleBar Grid.Row="0"/>-->
 		<cmpts:PageTitle Grid.Row="0" Text="{Binding PageTitle}"/>
 		<rxui:RoutedViewHost
 			Router="{Binding Router}"
