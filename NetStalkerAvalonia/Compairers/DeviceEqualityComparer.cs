@@ -12,7 +12,7 @@ namespace NetStalkerAvalonia.Compairers
             ArgumentNullException.ThrowIfNull(x);
             ArgumentNullException.ThrowIfNull(y);
 
-            return x.Mac.Equals(y.Mac, StringComparison.InvariantCultureIgnoreCase);
+            return x.Mac.Equals(y.Mac);
         }
 
         public int GetHashCode([DisallowNull] Device obj)
