@@ -1,9 +1,9 @@
-﻿using System.Net;
+﻿using NetStalkerAvalonia.Models;
 
 namespace NetStalkerAvalonia.Services
 {
     public interface IDeviceNameResolver
     {
-        string GetDeviceName(IPAddress ip);
+        string GetDeviceName(Device device);
     }
 }
