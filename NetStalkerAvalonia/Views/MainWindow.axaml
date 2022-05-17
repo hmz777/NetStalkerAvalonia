@@ -4,48 +4,50 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:rxui="clr-namespace:Avalonia.ReactiveUI;assembly=Avalonia.ReactiveUI"
-		xmlns:cmpts="using:NetStalkerAvalonia.Components"
-		xmlns:rvws="using:NetStalkerAvalonia.Views.RoutedViews"
-		mc:Ignorable="d"
+        xmlns:cmpts="using:NetStalkerAvalonia.Components"
+        xmlns:rvws="using:NetStalkerAvalonia.Views.RoutedViews"
+        mc:Ignorable="d"
         x:Class="NetStalkerAvalonia.Views.MainWindow"
-		Name="mainWindow"
+        Name="mainWindow"
         Title="NetStalkerAvalonia">
 
-	<Design.DataContext>
-		<vm:MainWindowViewModel/>
-	</Design.DataContext>
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
 
-	<Window.Styles>
-		<Style Selector="Window">
-			<Setter Property="TransparencyLevelHint" Value="AcrylicBlur"/>
-			<Setter Property="Background" Value="{Binding Theme.WindowBackground}"/>
-			<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
-			<!--<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>-->
-			<!--<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>-->
-			<Setter Property="Width" Value="{Binding Theme.WindowWidth}"/>
-			<Setter Property="Height" Value="{Binding Theme.WindowHeight}"/>
-			<Setter Property="Icon" Value="/Assets/avalonia-logo.ico"/>
-		</Style>
-		<Style Selector="Window">
-			<Setter Property="FontFamily" Value="{Binding Theme.FontFamily}"/>
-		</Style>
-	</Window.Styles>
+    <Window.Styles>
+        <Style Selector="Window">
+            <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
+            <Setter Property="Background" Value="{Binding Theme.WindowBackground}" />
+            <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+            <!--<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>-->
+            <!--<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>-->
+            <Setter Property="Width" Value="{Binding Theme.WindowWidth}" />
+            <Setter Property="Height" Value="{Binding Theme.WindowHeight}" />
+            <Setter Property="Icon" Value="/Assets/avalonia-logo.ico" />
+        </Style>
+        <Style Selector="Window">
+            <Setter Property="FontFamily" Value="{Binding Theme.FontFamily}" />
+        </Style>
+        <Style Selector="TextBox:focus /template/ Border">
+            <Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
+        </Style>
+        <Style Selector="CheckBox:checked /template/ Border">
+            <Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
+        </Style>
+    </Window.Styles>
 
-	<Grid HorizontalAlignment="Stretch"
-		  VerticalAlignment="Stretch">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="auto" />
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
-		<cmpts:PageTitle Grid.Row="0" Text="{Binding PageTitle}"/>
-		<rxui:RoutedViewHost
-			Router="{Binding Router}"
-			VerticalAlignment="Stretch"
-			VerticalContentAlignment="Stretch"
-			Grid.Row="1">
-			<rxui:RoutedViewHost.DefaultContent>
-				<rvws:HomeView/>
-			</rxui:RoutedViewHost.DefaultContent>
-		</rxui:RoutedViewHost>
-	</Grid>
+    <Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch" RowDefinitions="auto,*">
+        <cmpts:PageTitle Grid.Row="0" Text="{Binding PageTitle}" />
+        <rxui:RoutedViewHost
+            Router="{Binding Router}"
+            VerticalAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            Grid.Row="1">
+            <rxui:RoutedViewHost.DefaultContent>
+                <rvws:HomeView />
+            </rxui:RoutedViewHost.DefaultContent>
+        </rxui:RoutedViewHost>
+    </Grid>
 </Window>
