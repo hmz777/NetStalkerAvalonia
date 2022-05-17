@@ -18,6 +18,7 @@
         public static string AccentColor => "Teal";
         public static string PageTitleSize => "35";
         public static string ListRowSelectedBackColor => "Teal";
+        public static string ListColumnHeaderBackColor => "#2C2C2C";
         public static string FontFamily => "Verdana";
     }
 }
