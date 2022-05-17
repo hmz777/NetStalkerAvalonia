@@ -33,7 +33,11 @@ namespace NetStalkerAvalonia.ViewModels
 
         // The command that navigates a user back.
         public ReactiveCommand<Unit, Unit> GoBack => Router.NavigateBack;
-        public void GoBackHandler() { GoBack?.Execute(); }
+
+        public void GoBackHandler()
+        {
+            GoBack?.Execute();
+        }
 
         private readonly ObservableAsPropertyHelper<bool> _canGoBack;
         public bool CanGoBack => _canGoBack.Value;
@@ -53,10 +57,10 @@ namespace NetStalkerAvalonia.ViewModels
         private readonly SourceCache<Device, string> devicesStore = new(device => device.Mac.ToString());
 
         // Collection projected from source for UI
-        private readonly ReadOnlyObservableCollection<Device> devicesDisplay;
+        private readonly ReadOnlyObservableCollection<Device> devicesReadOnly;
 
         // Accessor to expose the UI device list
-        public ReadOnlyObservableCollection<Device> Devices => devicesDisplay;
+        public ReadOnlyObservableCollection<Device> Devices => devicesReadOnly;
 
         // Configure the device list view
         public DeviceListViewSettings DeviceListViewSettings { get; set; } = new();
@@ -75,13 +79,13 @@ namespace NetStalkerAvalonia.ViewModels
         {
             // Info wiring
             _pageTitle = this.WhenAnyObservable(x => x.Router.CurrentViewModel)
-                             .Select(x => GetPageNameFromViewModel(x))
-                             .ToProperty(this, x => x.PageTitle);
+                .Select(GetPageNameFromViewModel!)
+                .ToProperty(this, x => x.PageTitle);
 
             // Navigation wiring
             _canGoBack = this.WhenAnyValue(x => x.Router.NavigationStack.Count)
-                             .Select(count => count > 0)
-                             .ToProperty(this, x => x.CanGoBack);
+                .Select(count => count > 0)
+                .ToProperty(this, x => x.CanGoBack);
 
             GoToSniffer = ReactiveCommand.CreateFromObservable(
                 () => Router.Navigate.Execute(new SnifferViewModel(this)));
@@ -91,11 +95,11 @@ namespace NetStalkerAvalonia.ViewModels
 
             // Device collection projection for UI
             devicesStore
-                   .Connect()
-                   .Sort(SortExpressionComparer<Device>.Descending(device => device.DateAdded))
-                   .ObserveOn(RxApp.MainThreadScheduler)
-                   .Bind(out devicesDisplay)
-                   .Subscribe();
+                .Connect()
+                .Sort(SortExpressionComparer<Device>.Descending(device => device.DateAdded))
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out devicesReadOnly)
+                .Subscribe();
 
             // Testing
             // Dummy data population
@@ -129,15 +133,14 @@ namespace NetStalkerAvalonia.ViewModels
             for (int i = 0; i < 50; i++)
             {
                 devices.AddOrUpdate(
-                     new Device(IPAddress.Parse($"192.168.1.{i}"),
-                                PhysicalAddress.Parse(GetRandomMacAddress())), DeviceEqualityComparer);
+                    new Device(IPAddress.Parse($"192.168.1.{i}"),
+                        PhysicalAddress.Parse(GetRandomMacAddress())), DeviceEqualityComparer);
             }
         }
 
         // For debugging
         public void TestMethod()
         {
-
         }
 
         private static string GetRandomMacAddress()
