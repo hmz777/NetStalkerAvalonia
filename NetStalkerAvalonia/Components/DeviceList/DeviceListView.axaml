@@ -17,6 +17,9 @@
 		<Style Selector="DataGrid#DeviceList DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
 			<Setter Property="Fill" Value="{Binding $parent[Window].DataContext.Theme.ListRowSelectedBackColor}"/>
 		</Style>
+		<Style Selector="DataGridColumnHeader">
+			<Setter	Property="Background" Value="{Binding Theme.ListColumnHeaderBackColor}"/>
+		</Style>
 	</UserControl.Styles>
 
 	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
