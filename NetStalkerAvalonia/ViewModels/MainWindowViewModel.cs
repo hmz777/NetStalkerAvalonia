@@ -13,11 +13,19 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Reactive;
 using System.Reactive.Linq;
+using NetStalkerAvalonia.Helpers;
+using NetStalkerAvalonia.Services;
 
 namespace NetStalkerAvalonia.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase, IScreen
     {
+        #region Members
+
+        private readonly IBlockerRedirector _redirector;
+
+        #endregion
+
         #region Routing
 
         // The Router associated with this Screen.
@@ -25,19 +33,16 @@ namespace NetStalkerAvalonia.ViewModels
         public RoutingState Router { get; } = new RoutingState();
 
         // Commands to navigate the different views
-        public ReactiveCommand<Unit, IRoutableViewModel>? GoToHome { get; }
+        // public ReactiveCommand<Unit, IRoutableViewModel>? GoToHome { get; }
         public ReactiveCommand<Unit, IRoutableViewModel>? GoToRules { get; }
         public ReactiveCommand<Unit, IRoutableViewModel>? GoToSniffer { get; }
         public ReactiveCommand<Unit, IRoutableViewModel>? GoToOptions { get; }
         public ReactiveCommand<Unit, IRoutableViewModel>? GoToHelp { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel>? GoToAbout { get; }
 
         // The command that navigates a user back.
         public ReactiveCommand<Unit, Unit> GoBack => Router.NavigateBack;
-
-        public void GoBackHandler()
-        {
-            GoBack?.Execute();
-        }
+        public void GoBackHandler() => GoBack?.Execute();
 
         private readonly ObservableAsPropertyHelper<bool> _canGoBack;
         public bool CanGoBack => _canGoBack.Value;
@@ -54,13 +59,13 @@ namespace NetStalkerAvalonia.ViewModels
         #region Devices List
 
         // The data store for devices
-        private readonly SourceCache<Device, string> devicesStore = new(device => device.Mac.ToString());
+        private readonly SourceCache<Device, string> _devicesStore = new(device => device.Mac!.ToString());
 
         // Collection projected from source for UI
-        private readonly ReadOnlyObservableCollection<Device> devicesReadOnly;
+        private readonly ReadOnlyObservableCollection<Device> _devicesReadOnly;
 
         // Accessor to expose the UI device list
-        public ReadOnlyObservableCollection<Device> Devices => devicesReadOnly;
+        public ReadOnlyObservableCollection<Device> Devices => _devicesReadOnly;
 
         // Configure the device list view
         public DeviceListViewSettings DeviceListViewSettings { get; set; } = new();
@@ -75,8 +80,11 @@ namespace NetStalkerAvalonia.ViewModels
 
         #region Constructor
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IBlockerRedirector redirector = null!)
         {
+            // Resolve dependencies
+            // _redirector = Tools.ResolveIfNull<IBlockerRedirector>(redirector);
+
             // Info wiring
             _pageTitle = this.WhenAnyObservable(x => x.Router.CurrentViewModel)
                 .Select(GetPageNameFromViewModel!)
@@ -93,17 +101,26 @@ namespace NetStalkerAvalonia.ViewModels
             GoToOptions = ReactiveCommand.CreateFromObservable(
                 () => Router.Navigate.Execute(new OptionsViewModel(this)));
 
+            GoToRules = ReactiveCommand.CreateFromObservable(
+                () => Router.Navigate.Execute(new RuleBuilderViewModel(this)));
+
+            GoToHelp = ReactiveCommand.CreateFromObservable(
+                () => Router.Navigate.Execute(new HelpViewModel(this)));
+
+            GoToAbout = ReactiveCommand.CreateFromObservable(
+                () => Router.Navigate.Execute(new AboutViewModel(this)));
+
             // Device collection projection for UI
-            devicesStore
+            _devicesStore
                 .Connect()
                 .Sort(SortExpressionComparer<Device>.Descending(device => device.DateAdded))
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out devicesReadOnly)
+                .Bind(out _devicesReadOnly)
                 .Subscribe();
 
             // Testing
             // Dummy data population
-            PopulateDummyData(devicesStore);
+            PopulateDummyData(_devicesStore);
         }
 
         #endregion
