@@ -7,12 +7,13 @@ using NetStalkerAvalonia.Services.Implementations.DeviceNameResolving;
 using NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification;
 using NetStalkerAvalonia.Services.Implementations.Notifications;
 using NetStalkerAvalonia.Services.Implementations.Packets;
-using ReactiveUI;
 using Serilog;
 using Splat;
 using System;
 using System.Configuration;
+using System.IO;
 using System.Reflection;
+using ReactiveUI;
 using ILogger = Serilog.ILogger;
 
 namespace NetStalkerAvalonia
@@ -27,47 +28,64 @@ namespace NetStalkerAvalonia
             .StartWithClassicDesktopLifetime(args);
 
         // Avalonia configuration, don't remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
+        private static AppBuilder BuildAvaloniaApp()
         {
             // Router uses Splat.Locator to resolve views for
             // view models, so we need to register our views.
-            //
             Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetExecutingAssembly());
 
             // Configure logging
-            ConfigureLogging();
+            ConfigureAndRegisterLogging();
 
             // Register app services
             RegisterRequiredServices();
 
             return AppBuilder.Configure<App>()
-                 .UsePlatformDetect()
-                 .LogToTrace()
-                 .UseReactiveUI();
+                .UsePlatformDetect()
+                .LogToTrace()
+                .UseReactiveUI();
         }
 
-        private static void ConfigureLogging()
+        private static void ConfigureAndRegisterLogging()
         {
             var log = new LoggerConfiguration()
-                                .WriteTo.Console()
-                                .WriteTo.File(Assembly.GetExecutingAssembly().Location, rollingInterval: RollingInterval.Day)
-                                .CreateLogger();
+                .WriteTo.Console()
+                .WriteTo.File(Path.Combine(Assembly.GetExecutingAssembly().Location, "log.txt"),
+                    rollingInterval: RollingInterval.Day)
+                .CreateLogger();
 
-            Locator.CurrentMutable.Register<ILogger>(() => log);
+            Locator.CurrentMutable.RegisterLazySingleton(() => log, typeof(ILogger));
         }
 
         private static void RegisterRequiredServices()
         {
-            Locator.CurrentMutable.Register<IBandwidthController>(() => new BandwidthController());
-            Locator.CurrentMutable.Register<IBlockerRedirector>(() => new BlockerRedirector());
-            Locator.CurrentMutable.Register<IDeviceNameResolver>(() => new DeviceNameResolver());
-            Locator.CurrentMutable.Register<IDeviceTypeIdentifier>(() => new DeviceTypeIdentifier());
+            Locator.CurrentMutable.RegisterLazySingleton(() =>
+                    new BandwidthController(),
+                typeof(IBandwidthController));
 
+            Locator.CurrentMutable.RegisterLazySingleton(() =>
+                    new BlockerRedirector(),
+                typeof(IBlockerRedirector));
+
+            Locator.CurrentMutable.RegisterLazySingleton(() =>
+                    new DeviceNameResolver(),
+                typeof(IDeviceNameResolver));
+
+            Locator.CurrentMutable.RegisterLazySingleton(() =>
+                    new DeviceTypeIdentifier(),
+                typeof(IDeviceTypeIdentifier));
+
+            // Read from app configuration
             var notificationOptions = ConfigurationManager.GetSection("Notifications") as NotificationOptions
                                       ?? new NotificationOptions();
 
-            Locator.CurrentMutable.Register<INotificationManager>(() => new NotificationManager(notificationOptions));
-            Locator.CurrentMutable.Register<IPacketManager>(() => new PacketManager());
+            Locator.CurrentMutable.RegisterLazySingleton(() =>
+                    new NotificationManager(notificationOptions),
+                typeof(INotificationManager));
+
+            Locator.CurrentMutable.RegisterLazySingleton(() =>
+                    new PacketManager(),
+                typeof(IPacketManager));
         }
     }
 }
