@@ -1,0 +1,42 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="NetStalkerAvalonia.Views.AdapterSelectWindow"
+        Title="Adapter Select">
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock>Network Adapter</TextBlock>
+            <ComboBox PlaceholderText="Select an adapter"></ComboBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock>Network Adapter</TextBlock>
+            <TextBlock>Value</TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock>Network Adapter</TextBlock>
+            <TextBlock>Value</TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock>Network Adapter</TextBlock>
+            <TextBlock>Value</TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock>Network Adapter</TextBlock>
+            <TextBlock>Value</TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock>Network Adapter</TextBlock>
+            <TextBlock>Value</TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock>Network Adapter</TextBlock>
+            <TextBlock>Value</TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Quit" Command="{Binding Exit}"></Button>
+            <Button Content="Ok"></Button>
+        </StackPanel>
+    </StackPanel>
+</Window>

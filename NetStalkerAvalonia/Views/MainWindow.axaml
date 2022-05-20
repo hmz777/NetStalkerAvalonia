@@ -8,7 +8,6 @@
         xmlns:rvws="using:NetStalkerAvalonia.Views.RoutedViews"
         mc:Ignorable="d"
         x:Class="NetStalkerAvalonia.Views.MainWindow"
-        Name="mainWindow"
         Title="NetStalkerAvalonia">
 
     <Design.DataContext>

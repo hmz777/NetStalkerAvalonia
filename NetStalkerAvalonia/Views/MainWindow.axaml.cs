@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using NetStalkerAvalonia.ViewModels;
@@ -9,7 +10,13 @@ namespace NetStalkerAvalonia.Views
     {
         public MainWindow()
         {
-            this.WhenActivated(disposables => { });
+            this.WhenActivated(disposables =>
+            {
+                var adapterSelect = new AdapterSelectWindow();
+                adapterSelect.DataContext = new AdapterSelectViewModel();
+                adapterSelect.ShowDialog(this);
+            });
+
             AvaloniaXamlLoader.Load(this);
         }
     }
