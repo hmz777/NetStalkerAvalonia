@@ -1,10 +1,10 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using System;
+using NetStalkerAvalonia.Models;
 
 namespace NetStalkerAvalonia.Services
 {
-    public interface IBlockerRedirector
+    public interface IBlockerRedirector : IDisposable
     {
-        void Destroy();
         void Block(Device device);
         void UnBlock(Device device);
         void Redirect(Device device);
