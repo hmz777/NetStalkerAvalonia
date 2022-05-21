@@ -1,3 +1,5 @@
+using System;
+using System.Net;
 using Splat;
 
 namespace NetStalkerAvalonia.Helpers;
@@ -9,6 +11,22 @@ public class Tools
         if (dependency != null)
             return dependency;
 
-        return Locator.Current.GetService<T>()!;
+        dependency = Locator.Current.GetService<T>()!;
+
+        if (dependency == null)
+        {
+            throw new Exception(string.Format("The dependency locator returned null of type {0}.", typeof(T)));
+        }
+
+        return dependency;
+    }
+
+    public static string GetRootIp(IPAddress ipaddress)
+    {
+        ArgumentNullException.ThrowIfNull(ipaddress);
+
+        var ipaddressstring = ipaddress.ToString();
+        return ipaddressstring
+            .Substring(0, ipaddressstring.LastIndexOf(".", StringComparison.InvariantCultureIgnoreCase) + 1);
     }
 }
