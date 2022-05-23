@@ -1,9 +1,7 @@
-using System.Net.Mime;
 using System.Reactive;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
-using SkiaSharp;
 
 namespace NetStalkerAvalonia.ViewModels;
 

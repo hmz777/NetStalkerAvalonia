@@ -13,7 +13,6 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Reactive;
 using System.Reactive.Linq;
-using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Services;
 
 namespace NetStalkerAvalonia.ViewModels
