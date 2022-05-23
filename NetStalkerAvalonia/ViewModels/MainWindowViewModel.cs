@@ -20,9 +20,7 @@ namespace NetStalkerAvalonia.ViewModels
     public class MainWindowViewModel : ViewModelBase, IScreen
     {
         #region Members
-
-        private readonly IBlockerRedirector _redirector;
-
+        
         #endregion
 
         #region Routing
@@ -56,11 +54,10 @@ namespace NetStalkerAvalonia.ViewModels
         #endregion
 
         #region Devices List
-
-        // The data store for devices
-        private readonly SourceCache<Device, string> _devicesStore = new(device => device.Mac!.ToString());
+        
 
         // Collection projected from source for UI
+        // TODO: Bind this collection from the scanner service's device store
         private readonly ReadOnlyObservableCollection<Device> _devicesReadOnly;
 
         // Accessor to expose the UI device list
@@ -79,10 +76,9 @@ namespace NetStalkerAvalonia.ViewModels
 
         #region Constructor
 
-        public MainWindowViewModel(IBlockerRedirector redirector = null!)
+        public MainWindowViewModel()
         {
-            // Resolve dependencies
-            // _redirector = Tools.ResolveIfNull<IBlockerRedirector>(redirector);
+            // Resolve dependencies here
 
             // Info wiring
             _pageTitle = this.WhenAnyObservable(x => x.Router.CurrentViewModel)
@@ -110,16 +106,16 @@ namespace NetStalkerAvalonia.ViewModels
                 () => Router.Navigate.Execute(new AboutViewModel(this)));
 
             // Device collection projection for UI
-            _devicesStore
-                .Connect()
-                .Sort(SortExpressionComparer<Device>.Descending(device => device.DateAdded))
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(out _devicesReadOnly)
-                .Subscribe();
+            // _devicesStore
+            //     .Connect()
+            //     .Sort(SortExpressionComparer<Device>.Descending(device => device.DateAdded))
+            //     .ObserveOn(RxApp.MainThreadScheduler)
+            //     .Bind(out _devicesReadOnly)
+            //     .Subscribe();
 
             // Testing
             // Dummy data population
-            PopulateDummyData(_devicesStore);
+            // PopulateDummyData(_devicesStore);
         }
 
         #endregion
