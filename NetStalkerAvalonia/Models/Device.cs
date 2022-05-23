@@ -32,6 +32,7 @@ namespace NetStalkerAvalonia.Models
         public DateTime DateAdded { get; }
         public long BytesSentSinceLastReset { get; private set; }
         public long BytesReceivedSinceLastReset { get; private set; }
+        public DateTime TimeSinceLastArp { get; private set; }
 
         #endregion
 
@@ -46,6 +47,7 @@ namespace NetStalkerAvalonia.Models
         public void SetUpload(int upload) => Upload = upload;
         public void SetSentBytes(long bytes) => BytesSentSinceLastReset += bytes;
         public void SetReceivedBytes(long bytes) => BytesReceivedSinceLastReset += bytes;
+        public void UpdateLastArpTime() => TimeSinceLastArp = DateTime.Now;
 
         public bool IsGateway() => Mac.Equals(HostInfo.GatewayMac);
         public bool IsLocalDevice() => Mac.Equals(HostInfo.HostMac);
