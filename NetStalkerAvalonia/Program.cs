@@ -40,6 +40,9 @@ namespace NetStalkerAvalonia
             // Register app services
             RegisterRequiredServices();
 
+            // Read App Configuration
+            ReadAppConfiguration();
+
             return AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()
@@ -86,6 +89,11 @@ namespace NetStalkerAvalonia
             Locator.CurrentMutable.RegisterLazySingleton(() =>
                     new PacketManager(),
                 typeof(IPacketManager));
+        }
+
+        private static void ReadAppConfiguration()
+        {
+            // TODO: Read app config from file to ApplicationConfiguration
         }
     }
 }
