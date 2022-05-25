@@ -28,6 +28,7 @@ namespace NetStalkerAvalonia.Models
         public int Download { get; private set; }
         public int Upload { get; private set; }
         public string? Name { get; private set; }
+        public string? Vendor { get; private set; }
         public DeviceType Type { get; private set; }
         public DateTime DateAdded { get; }
         public long BytesSentSinceLastReset { get; private set; }
@@ -39,12 +40,13 @@ namespace NetStalkerAvalonia.Models
         #region Methods
 
         public void SetFriendlyName(string name) => Name = name;
+        public void SetVendor(string vendor) => Vendor = vendor;
         public void Block() => Blocked = true;
         public void UnBlock() => Blocked = false;
         public void Redirect() => Redirected = true;
         public void UnRedirect() => Redirected = false;
-        public void SetDownload(int download) => Download = download;
-        public void SetUpload(int upload) => Upload = upload;
+        public void SetDownload(int download) => Download = download * 1024;
+        public void SetUpload(int upload) => Upload = upload * 1024;
         public void SetSentBytes(long bytes) => BytesSentSinceLastReset += bytes;
         public void SetReceivedBytes(long bytes) => BytesReceivedSinceLastReset += bytes;
         public void UpdateLastArpTime() => TimeSinceLastArp = DateTime.Now;
