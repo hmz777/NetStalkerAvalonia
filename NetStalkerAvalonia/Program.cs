@@ -12,7 +12,9 @@ using Splat;
 using System;
 using System.Configuration;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
+using NetStalkerAvalonia.Configuration;
 using ReactiveUI;
 using ILogger = Serilog.ILogger;
 
@@ -39,9 +41,6 @@ namespace NetStalkerAvalonia
 
             // Register app services
             RegisterRequiredServices();
-
-            // Read App Configuration
-            ReadAppConfiguration();
 
             return AppBuilder.Configure<App>()
                 .UsePlatformDetect()
@@ -74,10 +73,6 @@ namespace NetStalkerAvalonia
                     new DeviceNameResolver(),
                 typeof(IDeviceNameResolver));
 
-            Locator.CurrentMutable.RegisterLazySingleton(() =>
-                    new DeviceTypeIdentifier(),
-                typeof(IDeviceTypeIdentifier));
-
             // Read from app configuration
             var notificationOptions = ConfigurationManager.GetSection("Notifications") as NotificationOptions
                                       ?? new NotificationOptions();
@@ -89,11 +84,28 @@ namespace NetStalkerAvalonia
             Locator.CurrentMutable.RegisterLazySingleton(() =>
                     new PacketManager(),
                 typeof(IPacketManager));
-        }
 
-        private static void ReadAppConfiguration()
-        {
-            // TODO: Read app config from file to ApplicationConfiguration
+            var macLookupApiToken = ConfigurationManager
+                .AppSettings[nameof(ConfigKeys.ApiKey)];
+            var macLookupServiceUri = ConfigurationManager
+                .AppSettings[nameof(ConfigKeys.MacLookupServiceUri)];
+
+            if (string.IsNullOrWhiteSpace(macLookupApiToken) == false &&
+                string.IsNullOrWhiteSpace(macLookupServiceUri) == false)
+            {
+                Locator.CurrentMutable.RegisterLazySingleton(() =>
+                {
+                    var client = new HttpClient();
+                    client.DefaultRequestHeaders.Add("Authorization",
+                        "Bearer " + ConfigurationManager.AppSettings[nameof(ConfigKeys.ApiKey)]);
+
+                    return client;
+                }, contract: nameof(ContractKeys.MacLookupClient));
+
+                Locator.CurrentMutable.RegisterLazySingleton(() =>
+                        new DeviceTypeIdentifier(),
+                    typeof(IDeviceTypeIdentifier));
+            }
         }
     }
 }
