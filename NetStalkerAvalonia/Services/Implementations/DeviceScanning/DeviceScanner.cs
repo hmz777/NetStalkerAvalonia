@@ -6,6 +6,7 @@ using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
 using PacketDotNet;
 using ReactiveUI;
+using Serilog;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using Timer = System.Threading.Timer;
@@ -17,29 +18,49 @@ public class DeviceScanner : IDeviceScanner
     #region Members
 
     private CancellationTokenSource? _cancellationTokenSource;
-    private bool _isStarted;
     private LibPcapLiveDevice? _device;
     private Timer? _discoveryTimer;
 
-    private IDeviceNameResolver? _deviceNameResolver;
-    private IDeviceTypeIdentifier? _deviceTypeIdentifier;
+    private readonly ILogger? _logger;
+    private readonly IDeviceNameResolver? _deviceNameResolver;
+    private readonly IDeviceTypeIdentifier? _deviceTypeIdentifier;
 
     // This is the original source of clients and all other collections are projections from this
     private SourceCache<Device, string> _clients = new(x => x.Mac!.ToString());
 
     #endregion
 
+    #region Properties
+
+    public bool IsStarted { get; private set; }
+
+    #endregion
+
     #region Constructor
 
     public DeviceScanner(
-        IDeviceNameResolver deviceNameResolver,
-        IDeviceTypeIdentifier deviceTypeIdentifier)
+        IDeviceNameResolver? deviceNameResolver = null!,
+        IDeviceTypeIdentifier? deviceTypeIdentifier = null!,
+        ILogger? logger = null!)
     {
-        _deviceNameResolver = Tools.ResolveIfNull(deviceNameResolver);
-        _deviceTypeIdentifier = Tools.ResolveIfNull(deviceTypeIdentifier);
+        _logger = Tools.ResolveIfNull(logger);
+
+        try
+        {
+            _deviceNameResolver = Tools.ResolveIfNull(deviceNameResolver);
+            _deviceTypeIdentifier = Tools.ResolveIfNull(deviceTypeIdentifier);
+        }
+        catch (Exception e)
+        {
+            _logger!.Warning("Service resolve error: {Message}",
+                e.Message);
+        }
 
         Init();
         SetupBindings();
+
+        _logger!.Information("Service of type: {Type}, initialized",
+            typeof(IDeviceScanner));
     }
 
     #endregion
@@ -51,7 +72,7 @@ public class DeviceScanner : IDeviceScanner
         if (_device == null)
         {
             _device = (LibPcapLiveDevice)CaptureDeviceList.New()[HostInfo.NetworkAdapterName];
-            _device.Open(DeviceModes.Promiscuous, 1000);
+            _device.Open(DeviceModes.Promiscuous);
             _device.Filter = "arp";
 
             // The state parameter here doesn't matter since we're initializing the timer
@@ -98,7 +119,7 @@ public class DeviceScanner : IDeviceScanner
 
     private void StartMonitoring()
     {
-        _device!.OnPacketArrival += (object sender, PacketCapture e) =>
+        _device!.OnPacketArrival += (_, e) =>
         {
             if (_cancellationTokenSource?.IsCancellationRequested == false)
                 ProcessPacket(e);
@@ -109,6 +130,9 @@ public class DeviceScanner : IDeviceScanner
 
         // Start receiving packets
         _device.StartCapture();
+
+        _logger!.Information("Service of type: {Type}, started",
+            typeof(IDeviceScanner));
     }
 
     private void ProbeDevices()
@@ -158,7 +182,7 @@ public class DeviceScanner : IDeviceScanner
             _deviceNameResolver?.GetDeviceName(client.Value);
 
             // Get vendor info for current target
-            _deviceTypeIdentifier?.IdentifyDevice(client.Value);
+            _deviceTypeIdentifier?.IdentifyDeviceAsync(client.Value);
         }
         else
         {
@@ -190,17 +214,23 @@ public class DeviceScanner : IDeviceScanner
 
     public void Scan()
     {
-        if (_isStarted == false)
+        if (IsStarted == false)
         {
             StartMonitoring();
         }
+
+        _logger!.Information("Service of type: {Type}, started",
+            typeof(IDeviceScanner));
     }
 
     public void Stop()
     {
         _cancellationTokenSource?.Cancel();
-        _isStarted = false;
+        IsStarted = false;
         _device?.StopCapture();
+
+        _logger!.Information("Service of type: {Type}, stopped",
+            typeof(IDeviceScanner));
     }
 
     public void Dispose()
@@ -215,6 +245,9 @@ public class DeviceScanner : IDeviceScanner
             _cancellationTokenSource?.Dispose();
             _cancellationTokenSource = null;
         }
+
+        _logger!.Information("Service of type: {Type}, disposed",
+            typeof(IDeviceScanner));
     }
 
     #endregion
