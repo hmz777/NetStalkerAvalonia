@@ -4,6 +4,6 @@ namespace NetStalkerAvalonia.Services
 {
     public interface IDeviceNameResolver
     {
-        string GetDeviceName(Device device);
+        void GetDeviceName(Device device);
     }
 }

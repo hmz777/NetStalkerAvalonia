@@ -5,7 +5,7 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
 {
     public class DeviceNameResolver : IDeviceNameResolver
     {
-        public string GetDeviceName(Device device)
+        public void GetDeviceName(Device device)
         {
             throw new NotImplementedException();
         }
