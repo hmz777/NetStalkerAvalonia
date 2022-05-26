@@ -1,13 +1,16 @@
 ﻿using NetStalkerAvalonia.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DynamicData;
 using NetStalkerAvalonia.Configuration;
+using NetStalkerAvalonia.Helpers;
 using PacketDotNet;
 using ReactiveUI;
+using Serilog;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
@@ -23,14 +26,21 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
         private ReadOnlyObservableCollection<Device>? _clients;
 
+        private readonly ILogger? _logger;
+
         #endregion
 
         #region Constructor
 
-        public BlockerRedirector()
+        public BlockerRedirector(ILogger logger = null!)
         {
+            _logger = Tools.ResolveIfNull(logger);
+
             InitDevice();
             BindClients();
+
+            _logger.Information("Service of type: {Type}, initialized",
+                typeof(IBlockerRedirector));
         }
 
         #endregion
@@ -135,6 +145,10 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                     _isStarted = true;
                 }
             }
+
+
+            _logger!.Information("Service of type: {Type}, started",
+                typeof(IBlockerRedirector));
         }
 
         private void SpoofClients()
@@ -146,7 +160,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                     && client.IsGateway() == false)
                 {
                     ConstructAndSendArp(client, ArpPacketType.Spoof);
-                    if (ApplicationConfiguration.SpoofProtection)
+                    if ((bool)ConfigurationManager
+                            .GetSection(nameof(ConfigKeys.SpoofProtection)))
                         ConstructAndSendArp(client, ArpPacketType.Protection);
                 }
             }
@@ -234,6 +249,9 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                 // If no clients have active blocking or redirection we pause the service 
                 // so we don't do extra work on idle
                 Stop();
+
+                _logger!.Information("Service of type: {Type}, paused",
+                    typeof(IBlockerRedirector));
             }
         }
 
@@ -242,6 +260,9 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             _cancellationTokenSource?.Cancel();
             _isStarted = false;
             _device?.StopCapture();
+
+            _logger!.Information("Service of type: {Type}, stopped",
+                typeof(IBlockerRedirector));
         }
 
         #endregion
@@ -252,24 +273,44 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
         {
             device.Block();
             Start();
+
+            _logger!.Information("Service of type: {Type}, Block device with MAC:{Mac} - IP:{Ip}",
+                typeof(IBlockerRedirector),
+                device.Mac,
+                device.IP);
         }
 
         public void Redirect(Device device)
         {
             device.Redirect();
             Start();
+
+            _logger!.Information("Service of type: {Type}, Redirect device with MAC:{Mac} - IP:{Ip}",
+                typeof(IBlockerRedirector),
+                device.Mac,
+                device.IP);
         }
 
         public void UnBlock(Device device)
         {
             device.UnBlock();
             Pause();
+
+            _logger!.Information("Service of type: {Type}, Unblock device with MAC:{Mac} - IP:{Ip}",
+                typeof(IBlockerRedirector),
+                device.Mac,
+                device.IP);
         }
 
         public void UnRedirect(Device device)
         {
             device.UnRedirect();
             Pause();
+
+            _logger!.Information("Service of type: {Type}, Unredirect device with MAC:{Mac} - IP:{Ip}",
+                typeof(IBlockerRedirector),
+                device.Mac,
+                device.IP);
         }
 
         public void Dispose()
@@ -285,6 +326,9 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                 _cancellationTokenSource?.Dispose();
                 _cancellationTokenSource = null;
             }
+
+            _logger!.Information("Service of type: {Type}, disposed",
+                typeof(IBlockerRedirector));
         }
 
         #endregion
