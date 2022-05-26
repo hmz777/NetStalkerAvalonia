@@ -1,9 +1,11 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using System;
+using System.Threading.Tasks;
+using NetStalkerAvalonia.Models;
 
 namespace NetStalkerAvalonia.Services
 {
-    public interface IDeviceTypeIdentifier
+    public interface IDeviceTypeIdentifier : IDisposable
     {
-        DeviceType IdentifyDevice(Device device);
+        Task IdentifyDeviceAsync(Device device);
     }
 }
