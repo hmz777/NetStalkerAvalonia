@@ -7,17 +7,24 @@ namespace NetStalkerAvalonia.Services.Implementations.BandwidthControl
     {
         public void Limit(Device device, int download, int upload)
         {
-            throw new NotImplementedException();
+            device.SetDownload(download);
+            device.SetUpload(upload);
+        }
+
+        public void UnlockLimitation(Device device)
+        {
+            device.SetDownload(0);
+            device.SetUpload(0);
         }
 
         public void UnlockDownloadLimitation(Device device)
         {
-            throw new NotImplementedException();
+            device.SetDownload(0);
         }
 
         public void UnlockUploadLimitation(Device device)
         {
-            throw new NotImplementedException();
+            device.SetUpload(0);
         }
     }
 }
