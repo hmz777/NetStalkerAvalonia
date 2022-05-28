@@ -1,0 +1,20 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="Window">
+        <!--<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>-->
+        <!--<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>-->
+        <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
+        <Setter Property="Background" Value="{Binding Theme.WindowBackground}" />
+        <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+        <Setter Property="Icon" Value="/Assets/avalonia-logo.ico" />
+    </Style>
+    <Style Selector="Window">
+        <Setter Property="FontFamily" Value="{Binding Theme.FontFamily}" />
+    </Style>
+</Styles>
