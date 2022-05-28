@@ -27,7 +27,7 @@ namespace NetStalkerAvalonia.ViewModels
 
         // The Router associated with this Screen.
         // Required by the IScreen interface.
-        public RoutingState Router { get; } = new RoutingState();
+        public RoutingState Router { get; } = new();
 
         // Commands to navigate the different views
         // public ReactiveCommand<Unit, IRoutableViewModel>? GoToHome { get; }
