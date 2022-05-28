@@ -15,15 +15,10 @@
     </Design.DataContext>
 
     <Window.Styles>
+        <StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
         <Style Selector="Window">
-            <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
-            <Setter Property="Background" Value="{Binding Theme.WindowBackground}" />
-            <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
-            <!--<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>-->
-            <!--<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>-->
             <Setter Property="Width" Value="{Binding Theme.WindowWidth}" />
             <Setter Property="Height" Value="{Binding Theme.WindowHeight}" />
-            <Setter Property="Icon" Value="/Assets/avalonia-logo.ico" />
         </Style>
         <Style Selector="Window">
             <Setter Property="FontFamily" Value="{Binding Theme.FontFamily}" />
@@ -37,7 +32,7 @@
     </Window.Styles>
 
     <Grid HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch" RowDefinitions="auto,*">
+          VerticalAlignment="Stretch" RowDefinitions="Auto,*">
         <cmpts:PageTitle Grid.Row="0" Text="{Binding PageTitle}" />
         <rxui:RoutedViewHost
             Router="{Binding Router}"
