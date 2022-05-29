@@ -20,5 +20,8 @@
         public static string ListRowSelectedBackColor => "Teal";
         public static string ListColumnHeaderBackColor => "#2C2C2C";
         public static string FontFamily => "Verdana";
+        public static string PagePadding => "15";
+        public static string DialogButtonWidth => "60";
+        public static string DialogButtonHeight => "35";
     }
 }
