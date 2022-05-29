@@ -2,41 +2,109 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cmpts="using:NetStalkerAvalonia.Components"
+        xmlns:vm="using:NetStalkerAvalonia.ViewModels"
         mc:Ignorable="d"
         x:Class="NetStalkerAvalonia.Views.AdapterSelectWindow"
         Title="Adapter Select">
-    <StackPanel Orientation="Vertical">
-        <StackPanel Orientation="Horizontal">
-            <TextBlock>Network Adapter</TextBlock>
-            <ComboBox PlaceholderText="Select an adapter"></ComboBox>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock>Network Adapter</TextBlock>
-            <TextBlock>Value</TextBlock>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock>Network Adapter</TextBlock>
-            <TextBlock>Value</TextBlock>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock>Network Adapter</TextBlock>
-            <TextBlock>Value</TextBlock>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock>Network Adapter</TextBlock>
-            <TextBlock>Value</TextBlock>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock>Network Adapter</TextBlock>
-            <TextBlock>Value</TextBlock>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock>Network Adapter</TextBlock>
-            <TextBlock>Value</TextBlock>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="Quit" Command="{Binding Exit}"></Button>
-            <Button Content="Ok"></Button>
-        </StackPanel>
-    </StackPanel>
+
+    <Design.DataContext>
+        <vm:AdapterSelectViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
+        <Style Selector="Window">
+            <Setter Property="ExtendClientAreaChromeHints" Value="NoChrome" />
+            <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1" />
+            <Setter Property="Width" Value="450" />
+            <Setter Property="CanResize" Value="False" />
+            <Setter Property="WindowStartupLocation" Value="CenterOwner" />
+            <Setter Property="SizeToContent" Value="Height" />
+        </Style>
+        <Style Selector="Grid > Border">
+            <Setter Property="Padding" Value="15" />
+        </Style>
+        <Style Selector="DockPanel.horizontalPanel">
+            <Setter Property="Margin" Value="0,0,0,20" />
+        </Style>
+        <Style Selector="DockPanel.horizontalPanel > TextBlock">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="DockPanel.horizontalPanel > TextBlock:nth-child(2)">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="DockPanel.horizontalPanel > ComboBox">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Width" Value="210" />
+        </Style>
+    </Window.Styles>
+
+    <Window.Resources>
+        <ControlTemplate x:Key="BigBtn" TargetType="Button">
+            <Border Padding="20,10,20,10"
+                    BorderBrush="White">
+                <TextBlock Text="{TemplateBinding Content}" />
+            </Border>
+        </ControlTemplate>
+    </Window.Resources>
+
+    <Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          RowDefinitions="Auto,*">
+        <cmpts:PageTitle VerticalAlignment="Stretch" Grid.Row="0" Text="{Binding $parent[Window].Title}" />
+        <Border Grid.Row="1">
+            <StackPanel>
+                <DockPanel Classes="horizontalPanel">
+                    <TextBlock>Network Adapter</TextBlock>
+                    <ComboBox PlaceholderText="Select an adapter"></ComboBox>
+                </DockPanel>
+                <DockPanel Classes="horizontalPanel">
+                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>Value</TextBlock>
+                </DockPanel>
+                <DockPanel Classes="horizontalPanel">
+                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>Value</TextBlock>
+                </DockPanel>
+                <DockPanel Classes="horizontalPanel">
+                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>Value</TextBlock>
+                </DockPanel>
+                <DockPanel Classes="horizontalPanel">
+                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>Value</TextBlock>
+                </DockPanel>
+                <DockPanel Classes="horizontalPanel">
+                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>Value</TextBlock>
+                </DockPanel>
+                <DockPanel Classes="horizontalPanel">
+                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>Value</TextBlock>
+                </DockPanel>
+                <DockPanel HorizontalAlignment="Stretch"
+                           VerticalAlignment="Bottom"
+                           LastChildFill="False">
+                    <Button Width="{Binding Theme.DialogButtonWidth}"
+                            Height="{Binding Theme.DialogButtonHeight}"
+                            Content="Ok"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            DockPanel.Dock="Right"
+                            Margin="15,0,0,0" />
+                    <Button HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Width="{Binding Theme.DialogButtonWidth}"
+                            Height="{Binding Theme.DialogButtonHeight}"
+                            Content="Quit"
+                            Command="{Binding Exit}"
+                            DockPanel.Dock="Right" />
+                </DockPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
 </Window>
