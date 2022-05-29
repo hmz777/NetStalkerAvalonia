@@ -32,8 +32,9 @@
     </Window.Styles>
 
     <Grid HorizontalAlignment="Stretch"
-          VerticalAlignment="Stretch" RowDefinitions="Auto,*">
-        <cmpts:PageTitle Grid.Row="0" Text="{Binding PageTitle}" />
+          VerticalAlignment="Stretch"
+          RowDefinitions="Auto,*">
+        <cmpts:PageTitle VerticalAlignment="Stretch" Grid.Row="0" Text="{Binding PageTitle}" />
         <rxui:RoutedViewHost
             Router="{Binding Router}"
             VerticalAlignment="Stretch"
