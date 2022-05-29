@@ -3,18 +3,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-			 xmlns:cmpts="using:NetStalkerAvalonia.Components"
              x:Class="NetStalkerAvalonia.Components.PageTitle">
-	<Border Margin="15,30,15,15">
-		<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-			<Button Command="{Binding GoBackHandler}" IsVisible="{Binding CanGoBack}"
-					Background="Transparent">
-				<Image Source="/Assets/NavIcons/back.png"/>
-			</Button>
-			<TextBlock Text="{Binding $parent[UserControl].Text}"
-			   Foreground="{Binding Theme.PageTitleColor}"
-			   FontSize="{Binding Theme.PageTitleSize}"
-			   Margin="5,0,0,0"/>
-		</StackPanel>
-	</Border>
+    <Border Margin="0,40,0,10">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Command="{Binding GoBackHandler}" IsVisible="{Binding CanGoBack, FallbackValue=false}"
+                    Background="Transparent"
+                    Margin="10,0,0,0">
+                <Image Source="/Assets/NavIcons/back.png" />
+            </Button>
+            <TextBlock Text="{Binding $parent[UserControl].Text}"
+                       Foreground="{Binding Theme.PageTitleColor}"
+                       FontSize="{Binding Theme.PageTitleSize}"
+                       Margin="10,0,0,0" />
+        </StackPanel>
+    </Border>
 </UserControl>
