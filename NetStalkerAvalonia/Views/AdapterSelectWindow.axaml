@@ -22,9 +22,6 @@
             <Setter Property="WindowStartupLocation" Value="CenterOwner" />
             <Setter Property="SizeToContent" Value="Height" />
         </Style>
-        <Style Selector="Grid > Border">
-            <Setter Property="Padding" Value="15" />
-        </Style>
         <Style Selector="DockPanel.horizontalPanel">
             <Setter Property="Margin" Value="0,0,0,20" />
         </Style>
@@ -56,34 +53,34 @@
           VerticalAlignment="Stretch"
           RowDefinitions="Auto,*">
         <cmpts:PageTitle VerticalAlignment="Stretch" Grid.Row="0" Text="{Binding $parent[Window].Title}" />
-        <Border Grid.Row="1">
+        <Border Grid.Row="1" Padding="15">
             <StackPanel>
                 <DockPanel Classes="horizontalPanel">
-                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>Network Adapter:</TextBlock>
                     <ComboBox PlaceholderText="Select an adapter"></ComboBox>
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
-                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>NIC Type:</TextBlock>
                     <TextBlock>Value</TextBlock>
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
-                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>IP Address:</TextBlock>
                     <TextBlock>Value</TextBlock>
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
-                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>MAC Address:</TextBlock>
                     <TextBlock>Value</TextBlock>
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
-                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>Gateway:</TextBlock>
                     <TextBlock>Value</TextBlock>
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
-                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>Network SSID:</TextBlock>
                     <TextBlock>Value</TextBlock>
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
-                    <TextBlock>Network Adapter</TextBlock>
+                    <TextBlock>Driver Version:</TextBlock>
                     <TextBlock>Value</TextBlock>
                 </DockPanel>
                 <DockPanel HorizontalAlignment="Stretch"
@@ -95,7 +92,9 @@
                             HorizontalContentAlignment="Center"
                             VerticalContentAlignment="Center"
                             DockPanel.Dock="Right"
-                            Margin="15,0,0,0" />
+                            Margin="15,0,0,0"
+                            Command="{Binding Accept}"
+                            CommandParameter="{Binding $parent[Window]}"/>
                     <Button HorizontalContentAlignment="Center"
                             VerticalContentAlignment="Center"
                             Width="{Binding Theme.DialogButtonWidth}"
