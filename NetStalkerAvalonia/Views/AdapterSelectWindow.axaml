@@ -72,7 +72,7 @@
                     <TextBlock>Value</TextBlock>
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
-                    <TextBlock>Gateway:</TextBlock>
+                    <TextBlock>Gateway IP:</TextBlock>
                     <TextBlock>Value</TextBlock>
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
@@ -94,7 +94,7 @@
                             DockPanel.Dock="Right"
                             Margin="15,0,0,0"
                             Command="{Binding Accept}"
-                            CommandParameter="{Binding $parent[Window]}"/>
+                            CommandParameter="{Binding $parent[Window]}" />
                     <Button HorizontalContentAlignment="Center"
                             VerticalContentAlignment="Center"
                             Width="{Binding Theme.DialogButtonWidth}"
