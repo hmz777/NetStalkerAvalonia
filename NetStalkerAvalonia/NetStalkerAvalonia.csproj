@@ -39,6 +39,7 @@
 		<PackageReference Include="DynamicData" Version="7.7.14" />
 		<PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
 		<PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
+		<PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.22000.196" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="SharpPcap" Version="6.2.1" />
