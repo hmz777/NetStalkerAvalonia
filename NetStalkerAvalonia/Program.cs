@@ -15,6 +15,7 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using NetStalkerAvalonia.Configuration;
+using NetStalkerAvalonia.Services.Implementations.DeviceScanning;
 using ReactiveUI;
 using ILogger = Serilog.ILogger;
 
@@ -61,6 +62,10 @@ namespace NetStalkerAvalonia
 
         private static void RegisterRequiredServices()
         {
+            Locator.CurrentMutable.RegisterLazySingleton(() =>
+                    new DeviceScanner(),
+                typeof(IDeviceScanner));
+
             Locator.CurrentMutable.RegisterLazySingleton(() =>
                     new BandwidthController(),
                 typeof(IBandwidthController));
