@@ -21,7 +21,7 @@ namespace NetStalkerAvalonia
             {
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = new MainWindowViewModel()
                 };
 
                 desktop.ShutdownRequested += Desktop_ShutdownRequested;
