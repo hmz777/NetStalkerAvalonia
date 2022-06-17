@@ -51,7 +51,11 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
         {
             if (_device == null)
             {
-                _device = (LibPcapLiveDevice)CaptureDeviceList.New()[HostInfo.NetworkAdapterName];
+                var adapterName = (from devicex in CaptureDeviceList.Instance
+                    where ((LibPcapLiveDevice)devicex).Interface.FriendlyName == HostInfo.NetworkAdapterName
+                    select devicex).ToList()[0].Name;
+
+                _device = (LibPcapLiveDevice)CaptureDeviceList.New()[adapterName];
                 _device.Open(DeviceModes.Promiscuous, 1000);
                 _device.Filter = "ether proto \\ip";
                 _device.OnPacketArrival += DeviceOnOnPacketArrival;
