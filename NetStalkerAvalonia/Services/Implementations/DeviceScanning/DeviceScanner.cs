@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using DynamicData;
@@ -71,7 +72,11 @@ public class DeviceScanner : IDeviceScanner
     {
         if (_device == null)
         {
-            _device = (LibPcapLiveDevice)CaptureDeviceList.New()[HostInfo.NetworkAdapterName];
+            var adapterName = (from devicex in CaptureDeviceList.Instance
+                where ((LibPcapLiveDevice)devicex).Interface.FriendlyName == HostInfo.NetworkAdapterName
+                select devicex).ToList()[0].Name;
+            
+            _device = (LibPcapLiveDevice)CaptureDeviceList.New()[adapterName];
             _device.Open(DeviceModes.Promiscuous);
             _device.Filter = "arp";
 
@@ -83,7 +88,9 @@ public class DeviceScanner : IDeviceScanner
         }
     }
 
-    private void SetupBindings() => MessageBus.Current.RegisterMessageSource(_clients.Connect());
+    private void SetupBindings() => MessageBus
+        .Current
+        .RegisterMessageSource(_clients.Connect());
 
     private void InitOrToggleDiscoveryTimer(bool state)
     {
@@ -217,10 +224,16 @@ public class DeviceScanner : IDeviceScanner
         if (IsStarted == false)
         {
             StartMonitoring();
+            IsStarted = true;
         }
 
         _logger!.Information("Service of type: {Type}, started",
             typeof(IDeviceScanner));
+    }
+
+    public void Refresh()
+    {
+        throw new NotImplementedException();
     }
 
     public void Stop()
