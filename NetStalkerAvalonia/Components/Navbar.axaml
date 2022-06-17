@@ -16,11 +16,14 @@
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal">
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/scan.png"
-							   TextContent="Scan"></cmpts:ImageButton>
+							   TextContent="Scan"
+							   Command="{Binding Scan}"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/refresh.png"
-							   TextContent="Refresh"></cmpts:ImageButton>
+							   TextContent="Refresh"
+							   Command="{Binding Refresh}"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/rules.png"
-							   TextContent="Rules"></cmpts:ImageButton>
+							   TextContent="Rules"
+							   Command="{Binding GoToRules}"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/sniffer.png"
 							   TextContent="Sniffer"
 							   Command="{Binding GoToSniffer}"></cmpts:ImageButton>
@@ -28,9 +31,11 @@
 							   TextContent="Options"
 							   Command="{Binding GoToOptions}"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/help.png"
-							   TextContent="Help"></cmpts:ImageButton>
+							   TextContent="Help"
+							   Command="{Binding GoToHelp}"></cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/about.png"
-							   TextContent="About"></cmpts:ImageButton>
+							   TextContent="About"
+							   Command="{Binding GoToAbout}"></cmpts:ImageButton>
 		</StackPanel>
 	</Border>
 </UserControl>
