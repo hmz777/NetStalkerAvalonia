@@ -13,14 +13,21 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Reactive;
 using System.Reactive.Linq;
+using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Services;
 
 namespace NetStalkerAvalonia.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase, IScreen
     {
-        #region Members
-        
+        #region Services
+
+        private bool _servicesResolved;
+
+        // Required services
+        private IDeviceScanner? _scanner;
+        private IBandwidthController? _bandwidthController;
+
         #endregion
 
         #region Routing
@@ -30,7 +37,6 @@ namespace NetStalkerAvalonia.ViewModels
         public RoutingState Router { get; } = new();
 
         // Commands to navigate the different views
-        // public ReactiveCommand<Unit, IRoutableViewModel>? GoToHome { get; }
         public ReactiveCommand<Unit, IRoutableViewModel>? GoToRules { get; }
         public ReactiveCommand<Unit, IRoutableViewModel>? GoToSniffer { get; }
         public ReactiveCommand<Unit, IRoutableViewModel>? GoToOptions { get; }
@@ -46,6 +52,15 @@ namespace NetStalkerAvalonia.ViewModels
 
         #endregion
 
+        #region Commands
+
+        public ReactiveCommand<Unit, Unit>? Scan { get; }
+        public ReactiveCommand<Unit, Unit>? Refresh { get; }
+        public ReactiveCommand<Device, Unit>? Redirect { get; }
+        public ReactiveCommand<Device, Unit>? Block { get; }
+
+        #endregion
+
         #region UI Info
 
         private readonly ObservableAsPropertyHelper<string> _pageTitle;
@@ -54,11 +69,9 @@ namespace NetStalkerAvalonia.ViewModels
         #endregion
 
         #region Devices List
-        
 
         // Collection projected from source for UI
-        // TODO: Bind this collection from the scanner service's device store
-        private readonly ReadOnlyObservableCollection<Device> _devicesReadOnly;
+        private ReadOnlyObservableCollection<Device> _devicesReadOnly;
 
         // Accessor to expose the UI device list
         public ReadOnlyObservableCollection<Device> Devices => _devicesReadOnly;
@@ -78,14 +91,13 @@ namespace NetStalkerAvalonia.ViewModels
 
         public MainWindowViewModel()
         {
-            // Resolve dependencies here
-
             // Info wiring
             _pageTitle = this.WhenAnyObservable(x => x.Router.CurrentViewModel)
                 .Select(GetPageNameFromViewModel!)
                 .ToProperty(this, x => x.PageTitle);
 
-            // Navigation wiring
+            #region Navigation wiring
+
             _canGoBack = this.WhenAnyValue(x => x.Router.NavigationStack.Count)
                 .Select(count => count > 0)
                 .ToProperty(this, x => x.CanGoBack);
@@ -105,26 +117,75 @@ namespace NetStalkerAvalonia.ViewModels
             GoToAbout = ReactiveCommand.CreateFromObservable(
                 () => Router.Navigate.Execute(new AboutViewModel(this)));
 
-            // Device collection projection for UI
-            // _devicesStore
-            //     .Connect()
-            //     .Sort(SortExpressionComparer<Device>.Descending(device => device.DateAdded))
-            //     .ObserveOn(RxApp.MainThreadScheduler)
-            //     .Bind(out _devicesReadOnly)
-            //     .Subscribe();
+            #endregion
 
-            // Testing
-            // Dummy data population
-            // PopulateDummyData(_devicesStore);
+            // Subscribe to the scanner device stream
+            // to update the UI list
+            MessageBus
+                .Current
+                .Listen<IChangeSet<Device, string>>()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out _devicesReadOnly)
+                .DisposeMany()
+                .Subscribe();
+
+            #region Command wiring
+
+            Scan = ReactiveCommand.Create(ScanForDevices);
+            Refresh = ReactiveCommand.Create(RefreshDevices);
+            Block = ReactiveCommand.Create((Device device) => BlockDevice(device));
+            Redirect = ReactiveCommand.Create((Device device) => RedirectDevice(device));
+
+            #endregion
+        }
+
+        #endregion
+
+        #region Services
+
+        private void ResolveRequiredServices()
+        {
+            // Resolve dependencies here
+            if (_servicesResolved == false)
+            {
+                _scanner = Tools.ResolveIfNull<IDeviceScanner>(null!);
+                _bandwidthController = Tools.ResolveIfNull<IBandwidthController>(null!);
+
+                _servicesResolved = true;
+            }
         }
 
         #endregion
 
         #region Event Handlers
 
-        #region Device List
-
         #endregion
+
+        #region Command Handlers
+
+        private void ScanForDevices()
+        {
+            ResolveRequiredServices();
+
+            _scanner?.Scan();
+        }
+
+        private void RefreshDevices()
+        {
+            ResolveRequiredServices();
+
+            _scanner?.Refresh();
+        }
+
+        private void BlockDevice(Device device)
+        {
+            ResolveRequiredServices();
+        }
+
+        private void RedirectDevice(Device device)
+        {
+            ResolveRequiredServices();
+        }
 
         #endregion
 
