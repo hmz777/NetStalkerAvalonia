@@ -57,31 +57,35 @@
             <StackPanel>
                 <DockPanel Classes="horizontalPanel">
                     <TextBlock>Network Adapter:</TextBlock>
-                    <ComboBox PlaceholderText="Select an adapter"></ComboBox>
+                    <ComboBox
+                        PlaceholderText="Select an adapter"
+                        SelectedItem="{Binding SelectedItem}"
+                        Items="{Binding ComboBoxInterfaceData}">
+                    </ComboBox>
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
                     <TextBlock>NIC Type:</TextBlock>
-                    <TextBlock>Value</TextBlock>
+                    <TextBlock Text="{Binding NicType}" />
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
                     <TextBlock>IP Address:</TextBlock>
-                    <TextBlock>Value</TextBlock>
+                    <TextBlock Text="{Binding IpAddress}" />
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
                     <TextBlock>MAC Address:</TextBlock>
-                    <TextBlock>Value</TextBlock>
+                    <TextBlock Text="{Binding MacAddress}" />
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
                     <TextBlock>Gateway IP:</TextBlock>
-                    <TextBlock>Value</TextBlock>
+                    <TextBlock Text="{Binding GatewayIp}" />
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
                     <TextBlock>Network SSID:</TextBlock>
-                    <TextBlock>Value</TextBlock>
+                    <TextBlock Text="{Binding NetworkSsid}" />
                 </DockPanel>
                 <DockPanel Classes="horizontalPanel">
                     <TextBlock>Driver Version:</TextBlock>
-                    <TextBlock>Value</TextBlock>
+                    <TextBlock Text="{Binding DriverVersion}" />
                 </DockPanel>
                 <DockPanel HorizontalAlignment="Stretch"
                            VerticalAlignment="Bottom"
