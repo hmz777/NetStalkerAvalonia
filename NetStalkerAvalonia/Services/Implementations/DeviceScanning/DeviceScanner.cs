@@ -75,7 +75,7 @@ public class DeviceScanner : IDeviceScanner
             var adapterName = (from devicex in CaptureDeviceList.Instance
                 where ((LibPcapLiveDevice)devicex).Interface.FriendlyName == HostInfo.NetworkAdapterName
                 select devicex).ToList()[0].Name;
-            
+
             _device = (LibPcapLiveDevice)CaptureDeviceList.New()[adapterName];
             _device.Open(DeviceModes.Promiscuous);
             _device.Filter = "arp";
@@ -97,13 +97,12 @@ public class DeviceScanner : IDeviceScanner
         if (_discoveryTimer == null)
         {
             _discoveryTimer = new Timer(DiscoveryTimerOnElapsed, null,
-                Timeout.InfiniteTimeSpan,
-                TimeSpan.FromMilliseconds((int)HostInfo.NetworkClass));
+                Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         }
         else
         {
             if (state)
-                _discoveryTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds((int)HostInfo.NetworkClass));
+                _discoveryTimer?.Change(TimeSpan.Zero, Timeout.InfiniteTimeSpan);
             else
                 _discoveryTimer?.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         }
@@ -199,7 +198,7 @@ public class DeviceScanner : IDeviceScanner
 
     private EthernetPacket BuildArpPacket(IPAddress targetIpAddress)
     {
-        var arprequestpacket = new ArpPacket(ArpOperation.Request,
+        var arpRequestpacket = new ArpPacket(ArpOperation.Request,
             targetHardwareAddress: HostInfo.EmptyMac,
             targetProtocolAddress: targetIpAddress,
             senderHardwareAddress: HostInfo.HostMac,
@@ -210,7 +209,7 @@ public class DeviceScanner : IDeviceScanner
             destinationHardwareAddress: HostInfo.BroadcastMac,
             EthernetType.Arp);
 
-        ethernetpacket.PayloadPacket = arprequestpacket;
+        ethernetpacket.PayloadPacket = arpRequestpacket;
 
         return ethernetpacket;
     }
@@ -233,7 +232,7 @@ public class DeviceScanner : IDeviceScanner
 
     public void Refresh()
     {
-        throw new NotImplementedException();
+        ProbeDevices();
     }
 
     public void Stop()
