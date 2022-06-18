@@ -27,12 +27,12 @@ namespace NetStalkerAvalonia.Services
         public static NetworkClass NetworkClass { get; set; }
         public static IPAddress? SubnetMask { get; set; }
         public static IPAddress? BroadcastIp { get; set; }
-        public static PhysicalAddress? BroadcastMac { get; set; } = PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF");
+        public static PhysicalAddress? BroadcastMac = PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF");
         public static string? NetworkAdapterName { get; set; }
 
         #endregion
 
-        public static string? RootIp => Tools.GetRootIp(HostIp!);
-        public static PhysicalAddress? EmptyMac { get; set; } = PhysicalAddress.Parse("00-00-00-00-00-00");
+        public static string? RootIp => Tools.GetRootIp(HostIp!, NetworkClass);
+        public static PhysicalAddress? EmptyMac = PhysicalAddress.Parse("00-00-00-00-00-00");
     }
 }
