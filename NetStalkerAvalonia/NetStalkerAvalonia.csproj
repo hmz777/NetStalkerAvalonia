@@ -31,12 +31,12 @@
 		<TrimmableAssembly Include="Avalonia.Themes.Default" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="0.10.14" />
-		<PackageReference Include="Avalonia.Desktop" Version="0.10.14" />
+		<PackageReference Include="Avalonia" Version="0.10.15" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.15" />
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.14" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.14" />
-		<PackageReference Include="DynamicData" Version="7.7.14" />
+		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.15" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.15" />
+		<PackageReference Include="DynamicData" Version="7.9.1" />
 		<PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
 		<PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
