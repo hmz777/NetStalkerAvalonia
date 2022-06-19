@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using DynamicData;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
@@ -18,9 +19,11 @@ public class DeviceScanner : IDeviceScanner
 {
     #region Members
 
+    private readonly PacketReceiveTechnique _packetReceiveTechnique;
     private CancellationTokenSource? _cancellationTokenSource;
     private LibPcapLiveDevice? _device;
     private Timer? _discoveryTimer;
+    private bool _timerRanFirstTime;
 
     private readonly ILogger? _logger;
     private readonly IDeviceNameResolver? _deviceNameResolver;
@@ -40,10 +43,12 @@ public class DeviceScanner : IDeviceScanner
     #region Constructor
 
     public DeviceScanner(
+        PacketReceiveTechnique packetReceiveTechnique = PacketReceiveTechnique.EventHandler,
         IDeviceNameResolver? deviceNameResolver = null!,
         IDeviceTypeIdentifier? deviceTypeIdentifier = null!,
         ILogger? logger = null!)
     {
+        _packetReceiveTechnique = packetReceiveTechnique;
         _logger = Tools.ResolveIfNull(logger);
 
         try
@@ -72,12 +77,12 @@ public class DeviceScanner : IDeviceScanner
     {
         if (_device == null)
         {
-            var adapterName = (from devicex in CaptureDeviceList.Instance
-                where ((LibPcapLiveDevice)devicex).Interface.FriendlyName == HostInfo.NetworkAdapterName
+            var adapterName = (from devicex in LibPcapLiveDeviceList.Instance
+                where devicex.Interface.FriendlyName == HostInfo.NetworkAdapterName
                 select devicex).ToList()[0].Name;
 
-            _device = (LibPcapLiveDevice)CaptureDeviceList.New()[adapterName];
-            _device.Open(DeviceModes.Promiscuous);
+            _device = LibPcapLiveDeviceList.New()[adapterName];
+            _device.Open(DeviceModes.Promiscuous, 20);
             _device.Filter = "arp";
 
             // The state parameter here doesn't matter since we're initializing the timer
@@ -102,7 +107,20 @@ public class DeviceScanner : IDeviceScanner
         else
         {
             if (state)
-                _discoveryTimer?.Change(TimeSpan.Zero, Timeout.InfiniteTimeSpan);
+            {
+                if (_timerRanFirstTime == false)
+                {
+                    _discoveryTimer?.Change(
+                        TimeSpan.Zero, Timeout.InfiniteTimeSpan);
+
+                    _timerRanFirstTime = true;
+                }
+                else
+                {
+                    _discoveryTimer?.Change(
+                        TimeSpan.FromMilliseconds((int)HostInfo.NetworkClass), Timeout.InfiniteTimeSpan);
+                }
+            }
             else
                 _discoveryTimer?.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         }
@@ -125,20 +143,43 @@ public class DeviceScanner : IDeviceScanner
 
     private void StartMonitoring()
     {
-        _device!.OnPacketArrival += (_, e) =>
-        {
-            if (_cancellationTokenSource?.IsCancellationRequested == false)
-                ProcessPacket(e);
-        };
+        // Start receiving packets
+        ReceivePackets();
 
         // Setup the discovery timer
         InitOrToggleDiscoveryTimer(true);
 
-        // Start receiving packets
-        _device.StartCapture();
-
         _logger!.Information("Service of type: {Type}, started",
             typeof(IDeviceScanner));
+    }
+
+    private void ReceivePackets()
+    {
+        if (_packetReceiveTechnique == PacketReceiveTechnique.EventHandler)
+        {
+            _device!.OnPacketArrival += (_, e) =>
+            {
+                if (_cancellationTokenSource?.IsCancellationRequested == false)
+                    ProcessPacket(e);
+            };
+
+            _device?.StartCapture();
+        }
+        else
+        {
+            Task.Run(() =>
+            {
+                while (_cancellationTokenSource?.IsCancellationRequested == false)
+                {
+                    var packetResult = _device!.GetNextPacket(out var e);
+
+                    if (packetResult != GetPacketStatus.PacketRead)
+                        continue;
+
+                    ProcessPacket(e);
+                }
+            });
+        }
     }
 
     private void ProbeDevices()
@@ -184,11 +225,13 @@ public class DeviceScanner : IDeviceScanner
         {
             _clients.AddOrUpdate(new Device(arpPacket.SenderProtocolAddress, arpPacket.SenderHardwareAddress));
 
+            // var presentClient = _clients.Lookup(arpPacket.SenderHardwareAddress.ToString());
+
             // Get hostname for current target
-            _deviceNameResolver?.GetDeviceName(client.Value);
+            // _deviceNameResolver?.GetDeviceName(presentClient.Value);
 
             // Get vendor info for current target
-            _deviceTypeIdentifier?.IdentifyDeviceAsync(client.Value);
+            // _deviceTypeIdentifier?.IdentifyDeviceAsync(presentClient.Value);
         }
         else
         {
