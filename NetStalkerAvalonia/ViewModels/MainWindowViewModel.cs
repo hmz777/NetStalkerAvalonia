@@ -13,6 +13,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Services;
 
@@ -174,7 +175,8 @@ namespace NetStalkerAvalonia.ViewModels
         {
             ResolveRequiredServices();
 
-            _scanner?.Refresh();
+            // Send a round of ARP packets to discover devices quicker
+            Task.Run(() => _scanner?.Refresh());
         }
 
         private void BlockDevice(Device device)
