@@ -15,6 +15,7 @@ using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using NetStalkerAvalonia.Configuration;
+using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Services.Implementations.DeviceScanning;
 using ReactiveUI;
 using ILogger = Serilog.ILogger;
@@ -110,6 +111,8 @@ namespace NetStalkerAvalonia
                 Locator.CurrentMutable.RegisterLazySingleton(() =>
                         new DeviceTypeIdentifier(),
                     typeof(IDeviceTypeIdentifier));
+
+                OptionalFeatures.AvailableFeatures.Add(typeof(IDeviceTypeIdentifier));
             }
         }
     }
