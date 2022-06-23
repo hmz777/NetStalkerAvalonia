@@ -1,39 +1,73 @@
 ﻿using System;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Reactive.Linq;
 using NetStalkerAvalonia.Services;
+using ReactiveUI;
 
 namespace NetStalkerAvalonia.Models
 {
-    public class Device
+    public class Device : ReactiveObject
     {
         public Device(IPAddress ip, PhysicalAddress mac)
         {
             ArgumentNullException.ThrowIfNull(ip, nameof(ip));
             ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
-            IP = ip;
+            Ip = ip;
             Mac = mac;
-            Name = IP?.ToString();
+            Name = "Resolving...";
             Type = DeviceType.PC;
             DateAdded = DateTime.Now;
+
+            _isResolving = this.WhenAnyValue(x => x.Name)
+                .Select(state => state == "Resolving...")
+                .ToProperty(this, x => x.IsResolving);
         }
 
         #region Properties
 
-        public IPAddress? IP { get; private set; }
+        public IPAddress? Ip { get; set; }
         public PhysicalAddress? Mac { get; private set; }
-        public bool Blocked { get; private set; }
-        public bool Redirected { get; private set; }
         public int Download { get; private set; }
         public int Upload { get; private set; }
-        public string? Name { get; private set; }
         public string? Vendor { get; private set; }
         public DeviceType Type { get; private set; }
         public DateTime DateAdded { get; }
         public long BytesSentSinceLastReset { get; private set; }
         public long BytesReceivedSinceLastReset { get; private set; }
         public DateTime TimeSinceLastArp { get; private set; }
+
+        #endregion
+        
+        #region Reactive Properties
+
+        private bool _blocked;
+
+        public bool Blocked
+        {
+            get => _blocked;
+            set => this.RaiseAndSetIfChanged(ref _blocked, value);
+        }
+        
+        private bool _redirected;
+
+        public bool Redirected
+        {
+            get => _redirected;
+            set => this.RaiseAndSetIfChanged(ref _redirected, value);
+        }
+        
+        private string? _name;
+
+        public string? Name
+        {
+            get => _name;
+            private set => this.RaiseAndSetIfChanged(ref _name, value);
+        }
+        
+        private readonly ObservableAsPropertyHelper<bool> _isResolving;
+        public bool IsResolving => _isResolving.Value;
 
         #endregion
 
@@ -51,8 +85,8 @@ namespace NetStalkerAvalonia.Models
         public void SetReceivedBytes(long bytes) => BytesReceivedSinceLastReset += bytes;
         public void UpdateLastArpTime() => TimeSinceLastArp = DateTime.Now;
 
-        public bool IsGateway() => Mac.Equals(HostInfo.GatewayMac);
-        public bool IsLocalDevice() => Mac.Equals(HostInfo.HostMac);
+        public bool IsGateway() => Mac!.Equals(HostInfo.GatewayMac);
+        public bool IsLocalDevice() => Mac!.Equals(HostInfo.HostMac);
 
         #endregion
     }
