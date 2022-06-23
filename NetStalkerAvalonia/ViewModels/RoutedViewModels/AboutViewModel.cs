@@ -5,7 +5,13 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
     public class AboutViewModel : ViewModelBase, IRoutableViewModel
     {
         public string? UrlPathSegment { get; } = "About";
-        public IScreen HostScreen { get; }
-        public AboutViewModel(IScreen screen) => this.HostScreen = screen;
+        public IScreen? HostScreen { get; }
+
+        #region Constructors
+
+        public AboutViewModel(){}
+        public AboutViewModel(IScreen screen) => HostScreen = screen;
+
+        #endregion
     }
 }

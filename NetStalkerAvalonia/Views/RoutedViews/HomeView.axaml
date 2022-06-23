@@ -3,19 +3,24 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cmpts="using:NetStalkerAvalonia.Components"
-			 xmlns:cmptsDev="using:NetStalkerAvalonia.Components.DeviceList"
-			 mc:Ignorable="d"
+             xmlns:cmptsDev="using:NetStalkerAvalonia.Components.DeviceList"
+             xmlns:vm="using:NetStalkerAvalonia.ViewModels"
+             mc:Ignorable="d"
              x:Class="NetStalkerAvalonia.Views.RoutedViews.HomeView"
-			 Background="Transparent">
-	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*" />
-			<RowDefinition Height="auto"/>
-		</Grid.RowDefinitions>
-		<cmptsDev:DeviceListView Grid.Row="0"/>
-		<cmpts:Navbar Grid.Row="1"
-					  HorizontalAlignment="Stretch"
-					  VerticalAlignment="Bottom"
-					  Collapsed="{Binding NavEnabled}" />
-	</Grid>
+             Background="Transparent">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <cmptsDev:DeviceListView Grid.Row="0" />
+        <cmpts:Navbar Grid.Row="1"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Bottom"/>
+    </Grid>
 </UserControl>

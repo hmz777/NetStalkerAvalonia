@@ -2,13 +2,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:cmpts="using:NetStalkerAvalonia.Components"
-			 mc:Ignorable="d"
+             xmlns:vm="using:NetStalkerAvalonia.ViewModels.RoutedViewModels"
+             mc:Ignorable="d"
              x:Class="NetStalkerAvalonia.Views.RoutedViews.SnifferView">
-	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="auto" />
-		</Grid.RowDefinitions>
-		<TextBlock Text="Sniffer!!!"/>
-	</Grid>
+
+    <Design.DataContext>
+        <vm:SnifferViewModel />
+    </Design.DataContext>
+
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Sniffer!!!" />
+    </Grid>
 </UserControl>

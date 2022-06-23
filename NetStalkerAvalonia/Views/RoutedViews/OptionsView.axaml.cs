@@ -10,11 +10,6 @@ namespace NetStalkerAvalonia.Views.RoutedViews
         public OptionsView()
         {
             this.WhenActivated(disposables => { });
-            InitializeComponent();
-        }
-
-        private void InitializeComponent()
-        {
             AvaloniaXamlLoader.Load(this);
         }
     }
