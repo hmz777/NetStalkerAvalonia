@@ -1,5 +1,4 @@
 using DynamicData;
-using DynamicData.Binding;
 using NetStalkerAvalonia.Compairers;
 using NetStalkerAvalonia.Components.DeviceList;
 using NetStalkerAvalonia.Models;
@@ -27,7 +26,7 @@ namespace NetStalkerAvalonia.ViewModels
 
         // Required services
         private IDeviceScanner? _scanner;
-        private IBandwidthController? _bandwidthController;
+        private IBlockerRedirector? _blockerRedirector;
 
         #endregion
 
@@ -53,16 +52,23 @@ namespace NetStalkerAvalonia.ViewModels
 
         #endregion
 
-        #region Commands
+        #region Nav commands
 
         public ReactiveCommand<Unit, Unit>? Scan { get; }
         public ReactiveCommand<Unit, Unit>? Refresh { get; }
-        public ReactiveCommand<Device, Unit>? Redirect { get; }
-        public ReactiveCommand<Device, Unit>? Block { get; }
 
         #endregion
 
-        #region UI Info
+        #region Interactions
+
+        public Interaction<Unit, DeviceLimitResult?>? ShowLimitDialog { get; set; }
+        public ReactiveCommand<Unit, Unit> Limit { get; }
+
+        #endregion
+
+        #region UI Bounded Properties
+
+        public Device? SelectedDevice { get; set; }
 
         private readonly ObservableAsPropertyHelper<string> _pageTitle;
         public string PageTitle => _pageTitle.Value;
@@ -92,10 +98,14 @@ namespace NetStalkerAvalonia.ViewModels
 
         public MainWindowViewModel()
         {
+            #region Page info wiring
+
             // Info wiring
             _pageTitle = this.WhenAnyObservable(x => x.Router.CurrentViewModel)
                 .Select(GetPageNameFromViewModel!)
                 .ToProperty(this, x => x.PageTitle);
+
+            #endregion
 
             #region Navigation wiring
 
@@ -120,6 +130,8 @@ namespace NetStalkerAvalonia.ViewModels
 
             #endregion
 
+            #region Device collection listener
+
             // Subscribe to the scanner device stream
             // to update the UI list
             MessageBus
@@ -130,12 +142,23 @@ namespace NetStalkerAvalonia.ViewModels
                 .DisposeMany()
                 .Subscribe();
 
-            #region Command wiring
+            #endregion
+
+            #region Nav Command wiring
 
             Scan = ReactiveCommand.Create(ScanForDevices);
             Refresh = ReactiveCommand.Create(RefreshDevices);
-            Block = ReactiveCommand.Create((Device device) => BlockDevice(device));
-            Redirect = ReactiveCommand.Create((Device device) => RedirectDevice(device));
+
+            #endregion
+
+            #region Context Menu command wiring
+
+            #endregion
+
+            #region Limit Dialog
+
+            ShowLimitDialog = new Interaction<Unit, DeviceLimitResult?>();
+            Limit = ReactiveCommand.CreateFromTask(DeviceLimitation);
 
             #endregion
         }
@@ -150,8 +173,8 @@ namespace NetStalkerAvalonia.ViewModels
             if (_servicesResolved == false)
             {
                 _scanner = Tools.ResolveIfNull<IDeviceScanner>(null!);
-                _bandwidthController = Tools.ResolveIfNull<IBandwidthController>(null!);
-
+                _blockerRedirector = Tools.ResolveIfNull<IBlockerRedirector>(null!);
+                
                 _servicesResolved = true;
             }
         }
@@ -179,14 +202,15 @@ namespace NetStalkerAvalonia.ViewModels
             Task.Run(() => _scanner?.Refresh());
         }
 
-        private void BlockDevice(Device device)
+        private async Task DeviceLimitation()
         {
-            ResolveRequiredServices();
-        }
+            var result = await ShowLimitDialog!.Handle(Unit.Default);
 
-        private void RedirectDevice(Device device)
-        {
-            ResolveRequiredServices();
+            if (result != null)
+            {
+                SelectedDevice?.SetDownload(result.Download);
+                SelectedDevice?.SetUpload(result.Upload);
+            }
         }
 
         #endregion
