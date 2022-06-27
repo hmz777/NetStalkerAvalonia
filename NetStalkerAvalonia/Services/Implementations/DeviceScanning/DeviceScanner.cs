@@ -75,6 +75,8 @@ public class DeviceScanner : IDeviceScanner
 
     private void Init()
     {
+        Tools.ResolveGateway();
+
         if (_device == null)
         {
             var adapterName = (from devicex in LibPcapLiveDeviceList.Instance
@@ -178,7 +180,7 @@ public class DeviceScanner : IDeviceScanner
 
                     ProcessPacket(e);
                 }
-            });
+            }, _cancellationTokenSource!.Token);
         }
     }
 
@@ -225,13 +227,16 @@ public class DeviceScanner : IDeviceScanner
         {
             _clients.AddOrUpdate(new Device(arpPacket.SenderProtocolAddress, arpPacket.SenderHardwareAddress));
 
-            // var presentClient = _clients.Lookup(arpPacket.SenderHardwareAddress.ToString());
+            var presentClient = _clients.Lookup(arpPacket.SenderHardwareAddress.ToString());
 
             // Get hostname for current target
-            // _deviceNameResolver?.GetDeviceName(presentClient.Value);
+            // We fire and forget since failing to resolve the hostname won't affect
+            // the functionality
+            _deviceNameResolver?.GetDeviceNameAsync(presentClient.Value);
 
-            // Get vendor info for current target
-            // _deviceTypeIdentifier?.IdentifyDeviceAsync(presentClient.Value);
+            // Get vendor info for current target if the feature is available
+            if (OptionalFeatures.AvailableFeatures.Contains(typeof(IDeviceTypeIdentifier)))
+                _deviceTypeIdentifier?.IdentifyDeviceAsync(presentClient.Value);
         }
         else
         {
