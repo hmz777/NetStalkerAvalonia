@@ -1,13 +1,25 @@
 ﻿using NetStalkerAvalonia.Models;
 using System;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
 {
     public class DeviceNameResolver : IDeviceNameResolver
     {
-        public void GetDeviceName(Device device)
+        public async Task GetDeviceNameAsync(Device device)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(device, nameof(device));
+
+            try
+            {
+                var ipHostEntry = await Dns.GetHostEntryAsync(device.Ip!);
+                device.SetFriendlyName(ipHostEntry.HostName);
+            }
+            catch
+            {
+                device.SetFriendlyName(device.Ip!.ToString());
+            }
         }
     }
 }

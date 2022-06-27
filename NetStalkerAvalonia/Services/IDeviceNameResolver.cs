@@ -1,9 +1,10 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using System.Threading.Tasks;
+using NetStalkerAvalonia.Models;
 
 namespace NetStalkerAvalonia.Services
 {
     public interface IDeviceNameResolver
     {
-        void GetDeviceName(Device device);
+        Task GetDeviceNameAsync(Device device);
     }
 }
