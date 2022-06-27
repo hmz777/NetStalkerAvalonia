@@ -29,8 +29,6 @@ namespace NetStalkerAvalonia.Models
 
         public IPAddress? Ip { get; set; }
         public PhysicalAddress? Mac { get; private set; }
-        public int Download { get; private set; }
-        public int Upload { get; private set; }
         public string? Vendor { get; private set; }
         public DeviceType Type { get; private set; }
         public DateTime DateAdded { get; }
@@ -39,7 +37,7 @@ namespace NetStalkerAvalonia.Models
         public DateTime TimeSinceLastArp { get; private set; }
 
         #endregion
-        
+
         #region Reactive Properties
 
         private bool _blocked;
@@ -49,7 +47,7 @@ namespace NetStalkerAvalonia.Models
             get => _blocked;
             set => this.RaiseAndSetIfChanged(ref _blocked, value);
         }
-        
+
         private bool _redirected;
 
         public bool Redirected
@@ -57,7 +55,23 @@ namespace NetStalkerAvalonia.Models
             get => _redirected;
             set => this.RaiseAndSetIfChanged(ref _redirected, value);
         }
-        
+
+        private int _download;
+
+        public int Download
+        {
+            get => _download / 1024;
+            private set => this.RaiseAndSetIfChanged(ref _download, value);
+        }
+
+        private int _upload;
+
+        public int Upload
+        {
+            get => _upload / 1024;
+            private set => this.RaiseAndSetIfChanged(ref _upload, value);
+        }
+
         private string? _name;
 
         public string? Name
@@ -65,7 +79,7 @@ namespace NetStalkerAvalonia.Models
             get => _name;
             private set => this.RaiseAndSetIfChanged(ref _name, value);
         }
-        
+
         private readonly ObservableAsPropertyHelper<bool> _isResolving;
         public bool IsResolving => _isResolving.Value;
 
