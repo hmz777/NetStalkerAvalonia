@@ -3,21 +3,53 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:NetStalkerAvalonia.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:cmpts="using:NetStalkerAvalonia.Components"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="270"
         x:Class="NetStalkerAvalonia.Views.LimitDialogWindow"
-        Title="LimitDialogWindow">
+        Title="Limit Device">
 
     <Design.DataContext>
         <vm:LimitDialogViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="Auto,Auto">
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <NumericUpDown Minimum="0" Value="{Binding DeviceLimitResult.Download}" />
-            <NumericUpDown Minimum="0" Value="{Binding DeviceLimitResult.Upload}" />
-        </StackPanel>
-        <StackPanel Grid.Row="1">
-            <Button Command="{Binding Apply }">Set</Button>
-        </StackPanel>
+    <Window.Styles>
+        <StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
+        <Style Selector="Window">
+            <Setter Property="Width" Value="500" />
+            <Setter Property="Height" Value="270" />
+            <Setter Property="MaxWidth" Value="500" />
+            <Setter Property="MinWidth" Value="500" />
+            <Setter Property="MaxHeight" Value="270" />
+            <Setter Property="MinHeight" Value="270" />
+        </Style>
+        <Style Selector="NumericUpDown">
+            <Setter Property="Width" Value="200" />
+        </Style>
+    </Window.Styles>
+
+
+    <Grid RowDefinitions="Auto,*">
+        <cmpts:PageTitle Grid.Row="0" VerticalAlignment="Stretch" Text="{Binding $parent[Window].Title}" />
+        <Border Grid.Row="1" Padding="15">
+            <StackPanel Spacing="20">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <StackPanel>
+                        <Label>Download</Label>
+                        <NumericUpDown Minimum="0" Value="{Binding DeviceLimitResult.Download}" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Label>Upload</Label>
+                        <NumericUpDown Minimum="0" Value="{Binding DeviceLimitResult.Upload}" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom">
+                    <Button Padding="100,10,100,10" Command="{Binding Apply }">Set</Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
