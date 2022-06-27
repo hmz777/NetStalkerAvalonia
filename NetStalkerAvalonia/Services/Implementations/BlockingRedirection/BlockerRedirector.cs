@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DynamicData;
@@ -64,9 +65,13 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
         private void BindClients()
         {
-            this.WhenAnyObservable(x => MessageBus
-                    .Current.Listen<IChangeSet<Device, string>>(null))
-                .BindTo(this, x => x._clients);
+            MessageBus
+                .Current
+                .Listen<IChangeSet<Device, string>>()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out _clients)
+                .DisposeMany()
+                .Subscribe();
         }
 
         private void DeviceOnOnPacketArrival(object sender, PacketCapture e)
@@ -100,7 +105,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             {
                 var ipv4Packet = packet.Extract<IPv4Packet>();
                 var inTarget = _clients?
-                    .FirstOrDefault(x => x.IP!.Equals(ipv4Packet.DestinationAddress));
+                    .FirstOrDefault(x => x.Ip!.Equals(ipv4Packet.DestinationAddress));
 
                 if (inTarget is not null
                     && inTarget is { Redirected: true }
@@ -178,7 +183,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                 case ArpPacketType.Spoof:
                     var arpPacketForVicSpoof = new ArpPacket(ArpOperation.Request,
                         targetHardwareAddress: device.Mac,
-                        targetProtocolAddress: device.IP,
+                        targetProtocolAddress: device.Ip,
                         senderHardwareAddress: HostInfo.HostMac,
                         senderProtocolAddress: HostInfo.GatewayIp);
 
@@ -194,7 +199,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                         targetHardwareAddress: HostInfo.GatewayMac,
                         targetProtocolAddress: HostInfo.GatewayIp,
                         senderHardwareAddress: HostInfo.HostMac,
-                        senderProtocolAddress: device.IP);
+                        senderProtocolAddress: device.Ip);
 
                     var etherPacketForGatewaySpoof = new EthernetPacket(
                         sourceHardwareAddress: HostInfo.HostMac,
@@ -216,7 +221,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                         targetHardwareAddress: HostInfo.HostMac,
                         targetProtocolAddress: HostInfo.HostIp,
                         senderHardwareAddress: device.Mac,
-                        senderProtocolAddress: device.IP);
+                        senderProtocolAddress: device.Ip);
 
                     var etherPacketForVicProtection = new EthernetPacket(
                         sourceHardwareAddress: device.Mac,
@@ -281,7 +286,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             _logger!.Information("Service of type: {Type}, Block device with MAC:{Mac} - IP:{Ip}",
                 typeof(IBlockerRedirector),
                 device.Mac,
-                device.IP);
+                device.Ip);
         }
 
         public void Redirect(Device device)
@@ -292,7 +297,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             _logger!.Information("Service of type: {Type}, Redirect device with MAC:{Mac} - IP:{Ip}",
                 typeof(IBlockerRedirector),
                 device.Mac,
-                device.IP);
+                device.Ip);
         }
 
         public void UnBlock(Device device)
@@ -303,7 +308,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             _logger!.Information("Service of type: {Type}, Unblock device with MAC:{Mac} - IP:{Ip}",
                 typeof(IBlockerRedirector),
                 device.Mac,
-                device.IP);
+                device.Ip);
         }
 
         public void UnRedirect(Device device)
@@ -314,7 +319,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             _logger!.Information("Service of type: {Type}, Unredirect device with MAC:{Mac} - IP:{Ip}",
                 typeof(IBlockerRedirector),
                 device.Mac,
-                device.IP);
+                device.Ip);
         }
 
         public void Dispose()
