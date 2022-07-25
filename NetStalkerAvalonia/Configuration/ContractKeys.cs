@@ -2,5 +2,7 @@ namespace NetStalkerAvalonia.Configuration;
 
 public enum ContractKeys
 {
-    MacLookupClient
+    MacLookupClient,
+    ScannerStream,
+    UiStream
 }
