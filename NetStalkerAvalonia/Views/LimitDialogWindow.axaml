@@ -21,6 +21,7 @@
             <Setter Property="MinWidth" Value="500" />
             <Setter Property="MaxHeight" Value="270" />
             <Setter Property="MinHeight" Value="270" />
+            <Setter Property="WindowStartupLocation" Value="CenterOwner"/>
         </Style>
         <Style Selector="NumericUpDown">
             <Setter Property="Width" Value="200" />
