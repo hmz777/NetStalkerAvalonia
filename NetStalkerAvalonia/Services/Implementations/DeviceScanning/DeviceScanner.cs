@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using DynamicData;
+using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
 using PacketDotNet;
@@ -23,6 +24,7 @@ public class DeviceScanner : IDeviceScanner
     private CancellationTokenSource? _cancellationTokenSource;
     private LibPcapLiveDevice? _device;
     private Timer? _discoveryTimer;
+    private Timer? _aliveTimer;
     private bool _timerRanFirstTime;
 
     private readonly ILogger? _logger;
@@ -79,9 +81,9 @@ public class DeviceScanner : IDeviceScanner
 
         if (_device == null)
         {
-            var adapterName = (from devicex in LibPcapLiveDeviceList.Instance
-                where devicex.Interface.FriendlyName == HostInfo.NetworkAdapterName
-                select devicex).ToList()[0].Name;
+            var adapterName = (from deviceX in LibPcapLiveDeviceList.Instance
+                where deviceX.Interface.FriendlyName == HostInfo.NetworkAdapterName
+                select deviceX).ToList()[0].Name;
 
             _device = LibPcapLiveDeviceList.New()[adapterName];
             _device.Open(DeviceModes.Promiscuous, 20);
@@ -90,6 +92,7 @@ public class DeviceScanner : IDeviceScanner
             // The state parameter here doesn't matter since we're initializing the timer
             // it will be later started when the scan functionality is started
             InitOrToggleDiscoveryTimer(true);
+            InitOrToggleAliveTimer(true);
 
             _cancellationTokenSource = new CancellationTokenSource();
         }
@@ -97,7 +100,7 @@ public class DeviceScanner : IDeviceScanner
 
     private void SetupBindings() => MessageBus
         .Current
-        .RegisterMessageSource(_clients.Connect());
+        .RegisterMessageSource(_clients.Connect(), ContractKeys.ScannerStream.ToString());
 
     private void InitOrToggleDiscoveryTimer(bool state)
     {
@@ -128,6 +131,28 @@ public class DeviceScanner : IDeviceScanner
         }
     }
 
+    private void InitOrToggleAliveTimer(bool state)
+    {
+        if (_aliveTimer == null)
+        {
+            _aliveTimer = new Timer(
+                AliveTimerOnElapsed,
+                null,
+                Timeout.InfiniteTimeSpan,
+                Timeout.InfiniteTimeSpan);
+        }
+        else if (state)
+        {
+            _aliveTimer.Change(
+                TimeSpan.Zero,
+                TimeSpan.FromSeconds(30));
+        }
+        else
+        {
+            _aliveTimer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        }
+    }
+
     #endregion
 
     #region Internal
@@ -150,6 +175,9 @@ public class DeviceScanner : IDeviceScanner
 
         // Setup the discovery timer
         InitOrToggleDiscoveryTimer(true);
+
+        // Setup the device timout timer
+        InitOrToggleAliveTimer(true);
 
         _logger!.Information("Service of type: {Type}, started",
             typeof(IDeviceScanner));
@@ -214,8 +242,8 @@ public class DeviceScanner : IDeviceScanner
 
     private void ProcessPacket(PacketCapture packetCapture)
     {
-        var rawcapture = packetCapture.GetPacket();
-        var packet = Packet.ParsePacket(rawcapture.LinkLayerType, rawcapture.Data);
+        var rawCapture = packetCapture.GetPacket();
+        var packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
         var arpPacket = packet.Extract<ArpPacket>();
 
         if (arpPacket == null)
@@ -262,6 +290,19 @@ public class DeviceScanner : IDeviceScanner
         return ethernetpacket;
     }
 
+    private void AliveTimerOnElapsed(object? stateInfo)
+    {
+        foreach (var client in _clients.Items)
+        {
+            if (client.IsGateway() == false &&
+                client.IsLocalDevice() == false &&
+                DateTime.Now.Second - client.TimeSinceLastArp.Second > 30)
+            {
+                _clients.Remove(client);
+            }
+        }
+    }
+
     #endregion
 
     #region API
@@ -285,6 +326,9 @@ public class DeviceScanner : IDeviceScanner
 
     public void Stop()
     {
+        InitOrToggleDiscoveryTimer(false);
+        InitOrToggleAliveTimer(false);
+
         _cancellationTokenSource?.Cancel();
         IsStarted = false;
         _device?.StopCapture();
@@ -299,6 +343,9 @@ public class DeviceScanner : IDeviceScanner
 
         if (_device != null)
         {
+            _discoveryTimer?.Dispose();
+            _aliveTimer?.Dispose();
+
             _device.Close();
             _device.Dispose();
             _device = null;
