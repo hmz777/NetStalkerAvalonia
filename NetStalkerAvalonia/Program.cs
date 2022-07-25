@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.BandwidthControl;
 using NetStalkerAvalonia.Services.Implementations.BlockingRedirection;
 using NetStalkerAvalonia.Services.Implementations.DeviceNameResolving;
 using NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification;
@@ -66,10 +65,6 @@ namespace NetStalkerAvalonia
             Locator.CurrentMutable.RegisterLazySingleton(() =>
                     new DeviceScanner(),
                 typeof(IDeviceScanner));
-
-            Locator.CurrentMutable.RegisterLazySingleton(() =>
-                    new BandwidthController(),
-                typeof(IBandwidthController));
 
             Locator.CurrentMutable.RegisterLazySingleton(() =>
                     new BlockerRedirector(),
