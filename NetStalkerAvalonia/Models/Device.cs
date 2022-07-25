@@ -32,9 +32,6 @@ namespace NetStalkerAvalonia.Models
         public string? Vendor { get; private set; }
         public DeviceType Type { get; private set; }
         public DateTime DateAdded { get; }
-        public long BytesSentSinceLastReset { get; private set; }
-        public long BytesReceivedSinceLastReset { get; private set; }
-        public DateTime TimeSinceLastArp { get; private set; }
 
         #endregion
 
@@ -56,20 +53,36 @@ namespace NetStalkerAvalonia.Models
             set => this.RaiseAndSetIfChanged(ref _redirected, value);
         }
 
-        private int _download;
+        private int _downloadSpeed;
 
-        public int Download
+        public int DownloadSpeed
         {
-            get => _download / 1024;
-            private set => this.RaiseAndSetIfChanged(ref _download, value);
+            get => _downloadSpeed;
+            private set => this.RaiseAndSetIfChanged(ref _downloadSpeed, value);
         }
 
-        private int _upload;
+        private int _uploadSpeed;
 
-        public int Upload
+        public int UploadSpeed
         {
-            get => _upload / 1024;
-            private set => this.RaiseAndSetIfChanged(ref _upload, value);
+            get => _uploadSpeed;
+            private set => this.RaiseAndSetIfChanged(ref _uploadSpeed, value);
+        }
+
+        private int _downloadCap;
+
+        public int DownloadCap
+        {
+            get => _downloadCap;
+            private set => this.RaiseAndSetIfChanged(ref _downloadCap, value);
+        }
+
+        private int _uploadCap;
+
+        public int UploadCap
+        {
+            get => _uploadCap;
+            private set => this.RaiseAndSetIfChanged(ref _uploadCap, value);
         }
 
         private string? _name;
@@ -78,6 +91,30 @@ namespace NetStalkerAvalonia.Models
         {
             get => _name;
             private set => this.RaiseAndSetIfChanged(ref _name, value);
+        }
+
+        private DateTime _timeSinceLastArp;
+
+        public DateTime TimeSinceLastArp
+        {
+            get => _timeSinceLastArp;
+            private set => this.RaiseAndSetIfChanged(ref _timeSinceLastArp, value);
+        }
+
+        private long _bytesSentSinceLastReset;
+
+        public long BytesSentSinceLastReset
+        {
+            get => _bytesSentSinceLastReset;
+            private set => this.RaiseAndSetIfChanged(ref _bytesSentSinceLastReset, value);
+        }
+
+        private long _bytesReceivedSinceLastReset;
+
+        public long BytesReceivedSinceLastReset
+        {
+            get => _bytesReceivedSinceLastReset;
+            private set => this.RaiseAndSetIfChanged(ref _bytesReceivedSinceLastReset, value);
         }
 
         private readonly ObservableAsPropertyHelper<bool> _isResolving;
@@ -93,8 +130,8 @@ namespace NetStalkerAvalonia.Models
         public void UnBlock() => Blocked = false;
         public void Redirect() => Redirected = true;
         public void UnRedirect() => Redirected = false;
-        public void SetDownload(int download) => Download = download * 1024;
-        public void SetUpload(int upload) => Upload = upload * 1024;
+        public void SetDownloadCap(int downloadCap) => DownloadCap = _downloadCap * 1024;
+        public void SetUploadCap(int uploadCap) => UploadCap = uploadCap * 1024;
         public void SetSentBytes(long bytes) => BytesSentSinceLastReset += bytes;
         public void SetReceivedBytes(long bytes) => BytesReceivedSinceLastReset += bytes;
         public void UpdateLastArpTime() => TimeSinceLastArp = DateTime.Now;
