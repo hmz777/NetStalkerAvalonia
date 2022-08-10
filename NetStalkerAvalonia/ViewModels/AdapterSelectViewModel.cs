@@ -112,7 +112,15 @@ public class AdapterSelectViewModel : ViewModelBase
 
         #region Command wiring
 
-        Accept = ReactiveCommand.Create((Window window) => { window.Close(); });
+        var canAcceptExecute =
+            this.WhenAnyValue(x => 
+                x.GatewayIp, x => x.DriverVersion,
+        (gatewayIp,driver) => 
+                              string.IsNullOrEmpty(gatewayIp) == false && 
+                              string.IsNullOrEmpty(driver) == false && driver != "NAN");
+
+        Accept = ReactiveCommand.Create((Window window) => { window.Close(); }, canAcceptExecute);
+
         Exit = ReactiveCommand.Create(() =>
         {
             var app = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
@@ -128,6 +136,8 @@ public class AdapterSelectViewModel : ViewModelBase
             .Subscribe();
 
         #endregion
+        
+        CheckDriverAndGetVersion();
     }
 
     #endregion
@@ -136,6 +146,8 @@ public class AdapterSelectViewModel : ViewModelBase
 
     private async Task<Unit> ReactToAdapterSelection(string? item)
     {
+        ClearAll();
+        
         try
         {
             SelectedInterface = networkInterfaces
@@ -163,7 +175,6 @@ public class AdapterSelectViewModel : ViewModelBase
         }
 
         await GetNetworkWifiSsidAsync();
-        CheckDriverAndGetVersion();
 
         return Unit.Default;
     }
@@ -223,7 +234,7 @@ public class AdapterSelectViewModel : ViewModelBase
         var classIndicator = Regex
             .Matches(HostInfo.SubnetMask!.ToString(), "255")
             .Count;
-        
+
         switch (classIndicator)
         {
             case 1:
@@ -302,6 +313,15 @@ public class AdapterSelectViewModel : ViewModelBase
                 networkInterfaces.Add(net);
             }
         }
+    }
+
+    private void ClearAll()
+    {
+        NicType = default;
+        IpAddress = default;
+        MacAddress = default;
+        GatewayIp = default;
+        NetworkSsid = default;
     }
 
     #endregion
