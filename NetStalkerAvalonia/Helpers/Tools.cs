@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using System.Net;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.Services;
 using SharpPcap;
@@ -74,5 +76,11 @@ public class Tools
 
             HostInfo.GatewayMac = gatewayMac;
         }
+    }
+
+    public static void ExitApp()
+    {
+        var app = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+        app?.Shutdown();
     }
 }

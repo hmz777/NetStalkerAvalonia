@@ -15,6 +15,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Microsoft.Win32;
+using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.Services;
 using ReactiveUI;
@@ -121,11 +122,7 @@ public class AdapterSelectViewModel : ViewModelBase
 
         Accept = ReactiveCommand.Create((Window window) => { window.Close(); }, canAcceptExecute);
 
-        Exit = ReactiveCommand.Create(() =>
-        {
-            var app = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
-            app?.Shutdown();
-        });
+        Exit = ReactiveCommand.Create(Tools.ExitApp);
 
         #endregion
 
