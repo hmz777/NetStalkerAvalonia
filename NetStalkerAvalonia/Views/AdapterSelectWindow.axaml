@@ -23,6 +23,8 @@
             <Setter Property="MinHeight" Value="450"/>
             <Setter Property="WindowStartupLocation" Value="CenterOwner" />
             <Setter Property="SizeToContent" Value="Height" />
+            <Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>
+            <Setter Property="ShowInTaskbar" Value="False"/>
         </Style>
         <Style Selector="DockPanel.horizontalPanel">
             <Setter Property="Margin" Value="0,0,0,20" />
