@@ -53,7 +53,7 @@ namespace NetStalkerAvalonia
         {
             var log = new LoggerConfiguration()
                 .WriteTo.Console()
-                .WriteTo.File(Path.Combine(Assembly.GetExecutingAssembly().Location, "log.txt"),
+                .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "log.txt"),
                     rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
