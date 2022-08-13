@@ -125,16 +125,14 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
         private void StartIfNotStarted()
         {
-            if (_cancellationTokenSource == null)
+            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
             {
                 _cancellationTokenSource = new CancellationTokenSource();
             }
-            else if (_cancellationTokenSource.IsCancellationRequested)
+            else
             {
                 if (_cancellationTokenSource.TryReset() == false)
-                {
                     throw new InvalidOperationException("Can not reset the BlockerRedirector's cancellation token.");
-                }
             }
 
             if (_isStarted == false)
@@ -156,8 +154,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                     _isStarted = true;
                 }
             }
-
-
+            
             _logger!.Information("Service of type: {Type}, started",
                 typeof(IBlockerRedirector));
         }
