@@ -56,7 +56,11 @@ public class DeviceScanner : IDeviceScanner
         try
         {
             _deviceNameResolver = Tools.ResolveIfNull(deviceNameResolver);
-            _deviceTypeIdentifier = Tools.ResolveIfNull(deviceTypeIdentifier);
+
+            if (OptionalFeatures.AvailableFeatures.Contains(typeof(IDeviceTypeIdentifier)))
+            {
+                _deviceTypeIdentifier = Tools.ResolveIfNull(deviceTypeIdentifier);
+            }
         }
         catch (Exception e)
         {
