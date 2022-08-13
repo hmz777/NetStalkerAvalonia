@@ -14,20 +14,25 @@ namespace NetStalkerAvalonia.Helpers
             CommandProperty
                 .Changed
                 .Subscribe(Observer
-                .Create<AvaloniaPropertyChangedEventArgs<ICommand>>(x => HandleCommandChanged(x.Sender, x.NewValue.GetValueOrDefault<ICommand>())));
+                    .Create<AvaloniaPropertyChangedEventArgs<ICommand>>(x =>
+                        HandleCommandChanged(x.Sender, x.NewValue.GetValueOrDefault<ICommand>())));
         }
 
-        public static readonly AttachedProperty<string> IconProperty = AvaloniaProperty.RegisterAttached<AttachedProperties, Interactive, string>(
-                            "Icon", default(string), false, Avalonia.Data.BindingMode.OneWay, null);
+        public static readonly AttachedProperty<string> IconProperty =
+            AvaloniaProperty.RegisterAttached<AttachedProperties, Interactive, string>(
+                "Icon", default(string), false, Avalonia.Data.BindingMode.OneWay, null);
 
-        public static readonly AttachedProperty<string> TextProperty = AvaloniaProperty.RegisterAttached<AttachedProperties, Interactive, string>(
-                            "Text", default(string), false, Avalonia.Data.BindingMode.OneWay, null);
+        public static readonly AttachedProperty<string> TextProperty =
+            AvaloniaProperty.RegisterAttached<AttachedProperties, Interactive, string>(
+                "Text", default(string), false, Avalonia.Data.BindingMode.OneWay, null);
 
-        public static readonly AttachedProperty<ICommand> CommandProperty = AvaloniaProperty.RegisterAttached<AttachedProperties, Interactive, ICommand>(
-                            "Command", default(ICommand), false, BindingMode.OneTime);
+        public static readonly AttachedProperty<ICommand> CommandProperty =
+            AvaloniaProperty.RegisterAttached<AttachedProperties, Interactive, ICommand>(
+                "Command", default(ICommand), false, BindingMode.OneTime);
 
-        public static readonly AttachedProperty<object> CommandParameterProperty = AvaloniaProperty.RegisterAttached<AttachedProperties, Interactive, object>(
-                            "CommandParameter", default(object), false, BindingMode.OneWay, null);
+        public static readonly AttachedProperty<object> CommandParameterProperty =
+            AvaloniaProperty.RegisterAttached<AttachedProperties, Interactive, object>(
+                "CommandParameter", default(object), false, BindingMode.OneWay, null);
 
         /// <summary>
         /// Accessor for Attached property <see cref="IconProperty"/>.
