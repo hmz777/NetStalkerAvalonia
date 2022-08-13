@@ -13,8 +13,9 @@
         <Setter Property="Background" Value="{Binding Theme.WindowBackground}" />
         <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
         <Setter Property="Icon" Value="/Assets/avalonia-logo.ico" />
-    </Style>
-    <Style Selector="Window">
-        <Setter Property="FontFamily" Value="{Binding Theme.FontFamily}" />
+        <Setter Property="FontFamily" Value="/Assets/Fonts/Montserrat.ttf#Montserrat" />
+        <!-- <Setter Property="FontFamily" Value="/Assets/Fonts/Oswald.ttf#Oswald" /> -->
+        <!-- <Setter Property="FontFamily" Value="/Assets/Fonts/Poppins.ttf.ttf#Poppins" /> -->
+        <Setter Property="FontWeight" Value="DemiBold" />
     </Style>
 </Styles>

@@ -25,6 +25,7 @@
 						   VerticalAlignment="Center"/>
 					<TextBlock Text="{TemplateBinding attProp:AttachedProperties.Text}"
 							   FontSize="9"
+							   FontWeight="Bold"
 							   Foreground="{Binding Theme.NavElementText}"
 							   HorizontalAlignment="Center"
 							   VerticalAlignment="Bottom"
