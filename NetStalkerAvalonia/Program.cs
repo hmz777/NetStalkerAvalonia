@@ -40,8 +40,11 @@ namespace NetStalkerAvalonia
             // Configure logging
             ConfigureAndRegisterLogging();
 
-            // Register app services
+            // Register required app services
             RegisterRequiredServices();
+            
+            // Register optional services
+            RegisterOptionalServices();
 
             return AppBuilder.Configure<App>()
                 .UsePlatformDetect()
@@ -75,7 +78,8 @@ namespace NetStalkerAvalonia
                 typeof(IDeviceNameResolver));
 
             // Read from app configuration
-            var notificationOptions = ConfigurationManager.GetSection("Notifications") as NotificationOptions
+            var notificationOptions = ConfigurationManager.GetSection(nameof(ConfigKeys.NotificationOptions))
+                                          as NotificationOptions
                                       ?? new NotificationOptions();
 
             Locator.CurrentMutable.RegisterLazySingleton(() =>
@@ -85,7 +89,10 @@ namespace NetStalkerAvalonia
             Locator.CurrentMutable.RegisterLazySingleton(() =>
                     new PacketManager(),
                 typeof(IPacketManager));
+        }
 
+        private static void RegisterOptionalServices()
+        {
             var macLookupApiToken = ConfigurationManager
                 .AppSettings[nameof(ConfigKeys.ApiKey)];
             var macLookupServiceUri = ConfigurationManager
