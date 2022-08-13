@@ -20,9 +20,6 @@
             <Setter Property="Width" Value="{Binding Theme.WindowWidth}" />
             <Setter Property="Height" Value="{Binding Theme.WindowHeight}" />
         </Style>
-        <Style Selector="Window">
-            <Setter Property="FontFamily" Value="{Binding Theme.FontFamily}" />
-        </Style>
         <Style Selector="TextBox:focus /template/ Border">
             <Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
         </Style>
@@ -40,6 +37,17 @@
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             Grid.Row="1">
+            <rxui:RoutedViewHost.PageTransition>
+                <CompositePageTransition>
+                    <CrossFade Duration="0:00:00.300"
+                               FadeInEasing="SineEaseInOut"
+                               FadeOutEasing="SineEaseInOut"/>
+                    <PageSlide Duration="0:00:00.900"
+                               Orientation="Vertical"
+                               SlideInEasing="ExponentialEaseInOut"
+                               SlideOutEasing="ExponentialEaseInOut"/>
+                </CompositePageTransition>
+            </rxui:RoutedViewHost.PageTransition>
             <rxui:RoutedViewHost.DefaultContent>
                 <rvws:HomeView />
             </rxui:RoutedViewHost.DefaultContent>
