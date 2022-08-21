@@ -5,8 +5,10 @@
              xmlns:convs="using:NetStalkerAvalonia.Converters"
              xmlns:cmpts="using:NetStalkerAvalonia.Components"
              xmlns:vm="using:NetStalkerAvalonia.ViewModels"
+             xmlns:ap="using:NetStalkerAvalonia.Behaviors"
              mc:Ignorable="d"
              xmlns:models="using:NetStalkerAvalonia.Models"
+             xmlns:behaviors="clr-namespace:NetStalkerAvalonia.Behaviors"
              x:Class="NetStalkerAvalonia.Components.DeviceList.DeviceListView">
 
     <Design.DataContext>
@@ -17,6 +19,7 @@
         <convs:ListTypeToIconConverter x:Key="TypeToIconConv" />
         <convs:PhysicalAddressToStringConverter x:Key="MacToStringConv" />
         <convs:IpAddressToStringConverter x:Key="IpToStringConv" />
+        <convs:DeviceStatusToIntConverter x:Key="DeviceStatusToIntConv" />
     </UserControl.Resources>
 
     <UserControl.Styles>
@@ -26,17 +29,47 @@
         <Style Selector="DataGridColumnHeader">
             <Setter Property="Background" Value="{Binding Theme.ListColumnHeaderBackColor}" />
         </Style>
+        <Style Selector="Separator.row-status">
+            <Setter Property="Height" Value="5" />
+            <Setter Property="Background" Value="red" />
+        </Style>
     </UserControl.Styles>
 
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <DataGrid Name="DeviceList"
+    <Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          RowDefinitions="*">
+        <DataGrid Grid.Row="0"
+                  Name="DeviceList"
                   Items="{Binding Devices}"
-                  SelectedItem="{Binding SelectedDevice}"
+                  SelectedItem="{Binding SelectedDevice,Mode=TwoWay}"
                   AutoGenerateColumns="False"
+                  SelectionMode="Single"
                   CanUserReorderColumns="{Binding DeviceListViewSettings.UserCanReorderColumns}"
                   CanUserResizeColumns="{Binding DeviceListViewSettings.UserCanResizeColumns}"
-                  CanUserSortColumns="{Binding DeviceListViewSettings.UserCanSortColumns}">
+                  CanUserSortColumns="{Binding DeviceListViewSettings.UserCanSortColumns}"
+                  RowDetailsVisibilityMode="Visible">
             <DataGrid.Columns>
+                <DataGridTemplateColumn Width="10">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:Device">
+                            <Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Rectangle IsVisible="{Binding Blocked}" HorizontalAlignment="Left"
+                                           VerticalAlignment="Stretch" Width="10" Fill="red" />
+                                <Rectangle IsVisible="{Binding Redirected}" HorizontalAlignment="Left"
+                                           VerticalAlignment="Stretch" Width="10" Fill="yellow" />
+                                <Rectangle HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="10"
+                                           Fill="blue">
+                                    <Rectangle.IsVisible>
+                                        <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                            <Binding Path="!!DownloadCap" />
+                                            <Binding Path="!!UploadCap" />
+                                        </MultiBinding>
+                                    </Rectangle.IsVisible>
+                                </Rectangle>
+                            </Panel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Type">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="models:Device">
@@ -44,14 +77,18 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="IP" Binding="{Binding Ip, Converter={StaticResource IpToStringConv}}"
+                <DataGridTextColumn Header="IP"
+                                    Binding="{Binding Ip, Converter={StaticResource IpToStringConv}}"
                                     IsReadOnly="True" />
-                <DataGridTextColumn Header="Mac" Binding="{Binding Mac, Converter={StaticResource MacToStringConv}}"
+                <DataGridTextColumn Header="Mac"
+                                    Binding="{Binding Mac, Converter={StaticResource MacToStringConv}}"
                                     IsReadOnly="True" />
-                <DataGridCheckBoxColumn Header="Blocked" Binding="{Binding Blocked}" />
-                <DataGridCheckBoxColumn Header="Redirected" Binding="{Binding Redirected}" />
-                <DataGridTextColumn Header="Download (KB)" Binding="{Binding Download}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Upload (KB)" Binding="{Binding Upload}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Download (KB)"
+                                    Binding="{Binding DownloadSpeed}"
+                                    IsReadOnly="True" />
+                <DataGridTextColumn Header="Upload (KB)"
+                                    Binding="{Binding UploadSpeed}"
+                                    IsReadOnly="True" />
                 <DataGridTemplateColumn Header="Name">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="models:Device">
@@ -65,16 +102,53 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Actions">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:Device">
+                            <Button
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Background="transparent"
+                                Padding="10"
+                                Width="25"
+                                Height="30"
+                                CornerRadius="50"
+                                behaviors:ContextMenuLeftClickBehavior.IsLeftClickEnabled="True"
+                                behaviors:ContextMenuDisableRightClickBehavior.IsContextMenuRightClickDisabled="True">
+                                <Image Source="/Assets/NavIcons/context.png"
+                                       Width="25"
+                                       Height="50"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                                <Button.ContextMenu>
+                                    <ContextMenu FontFamily="{Binding $parent[Window].FontFamily}"
+                                                 Items="{Binding $parent[Window].DataContext.ContextMenuItemSource}">
+                                        <ContextMenu.DataTemplates>
+                                            <DataTemplate DataType="models:DeviceContextMenuItem">
+                                                <MenuItem Header="{Binding Header}"
+                                                          Command="{Binding Command}"
+                                                          IsEnabled="True" />
+                                            </DataTemplate>
+                                        </ContextMenu.DataTemplates>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Device Options"
-                              Command="{Binding Limit}" />
-                    <Separator />
-                    <MenuItem Header="Set Friendly Name" />
-                    <MenuItem Header="Clear Friendly Name" />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
+            <!-- <DataGrid.ContextMenu> -->
+            <!--     <ContextMenu FontFamily="{Binding $parent[Window].FontFamily}" -->
+            <!--                  Items="{Binding ContextMenuItemSource}"> -->
+            <!--         <ContextMenu.DataTemplates> -->
+            <!--             <DataTemplate DataType="models:DeviceContextMenuItem"> -->
+            <!--                 <MenuItem Header="{Binding Header}" -->
+            <!--                           Command="{Binding Command}" -->
+            <!--                           IsEnabled="True" /> -->
+            <!--             </DataTemplate> -->
+            <!--         </ContextMenu.DataTemplates> -->
+            <!--     </ContextMenu> -->
+            <!-- </DataGrid.ContextMenu> -->
         </DataGrid>
     </Grid>
 </UserControl>
