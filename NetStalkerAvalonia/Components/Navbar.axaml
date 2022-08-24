@@ -12,7 +12,7 @@
 			BorderBrush="{Binding Theme.NavBorderColor}"
 			BorderThickness="0,2,0,0">
 		<StackPanel Spacing="5"
-					HorizontalAlignment="Center"
+					HorizontalAlignment="Left"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal">
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/scan.png"

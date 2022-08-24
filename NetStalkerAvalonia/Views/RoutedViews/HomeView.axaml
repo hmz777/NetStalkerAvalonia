@@ -19,8 +19,9 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <cmptsDev:DeviceListView Grid.Row="0" />
-        <cmpts:Navbar Grid.Row="1"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Bottom"/>
+        <Border Grid.Row="1" Padding="10,0,0,0">
+            <cmpts:Navbar HorizontalAlignment="Stretch"
+                          VerticalAlignment="Bottom"/>
+        </Border>
     </Grid>
 </UserControl>
