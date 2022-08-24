@@ -8,20 +8,7 @@
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 	</PropertyGroup>
 	<ItemGroup>
-		<Folder Include="Assets\GlobalStyles\" />
 		<AvaloniaResource Include="Assets\**" />
-		<Folder Include="Assets\DeviceListIcons\" />
-		<None Remove=".gitignore" />
-		<None Remove="Assets\NavIcons\about.png" />
-		<None Remove="Assets\NavIcons\back.png" />
-		<None Remove="Assets\NavIcons\close.png" />
-		<None Remove="Assets\NavIcons\help.png" />
-		<None Remove="Assets\NavIcons\limit.png" />
-		<None Remove="Assets\NavIcons\maximize.png" />
-		<None Remove="Assets\NavIcons\minimize.png" />
-		<None Remove="Assets\NavIcons\options.png" />
-		<None Remove="Assets\NavIcons\refresh.png" />
-		<None Remove="Assets\NavIcons\sniffer.png" />
 	</ItemGroup>
 	<ItemGroup>
 		<!--This helps with theme dll-s trimming.
