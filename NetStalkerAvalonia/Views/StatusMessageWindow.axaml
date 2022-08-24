@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:NetStalkerAvalonia.ViewModels"
+        xmlns:converters="using:NetStalkerAvalonia.Converters"
+        mc:Ignorable="d"
+        x:Class="NetStalkerAvalonia.Views.StatusMessageWindow">
+
+    <Design.DataContext>
+        <vm:StatusMessageViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
+        <Style Selector="Window">
+            <Setter Property="Width" Value="500" />
+            <Setter Property="MinWidth" Value="500" />
+            <Setter Property="MaxWidth" Value="500" />
+            <Setter Property="Height" Value="100" />
+            <Setter Property="MinHeight" Value="100" />
+            <Setter Property="SizeToContent" Value="Height" />
+            <Setter Property="ShowInTaskbar" Value="False" />
+            <Setter Property="WindowStartupLocation" Value="CenterOwner" />
+            <Setter Property="ExtendClientAreaChromeHints" Value="NoChrome" />
+        </Style>
+    </Window.Styles>
+
+    <Window.Resources>
+        <converters:StatusMessageTypeToImageConverter x:Key="StatusMessageTypeToImageConv" />
+    </Window.Resources>
+
+    <Border Padding="30">
+        <Grid RowDefinitions="auto,auto" ColumnDefinitions="auto,*" Margin="0,20,0,0"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Image Grid.Row="0" Grid.Column="0"
+                   Source="{Binding StatusMessage.MessageType,
+                Converter={StaticResource StatusMessageTypeToImageConv}}"
+                   Width="45" Height="45"
+                   VerticalAlignment="Top" />
+            <TextBlock Grid.Row="0" Grid.Column="1"
+                       VerticalAlignment="Center"
+                       Margin="20,0,0,0"
+                       TextWrapping="Wrap"
+                       Text="{Binding StatusMessage.Message}" />
+            <Button Grid.Row="1" Grid.Column="1"
+                    Margin="0,20,0,0"
+                    HorizontalAlignment="Right"
+                    Content="Close"
+                    Command="{Binding Close}" />
+        </Grid>
+    </Border>
+</Window>

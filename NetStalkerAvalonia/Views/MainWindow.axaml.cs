@@ -1,5 +1,6 @@
 using System.Reactive;
 using System.Threading.Tasks;
+using Avalonia.Controls.Mixins;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using NetStalkerAvalonia.Models;
@@ -14,23 +15,40 @@ namespace NetStalkerAvalonia.Views
         {
             this.WhenActivated(disposables =>
             {
-                disposables(ViewModel!.ShowLimitDialog!.RegisterHandler(DoShowDialogAsync));
+                ViewModel!
+                    .ShowLimitDialogInteraction!
+                    .RegisterHandler(DoShowLimitDialogAsync)
+                    .DisposeWith(disposables);
+
+                ViewModel!
+                    .ShowStatusMessageInteraction!
+                    .RegisterHandler(DoShowMessageDialogAsync)
+                    .DisposeWith(disposables);
 
                 var adapterSelect = new AdapterSelectWindow();
                 adapterSelect.DataContext = new AdapterSelectViewModel();
 
-                disposables(adapterSelect.ShowDialog(this));
+                adapterSelect.ShowDialog(this).DisposeWith(disposables);
             });
 
             AvaloniaXamlLoader.Load(this);
         }
 
-        private async Task DoShowDialogAsync(InteractionContext<Unit, DeviceLimitResult?> interaction)
+        private async Task DoShowLimitDialogAsync(InteractionContext<Unit, DeviceLimitResult?> interaction)
         {
             var dialog = new LimitDialogWindow();
             dialog.DataContext = new LimitDialogViewModel();
 
             var result = await dialog.ShowDialog<DeviceLimitResult>(this);
+            interaction.SetOutput(result);
+        }
+
+        private async Task DoShowMessageDialogAsync(InteractionContext<StatusMessage, Unit> interaction)
+        {
+            var statusMessageDialog = new StatusMessageWindow();
+            statusMessageDialog.DataContext = new StatusMessageViewModel() { StatusMessage = interaction.Input };
+
+            var result = await statusMessageDialog.ShowDialog<Unit>(this);
             interaction.SetOutput(result);
         }
     }

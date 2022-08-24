@@ -19,7 +19,6 @@
         <convs:ListTypeToIconConverter x:Key="TypeToIconConv" />
         <convs:PhysicalAddressToStringConverter x:Key="MacToStringConv" />
         <convs:IpAddressToStringConverter x:Key="IpToStringConv" />
-        <convs:DeviceStatusToIntConverter x:Key="DeviceStatusToIntConv" />
     </UserControl.Resources>
 
     <UserControl.Styles>
@@ -121,15 +120,27 @@
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center" />
                                 <Button.ContextMenu>
-                                    <ContextMenu FontFamily="{Binding $parent[Window].FontFamily}"
-                                                 Items="{Binding $parent[Window].DataContext.ContextMenuItemSource}">
-                                        <ContextMenu.DataTemplates>
-                                            <DataTemplate DataType="models:DeviceContextMenuItem">
-                                                <MenuItem Header="{Binding Header}"
-                                                          Command="{Binding Command}"
-                                                          IsEnabled="True" />
-                                            </DataTemplate>
-                                        </ContextMenu.DataTemplates>
+                                    <ContextMenu FontFamily="{Binding $parent[Window].FontFamily}">
+                                        <MenuItem Header="Block/Unblock"
+                                                  Command="{Binding $parent[Window].DataContext.BlockUnblock}"
+                                                  CommandParameter="{Binding Mac}"
+                                                  IsEnabled="True" />
+                                        <MenuItem Header="Redirect/Undo Redirection"
+                                                  Command="{Binding $parent[Window].DataContext.RedirectUnredirect}"
+                                                  CommandParameter="{Binding Mac}"
+                                                  IsEnabled="True" />
+                                        <MenuItem Header="Limit Speed"
+                                                  Command="{Binding $parent[Window].DataContext.Limit}"
+                                                  CommandParameter="{Binding Mac}"
+                                                  IsEnabled="True" />
+                                        <MenuItem Header="Set friendly name"
+                                                  Command="{Binding $parent[Window].DataContext.SetFriendlyName}"
+                                                  CommandParameter="{Binding Mac}"
+                                                  IsEnabled="True" />
+                                        <MenuItem Header="Clear name"
+                                                  Command="{Binding $parent[Window].DataContext.ClearName}"
+                                                  CommandParameter="{Binding Mac}"
+                                                  IsEnabled="True" />
                                     </ContextMenu>
                                 </Button.ContextMenu>
                             </Button>
@@ -137,18 +148,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
-            <!-- <DataGrid.ContextMenu> -->
-            <!--     <ContextMenu FontFamily="{Binding $parent[Window].FontFamily}" -->
-            <!--                  Items="{Binding ContextMenuItemSource}"> -->
-            <!--         <ContextMenu.DataTemplates> -->
-            <!--             <DataTemplate DataType="models:DeviceContextMenuItem"> -->
-            <!--                 <MenuItem Header="{Binding Header}" -->
-            <!--                           Command="{Binding Command}" -->
-            <!--                           IsEnabled="True" /> -->
-            <!--             </DataTemplate> -->
-            <!--         </ContextMenu.DataTemplates> -->
-            <!--     </ContextMenu> -->
-            <!-- </DataGrid.ContextMenu> -->
         </DataGrid>
     </Grid>
 </UserControl>
