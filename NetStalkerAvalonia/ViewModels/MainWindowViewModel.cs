@@ -13,8 +13,14 @@ using System.Net.NetworkInformation;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Windows.Devices.Display;
+using Avalonia.Controls;
+using DynamicData.Binding;
+using Microsoft.Toolkit.Uwp.Notifications;
+using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Services;
+using Serilog;
 
 namespace NetStalkerAvalonia.ViewModels
 {
@@ -27,6 +33,7 @@ namespace NetStalkerAvalonia.ViewModels
         // Required services
         private IDeviceScanner? _scanner;
         private IBlockerRedirector? _blockerRedirector;
+        private ILogger? _logger;
 
         #endregion
 
@@ -59,20 +66,37 @@ namespace NetStalkerAvalonia.ViewModels
 
         #endregion
 
+        #region Context Menu Commands
+
+        public ReactiveCommand<PhysicalAddress?, Unit> BlockUnblock { get; set; }
+        public ReactiveCommand<PhysicalAddress?, Unit> RedirectUnredirect { get; set; }
+        public ReactiveCommand<PhysicalAddress?, Unit> SetFriendlyName { get; set; }
+        public ReactiveCommand<PhysicalAddress?, Unit> ClearName { get; set; }
+
+        #endregion
+
         #region Interactions
 
-        public Interaction<Unit, DeviceLimitResult?>? ShowLimitDialog { get; set; }
-        public ReactiveCommand<Unit, Unit> Limit { get; }
+        public Interaction<Unit, DeviceLimitResult?>? ShowLimitDialogInteraction { get; set; }
+        public ReactiveCommand<PhysicalAddress?, Unit> Limit { get; }
+
+        public Interaction<StatusMessage, Unit>? ShowStatusMessageInteraction { get; set; }
 
         #endregion
 
         #region UI Bounded Properties
 
-        public Device? SelectedDevice { get; set; }
+        private Device? _selectedDevice;
+
+        public Device? SelectedDevice
+        {
+            get => _selectedDevice;
+            set => this.RaiseAndSetIfChanged(ref _selectedDevice, value);
+        }
 
         private readonly ObservableAsPropertyHelper<string> _pageTitle;
         public string PageTitle => _pageTitle.Value;
-
+        
         #endregion
 
         #region Devices List
@@ -136,11 +160,15 @@ namespace NetStalkerAvalonia.ViewModels
             // to update the UI list
             MessageBus
                 .Current
-                .Listen<IChangeSet<Device, string>>()
+                .Listen<IChangeSet<Device, string>>(ContractKeys.ScannerStream.ToString())
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _devicesReadOnly)
                 .DisposeMany()
                 .Subscribe();
+
+            MessageBus
+                .Current
+                .RegisterMessageSource(_devicesReadOnly.ToObservableChangeSet(), ContractKeys.UiStream.ToString());
 
             #endregion
 
@@ -153,12 +181,21 @@ namespace NetStalkerAvalonia.ViewModels
 
             #region Context Menu command wiring
 
+            BlockUnblock = ReactiveCommand.CreateFromTask<PhysicalAddress?>(BlockDevice);
+            RedirectUnredirect = ReactiveCommand.CreateFromTask<PhysicalAddress?>(RedirectDevice);
+
             #endregion
 
             #region Limit Dialog
 
-            ShowLimitDialog = new Interaction<Unit, DeviceLimitResult?>();
-            Limit = ReactiveCommand.CreateFromTask(DeviceLimitation);
+            ShowLimitDialogInteraction = new Interaction<Unit, DeviceLimitResult?>();
+            Limit = ReactiveCommand.CreateFromTask<PhysicalAddress?>(DeviceLimitation);
+
+            #endregion
+
+            #region Status message
+
+            ShowStatusMessageInteraction = new Interaction<StatusMessage, Unit>();
 
             #endregion
         }
@@ -174,7 +211,8 @@ namespace NetStalkerAvalonia.ViewModels
             {
                 _scanner = Tools.ResolveIfNull<IDeviceScanner>(null!);
                 _blockerRedirector = Tools.ResolveIfNull<IBlockerRedirector>(null!);
-                
+                _logger = Tools.ResolveIfNull<ILogger>(null!);
+
                 _servicesResolved = true;
             }
         }
@@ -202,14 +240,54 @@ namespace NetStalkerAvalonia.ViewModels
             Task.Run(() => _scanner?.Refresh());
         }
 
-        private async Task DeviceLimitation()
+        private async Task BlockDevice(PhysicalAddress? mac)
         {
-            var result = await ShowLimitDialog!.Handle(Unit.Default);
+            var validationResult = await CheckIfMacAddressIsValid(mac);
+
+            if (validationResult.isValid == false)
+                return;
+
+            if (validationResult.device.Blocked == false)
+            {
+                _blockerRedirector?
+                    .Block(validationResult.device);
+            }
+            else
+            {
+                _blockerRedirector?
+                    .UnBlock(validationResult.device);
+            }
+        }
+
+        private async Task RedirectDevice(PhysicalAddress? mac)
+        {
+            var validationResult = await CheckIfMacAddressIsValid(mac);
+
+            if (validationResult.isValid == false)
+                return;
+
+            if (validationResult.device.Redirected == false)
+            {
+                _blockerRedirector?.Redirect(validationResult.device);
+            }
+            else
+            {
+                _blockerRedirector?.UnRedirect(validationResult.device);
+            }
+        }
+
+        private async Task DeviceLimitation(PhysicalAddress? mac)
+        {
+            var validationResult = await CheckIfMacAddressIsValid(mac);
+
+            if (validationResult.isValid == false)
+                return;
+
+            var result = await ShowLimitDialogInteraction!.Handle(Unit.Default);
 
             if (result != null)
             {
-                SelectedDevice?.SetDownload(result.Download);
-                SelectedDevice?.SetUpload(result.Upload);
+                _blockerRedirector?.Limit(validationResult.device, result.Download, result.Upload);
             }
         }
 
@@ -217,10 +295,39 @@ namespace NetStalkerAvalonia.ViewModels
 
         #region Tools
 
-        //We get the view name, othewise we return the initial name
-        private static string GetPageNameFromViewModel(IRoutableViewModel routableViewModel)
+        //We get the view name, otherwise we return the initial name
+        private static string GetPageNameFromViewModel(IRoutableViewModel? routableViewModel)
         {
             return routableViewModel?.UrlPathSegment ?? "Device List";
+        }
+
+        private async Task<(bool isValid, Device device)> CheckIfMacAddressIsValid(PhysicalAddress? mac)
+        {
+            var device = _devicesReadOnly.FirstOrDefault(x => x.Mac!.Equals(mac));
+
+            if (device == null)
+            {
+                await ShowStatusMessageInteraction!.Handle(new StatusMessage(MessageType.Error,
+                    "No device is selected!"));
+
+                return (false, null!);
+            }
+            else if (device!.IsGateway())
+            {
+                await ShowStatusMessageInteraction!.Handle(new StatusMessage(MessageType.Error,
+                    "Gateway can't be targeted!"));
+
+                return (false, null!);
+            }
+            else if (device!.IsLocalDevice())
+            {
+                await ShowStatusMessageInteraction!.Handle(new StatusMessage(MessageType.Error,
+                    "You can't target your own device!"));
+
+                return (false, null!);
+            }
+
+            return (true, device);
         }
 
         #endregion
@@ -238,7 +345,7 @@ namespace NetStalkerAvalonia.ViewModels
         }
 
         // For debugging
-        public void TestMethod()
+        public void TestMethod(Device? device = null)
         {
         }
 
