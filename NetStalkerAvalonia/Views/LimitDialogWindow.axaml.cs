@@ -1,4 +1,5 @@
 using System;
+using Avalonia.Controls.Mixins;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using NetStalkerAvalonia.ViewModels;
@@ -10,7 +11,10 @@ public partial class LimitDialogWindow : ReactiveWindow<LimitDialogViewModel>
 {
     public LimitDialogWindow()
     {
-        this.WhenActivated(disposables => { disposables(ViewModel!.Apply.Subscribe(Close)); });
+        this.WhenActivated(disposables =>
+        {
+            ViewModel!.Apply.Subscribe(Close).DisposeWith(disposables);
+        });
 
         AvaloniaXamlLoader.Load(this);
     }
