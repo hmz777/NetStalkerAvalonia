@@ -44,6 +44,9 @@
                 <Border DockPanel.Dock="Right" Classes="nav-item">
                     <cmpts:StatsBox />
                 </Border>
+                <Border DockPanel.Dock="Right" Classes="nav-item">
+                    <cmpts:ListControls />
+                </Border>
             </DockPanel>
         </Border>
     </Grid>
