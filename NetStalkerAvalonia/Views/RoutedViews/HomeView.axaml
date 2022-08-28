@@ -5,7 +5,7 @@
              xmlns:cmpts="using:NetStalkerAvalonia.Components"
              xmlns:cmptsDev="using:NetStalkerAvalonia.Components.DeviceList"
              xmlns:vm="using:NetStalkerAvalonia.ViewModels"
-             mc:Ignorable="d"
+             mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="NetStalkerAvalonia.Views.RoutedViews.HomeView"
              Background="Transparent">
 
@@ -13,15 +13,38 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
+    <UserControl.Styles>
+        <Style Selector="Border.nav-item">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border.nav-item:nth-child(1)">
+            <Setter Property="Margin" Value="0,0,0,0" />
+            <Setter Property="Padding" Value="0,0,0,0" />
+        </Style>
+    </UserControl.Styles>
+
     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <cmptsDev:DeviceListView Grid.Row="0" />
-        <Border Grid.Row="1" Padding="10,0,0,0">
-            <cmpts:Navbar HorizontalAlignment="Stretch"
-                          VerticalAlignment="Bottom"/>
+        <Border Grid.Row="1"
+                Background="{Binding Theme.NavBackground}"
+                Padding="15,0,15,0"
+                BorderBrush="{Binding Theme.NavBorderColor}"
+                BorderThickness="0,3,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+            <DockPanel HorizontalAlignment="Stretch">
+                <Border DockPanel.Dock="Left" Classes="nav-item">
+                    <cmpts:Navbar />
+                </Border>
+                <Border DockPanel.Dock="Right" Classes="nav-item">
+                    <cmpts:StatsBox />
+                </Border>
+            </DockPanel>
         </Border>
     </Grid>
 </UserControl>
