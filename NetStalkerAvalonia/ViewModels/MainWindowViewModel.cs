@@ -70,6 +70,7 @@ namespace NetStalkerAvalonia.ViewModels
 
         public ReactiveCommand<PhysicalAddress?, Unit> BlockUnblock { get; set; }
         public ReactiveCommand<PhysicalAddress?, Unit> RedirectUnredirect { get; set; }
+        public ReactiveCommand<PhysicalAddress?, Unit> Limit { get; }
         public ReactiveCommand<PhysicalAddress?, Unit> SetFriendlyName { get; set; }
         public ReactiveCommand<PhysicalAddress?, Unit> ClearName { get; set; }
 
@@ -78,8 +79,6 @@ namespace NetStalkerAvalonia.ViewModels
         #region Interactions
 
         public Interaction<Unit, DeviceLimitResult?>? ShowLimitDialogInteraction { get; set; }
-        public ReactiveCommand<PhysicalAddress?, Unit> Limit { get; }
-
         public Interaction<StatusMessage, Unit>? ShowStatusMessageInteraction { get; set; }
 
         #endregion
@@ -96,7 +95,7 @@ namespace NetStalkerAvalonia.ViewModels
 
         private readonly ObservableAsPropertyHelper<string> _pageTitle;
         public string PageTitle => _pageTitle.Value;
-        
+
         #endregion
 
         #region Devices List
@@ -114,7 +113,7 @@ namespace NetStalkerAvalonia.ViewModels
 
         #region Helpers
 
-        private IEqualityComparer<Device> DeviceEqualityComparer = new DeviceEqualityComparer();
+        private IEqualityComparer<Device> _deviceEqualityComparer = new DeviceEqualityComparer();
 
         #endregion
 
@@ -126,7 +125,7 @@ namespace NetStalkerAvalonia.ViewModels
 
             // Info wiring
             _pageTitle = this.WhenAnyObservable(x => x.Router.CurrentViewModel)
-                .Select(GetPageNameFromViewModel!)
+                .Select(GetPageNameFromViewModel)
                 .ToProperty(this, x => x.PageTitle);
 
             #endregion
@@ -184,12 +183,12 @@ namespace NetStalkerAvalonia.ViewModels
             BlockUnblock = ReactiveCommand.CreateFromTask<PhysicalAddress?>(BlockDevice);
             RedirectUnredirect = ReactiveCommand.CreateFromTask<PhysicalAddress?>(RedirectDevice);
 
-            #endregion
-
             #region Limit Dialog
 
             ShowLimitDialogInteraction = new Interaction<Unit, DeviceLimitResult?>();
             Limit = ReactiveCommand.CreateFromTask<PhysicalAddress?>(DeviceLimitation);
+
+            #endregion
 
             #endregion
 
@@ -216,10 +215,6 @@ namespace NetStalkerAvalonia.ViewModels
                 _servicesResolved = true;
             }
         }
-
-        #endregion
-
-        #region Event Handlers
 
         #endregion
 
@@ -340,7 +335,7 @@ namespace NetStalkerAvalonia.ViewModels
             {
                 devices.AddOrUpdate(
                     new Device(IPAddress.Parse($"192.168.1.{i}"),
-                        PhysicalAddress.Parse(GetRandomMacAddress())), DeviceEqualityComparer);
+                        PhysicalAddress.Parse(GetRandomMacAddress())), _deviceEqualityComparer);
             }
         }
 
