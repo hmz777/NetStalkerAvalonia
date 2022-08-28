@@ -7,10 +7,7 @@
              x:Class="NetStalkerAvalonia.Components.Navbar"
 			 x:Name="navbar">
 
-	<Border Height="80"
-			Background="{Binding Theme.NavBackground}"
-			BorderBrush="{Binding Theme.NavBorderColor}"
-			BorderThickness="0,2,0,0">
+	<Border Height="80">
 		<StackPanel Spacing="5"
 					HorizontalAlignment="Left"
 					VerticalAlignment="Stretch"

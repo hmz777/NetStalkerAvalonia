@@ -13,7 +13,7 @@
 			<Border
 				Padding="1"
 				BorderThickness="2"
-				CornerRadius="3"
+				CornerRadius="5"
 				Width="55"
 				Height="55"
 				BorderBrush="{Binding Theme.NavElementBorder}">

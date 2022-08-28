@@ -18,4 +18,19 @@
         <!-- <Setter Property="FontFamily" Value="/Assets/Fonts/Poppins.ttf.ttf#Poppins" /> -->
         <Setter Property="FontWeight" Value="DemiBold" />
     </Style>
+
+    <Style Selector="Border.label">
+        <Setter Property="Background" Value="{Binding Theme.NavElementBackground}" />
+        <Setter Property="Padding" Value="10,5,10,5" />
+        <Setter Property="CornerRadius" Value="10" />
+    </Style>
+    <Style Selector="Border.label > StackPanel > TextBlock">
+        <Setter Property="Foreground" Value="{Binding Theme.AccentColor}" />
+    </Style>
+
+    <Style Selector="Border.control-group">
+        <Setter Property="Background" Value="{Binding Theme.NavElementBackground}" />
+        <Setter Property="Padding" Value="15,5,15,5" />
+        <Setter Property="CornerRadius" Value="10" />
+    </Style>
 </Styles>
