@@ -2,7 +2,7 @@ using System;
 
 namespace NetStalkerAvalonia.Services;
 
-public interface IDeviceScanner : IDisposable
+public interface IDeviceScanner : IService, IDisposable
 {
     void Scan();
     void Refresh();

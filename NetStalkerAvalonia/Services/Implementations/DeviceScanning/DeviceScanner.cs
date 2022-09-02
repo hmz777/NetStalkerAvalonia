@@ -26,6 +26,7 @@ public class DeviceScanner : IDeviceScanner
     private Timer? _discoveryTimer;
     private Timer? _aliveTimer;
     private bool _timerRanFirstTime;
+    private bool _isStarted;
 
     private readonly ILogger? _logger;
     private readonly IDeviceNameResolver? _deviceNameResolver;
@@ -33,12 +34,6 @@ public class DeviceScanner : IDeviceScanner
 
     // This is the original source of clients and all other collections are projections from this
     private SourceCache<Device, string> _clients = new(x => x.Mac!.ToString());
-
-    #endregion
-
-    #region Properties
-
-    public bool IsStarted { get; private set; }
 
     #endregion
 
@@ -311,12 +306,14 @@ public class DeviceScanner : IDeviceScanner
 
     #region API
 
+    public bool Status => _isStarted;
+
     public void Scan()
     {
-        if (IsStarted == false)
+        if (_isStarted == false)
         {
             StartMonitoring();
-            IsStarted = true;
+            _isStarted = true;
         }
 
         _logger!.Information("Service of type: {Type}, started",
@@ -334,7 +331,7 @@ public class DeviceScanner : IDeviceScanner
         InitOrToggleAliveTimer(false);
 
         _cancellationTokenSource?.Cancel();
-        IsStarted = false;
+        _isStarted = false;
         _device?.StopCapture();
 
         _logger!.Information("Service of type: {Type}, stopped",
