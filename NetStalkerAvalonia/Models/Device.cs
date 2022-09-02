@@ -27,8 +27,8 @@ namespace NetStalkerAvalonia.Models
 
         #region Properties
 
-        public IPAddress? Ip { get; set; }
-        public PhysicalAddress? Mac { get; private set; }
+        public IPAddress Ip { get; set; }
+        public PhysicalAddress Mac { get; private set; }
         public string? Vendor { get; private set; }
         public DeviceType Type { get; private set; }
         public DateTime DateAdded { get; }
@@ -130,10 +130,10 @@ namespace NetStalkerAvalonia.Models
         public void UnBlock() => Blocked = false;
         public void Redirect() => Redirected = true;
         public void UnRedirect() => Redirected = false;
-        public void SetDownloadCap(int downloadCap) => DownloadCap = _downloadCap * 1024;
+        public void SetDownloadCap(int downloadCap) => DownloadCap = downloadCap * 1024;
         public void SetUploadCap(int uploadCap) => UploadCap = uploadCap * 1024;
-        public void SetSentBytes(long bytes) => BytesSentSinceLastReset += bytes;
-        public void SetReceivedBytes(long bytes) => BytesReceivedSinceLastReset += bytes;
+        public void IncrementSentBytes(long bytes) => BytesSentSinceLastReset += bytes;
+        public void IncrementReceivedBytes(long bytes) => BytesReceivedSinceLastReset += bytes;
         public void UpdateLastArpTime() => TimeSinceLastArp = DateTime.Now;
 
         public bool IsGateway() => Mac!.Equals(HostInfo.GatewayMac);
