@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
         private CancellationTokenSource? _cancellationTokenSource;
         private bool _isStarted;
         private LibPcapLiveDevice? _device;
+        private bool _hasSpoofProtection;
 
         private ReadOnlyObservableCollection<Device>? _clients;
 
@@ -39,6 +41,9 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
             InitDevice();
             BindClients();
+
+            _hasSpoofProtection = ConfigurationManager
+                .AppSettings[nameof(ConfigKeys.SpoofProtection)] == "true";
 
             _logger.Information("Service of type: {Type}, initialized",
                 typeof(IBlockerRedirector));
@@ -58,7 +63,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
                 _device = LibPcapLiveDeviceList.New()[adapterName];
                 _device.Open(DeviceModes.Promiscuous, 1000);
-                _device.Filter = "ether proto \\ip";
+                _device.Filter = "ip";
                 _device.OnPacketArrival += DeviceOnOnPacketArrival;
             }
         }
@@ -86,19 +91,17 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                 return;
 
             var outTarget = _clients?
-                .FirstOrDefault(x => x.Mac!.Equals(packet.SourceHardwareAddress));
+                .FirstOrDefault(x => x.Mac.Equals(packet.SourceHardwareAddress));
 
             if (outTarget is not null
-                && outTarget is { Redirected: true }
-                && outTarget.IsLocalDevice() == false
-                && outTarget.IsGateway() == false)
+                && outTarget is { Redirected: true })
             {
                 if (outTarget.UploadCap == 0 || outTarget.UploadCap > outTarget.BytesSentSinceLastReset)
                 {
                     packet.SourceHardwareAddress = HostInfo.HostMac;
                     packet.DestinationHardwareAddress = HostInfo.GatewayMac;
                     _device.SendPacket(packet);
-                    outTarget.SetSentBytes(packet.Bytes.Length);
+                    outTarget.IncrementSentBytes(packet.Bytes.Length);
                 }
             }
             else if (packet.SourceHardwareAddress.Equals(HostInfo.GatewayMac))
@@ -108,16 +111,14 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                     .FirstOrDefault(x => x.Ip!.Equals(ipv4Packet.DestinationAddress));
 
                 if (inTarget is not null
-                    && inTarget is { Redirected: true }
-                    && inTarget.IsLocalDevice() == false
-                    && inTarget.IsGateway() == false)
+                    && inTarget is { Redirected: true })
                 {
                     if (inTarget.DownloadCap == 0 || inTarget.DownloadCap > inTarget.BytesReceivedSinceLastReset)
                     {
                         packet.SourceHardwareAddress = HostInfo.HostMac;
                         packet.DestinationHardwareAddress = inTarget.Mac;
                         _device.SendPacket(packet);
-                        inTarget.SetReceivedBytes(packet.Bytes.Length);
+                        inTarget.IncrementReceivedBytes(packet.Bytes.Length);
                     }
                 }
             }
@@ -154,7 +155,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                     _isStarted = true;
                 }
             }
-            
+
             _logger!.Information("Service of type: {Type}, started",
                 typeof(IBlockerRedirector));
         }
@@ -171,13 +172,12 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
                     try
                     {
-                        if (ConfigurationManager
-                                .AppSettings[nameof(ConfigKeys.SpoofProtection)] == "false")
+                        if (_hasSpoofProtection)
                             ConstructAndSendArp(client, ArpPacketType.Protection);
                     }
                     catch (Exception e)
                     {
-                        _logger!.Error(e, "Exception of type {Type} triggered with {Message}",
+                        _logger!.Error(e, "Exception of type {Type} triggered with message:{Message}",
                             e.GetType(), e.Message);
                     }
                 }
@@ -189,73 +189,93 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             switch (arpPacketType)
             {
                 case ArpPacketType.Spoof:
-                    var arpPacketForVicSpoof = new ArpPacket(ArpOperation.Request,
-                        targetHardwareAddress: device.Mac,
-                        targetProtocolAddress: device.Ip,
-                        senderHardwareAddress: HostInfo.HostMac,
-                        senderProtocolAddress: HostInfo.GatewayIp);
-
-                    var etherPacketForVicSpoof = new EthernetPacket(
-                        sourceHardwareAddress: HostInfo.HostMac,
-                        destinationHardwareAddress: device.Mac,
-                        EthernetType.Arp)
-                    {
-                        PayloadPacket = arpPacketForVicSpoof
-                    };
-
-                    var arpPacketForGatewaySpoof = new ArpPacket(ArpOperation.Request,
-                        targetHardwareAddress: HostInfo.GatewayMac,
-                        targetProtocolAddress: HostInfo.GatewayIp,
-                        senderHardwareAddress: HostInfo.HostMac,
-                        senderProtocolAddress: device.Ip);
-
-                    var etherPacketForGatewaySpoof = new EthernetPacket(
-                        sourceHardwareAddress: HostInfo.HostMac,
-                        destinationHardwareAddress: HostInfo.GatewayMac,
-                        EthernetType.Arp)
-                    {
-                        PayloadPacket = arpPacketForGatewaySpoof
-                    };
-
-                    if (device.Blocked)
-                        _device.SendPacket(etherPacketForVicSpoof);
+                    SpoofTarget();
 
                     if (device.Redirected)
-                        _device.SendPacket(etherPacketForGatewaySpoof);
+                    {
+                        SpoofGateway();
+                    }
 
                     break;
                 case ArpPacketType.Protection:
-                    var arpPacketForVicProtection = new ArpPacket(ArpOperation.Response,
-                        targetHardwareAddress: HostInfo.HostMac,
-                        targetProtocolAddress: HostInfo.HostIp,
-                        senderHardwareAddress: device.Mac,
-                        senderProtocolAddress: device.Ip);
-
-                    var etherPacketForVicProtection = new EthernetPacket(
-                        sourceHardwareAddress: device.Mac,
-                        destinationHardwareAddress: HostInfo.HostMac,
-                        EthernetType.Arp)
-                    {
-                        PayloadPacket = arpPacketForVicProtection
-                    };
-
-                    var arpPacketForGatewayProtection = new ArpPacket(ArpOperation.Response,
-                        targetHardwareAddress: HostInfo.HostMac,
-                        targetProtocolAddress: HostInfo.HostIp,
-                        senderHardwareAddress: HostInfo.GatewayMac,
-                        senderProtocolAddress: HostInfo.GatewayIp);
-
-                    var etherPacketForGatewayProtection = new EthernetPacket(
-                        sourceHardwareAddress: HostInfo.GatewayMac,
-                        destinationHardwareAddress: HostInfo.HostMac,
-                        EthernetType.Arp)
-                    {
-                        PayloadPacket = arpPacketForGatewayProtection
-                    };
-
-                    _device.SendPacket(etherPacketForGatewayProtection);
-                    _device.SendPacket(etherPacketForVicProtection);
+                    MaintainTarget();
+                    MaintainGateway();
                     break;
+            }
+
+            void SpoofTarget()
+            {
+                var arpPacketForVicSpoof = new ArpPacket(ArpOperation.Request,
+                    targetHardwareAddress: device.Mac,
+                    targetProtocolAddress: device.Ip,
+                    senderHardwareAddress: HostInfo.HostMac,
+                    senderProtocolAddress: HostInfo.GatewayIp);
+
+                var etherPacketForVicSpoof = new EthernetPacket(
+                    sourceHardwareAddress: HostInfo.HostMac,
+                    destinationHardwareAddress: device.Mac,
+                    EthernetType.Arp)
+                {
+                    PayloadPacket = arpPacketForVicSpoof
+                };
+                _device.SendPacket(etherPacketForVicSpoof);
+            }
+
+            void SpoofGateway()
+            {
+                var arpPacketForGatewaySpoof = new ArpPacket(ArpOperation.Request,
+                    targetHardwareAddress: HostInfo.GatewayMac,
+                    targetProtocolAddress: HostInfo.GatewayIp,
+                    senderHardwareAddress: HostInfo.HostMac,
+                    senderProtocolAddress: device.Ip);
+
+                var etherPacketForGatewaySpoof = new EthernetPacket(
+                    sourceHardwareAddress: HostInfo.HostMac,
+                    destinationHardwareAddress: HostInfo.GatewayMac,
+                    EthernetType.Arp)
+                {
+                    PayloadPacket = arpPacketForGatewaySpoof
+                };
+
+                _device.SendPacket(etherPacketForGatewaySpoof);
+            }
+
+            void MaintainTarget()
+            {
+                var arpPacketForVicProtection = new ArpPacket(ArpOperation.Response,
+                    targetHardwareAddress: HostInfo.HostMac,
+                    targetProtocolAddress: HostInfo.HostIp,
+                    senderHardwareAddress: device.Mac,
+                    senderProtocolAddress: device.Ip);
+
+                var etherPacketForVicProtection = new EthernetPacket(
+                    sourceHardwareAddress: device.Mac,
+                    destinationHardwareAddress: HostInfo.HostMac,
+                    EthernetType.Arp)
+                {
+                    PayloadPacket = arpPacketForVicProtection
+                };
+
+                _device.SendPacket(etherPacketForVicProtection);
+            }
+
+            void MaintainGateway()
+            {
+                var arpPacketForGatewayProtection = new ArpPacket(ArpOperation.Response,
+                    targetHardwareAddress: HostInfo.HostMac,
+                    targetProtocolAddress: HostInfo.HostIp,
+                    senderHardwareAddress: HostInfo.GatewayMac,
+                    senderProtocolAddress: HostInfo.GatewayIp);
+
+                var etherPacketForGatewayProtection = new EthernetPacket(
+                    sourceHardwareAddress: HostInfo.GatewayMac,
+                    destinationHardwareAddress: HostInfo.HostMac,
+                    EthernetType.Arp)
+                {
+                    PayloadPacket = arpPacketForGatewayProtection
+                };
+
+                _device.SendPacket(etherPacketForGatewayProtection);
             }
         }
 
@@ -267,7 +287,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                 // so we don't do extra work on idle
                 Stop();
 
-                _logger!.Information("Service of type: {Type}, paused",
+                _logger!.Information("Service of type: {Type} stopped, Reason: No devices are active",
                     typeof(IBlockerRedirector));
             }
         }
@@ -286,48 +306,54 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
         #region API
 
-        public bool IsStarted => _isStarted;
+        public bool Status => _isStarted;
 
-        public void Block(Device device)
+        public void Block(PhysicalAddress mac)
         {
-            ArgumentNullException.ThrowIfNull(device, nameof(device));
+            ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
             var brDevice = _clients!
-                .Where(d => d.Mac!.Equals(device.Mac))
+                .Where(d => d.Mac!.Equals(mac))
                 .First();
+
+            if (brDevice.Redirected)
+                brDevice.UnRedirect();
 
             brDevice.Block();
             StartIfNotStarted();
 
             _logger!.Information("Service of type: {Type}, Block device with MAC:{Mac} - IP:{Ip}",
                 typeof(IBlockerRedirector),
-                device.Mac,
-                device.Ip);
+                brDevice.Mac,
+                brDevice.Ip);
         }
 
-        public void Redirect(Device device)
+        public void Redirect(PhysicalAddress mac)
         {
-            ArgumentNullException.ThrowIfNull(device, nameof(device));
+            ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
             var brDevice = _clients!
-                .Where(d => d.Mac!.Equals(device.Mac))
+                .Where(d => d.Mac!.Equals(mac))
                 .First();
+
+            if (brDevice.Blocked)
+                brDevice.UnBlock();
 
             brDevice.Redirect();
             StartIfNotStarted();
 
             _logger!.Information("Service of type: {Type}, Redirect device with MAC:{Mac} - IP:{Ip}",
                 typeof(IBlockerRedirector),
-                device.Mac,
-                device.Ip);
+                brDevice.Mac,
+                brDevice.Ip);
         }
 
-        public void UnBlock(Device device)
+        public void UnBlock(PhysicalAddress mac)
         {
-            ArgumentNullException.ThrowIfNull(device, nameof(device));
+            ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
             var brDevice = _clients!
-                .Where(d => d.Mac!.Equals(device.Mac))
+                .Where(d => d.Mac!.Equals(mac))
                 .First();
 
             brDevice.UnBlock();
@@ -335,16 +361,16 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
             _logger!.Information("Service of type: {Type}, Unblock device with MAC:{Mac} - IP:{Ip}",
                 typeof(IBlockerRedirector),
-                device.Mac,
-                device.Ip);
+                brDevice.Mac,
+                brDevice.Ip);
         }
 
-        public void UnRedirect(Device device)
+        public void UnRedirect(PhysicalAddress mac)
         {
-            ArgumentNullException.ThrowIfNull(device, nameof(device));
+            ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
             var brDevice = _clients!
-                .Where(d => d.Mac!.Equals(device.Mac))
+                .Where(d => d.Mac!.Equals(mac))
                 .First();
 
             brDevice.UnRedirect();
@@ -352,16 +378,16 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
             _logger!.Information("Service of type: {Type}, Unredirect device with MAC:{Mac} - IP:{Ip}",
                 typeof(IBlockerRedirector),
-                device.Mac,
-                device.Ip);
+                brDevice.Mac,
+                brDevice.Ip);
         }
 
-        public void Limit(Device device, int download, int upload)
+        public void Limit(PhysicalAddress mac, int download, int upload)
         {
-            Redirect(device);
+            Redirect(mac);
 
             var brDevice = _clients!
-                .Where(d => d.Mac!.Equals(device.Mac))
+                .Where(d => d.Mac!.Equals(mac))
                 .First();
 
             brDevice.SetDownloadCap(download);
@@ -370,18 +396,18 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             _logger!.Information("Service of type: {Type}, Limit device with MAC:{Mac} - IP:{Ip} - " +
                                  "Download: {Download} - Upload: {Upload}",
                 typeof(IBlockerRedirector),
-                device.Mac,
-                device.Ip,
+                brDevice.Mac,
+                brDevice.Ip,
                 download,
                 upload);
         }
 
-        public void LimitDownload(Device device, int download)
+        public void LimitDownload(PhysicalAddress mac, int download)
         {
-            Redirect(device);
+            Redirect(mac);
 
             var brDevice = _clients!
-                .Where(d => d.Mac!.Equals(device.Mac))
+                .Where(d => d.Mac!.Equals(mac))
                 .First();
 
             brDevice.SetDownloadCap(download);
@@ -389,17 +415,17 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             _logger!.Information("Service of type: {Type}, Limit device with MAC:{Mac} - IP:{Ip} - " +
                                  "Download: {Download}",
                 typeof(IBlockerRedirector),
-                device.Mac,
-                device.Ip,
+                brDevice.Mac,
+                brDevice.Ip,
                 download);
         }
 
-        public void LimitUpload(Device device, int upload)
+        public void LimitUpload(PhysicalAddress mac, int upload)
         {
-            Redirect(device);
+            Redirect(mac);
 
             var brDevice = _clients!
-                .Where(d => d.Mac!.Equals(device.Mac))
+                .Where(d => d.Mac!.Equals(mac))
                 .First();
 
             brDevice.SetUploadCap(upload);
@@ -407,52 +433,52 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             _logger!.Information("Service of type: {Type}, Limit device with MAC:{Mac} - IP:{Ip} - " +
                                  "Upload: {Upload}",
                 typeof(IBlockerRedirector),
-                device.Mac,
-                device.Ip,
+                brDevice.Mac,
+                brDevice.Ip,
                 upload);
         }
 
-        public void ClearLimits(Device device)
+        public void ClearLimits(PhysicalAddress mac)
         {
-            ArgumentNullException.ThrowIfNull(device, nameof(device));
+            ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
             var brDevice = _clients!
-                .Where(d => d.Mac!.Equals(device.Mac))
+                .Where(d => d.Mac!.Equals(mac))
                 .First();
 
             brDevice.SetDownloadCap(0);
             brDevice.SetUploadCap(0);
 
-            _logger!.Information("Service of type: {Type}, Clear device limits",
-                typeof(IBlockerRedirector));
+            _logger!.Information("Service of type: {Type}, Limits cleared for device with MAC:{Mac}",
+                typeof(IBlockerRedirector), brDevice.Mac);
         }
 
-        public void ClearDownload(Device device)
+        public void ClearDownload(PhysicalAddress mac)
         {
-            ArgumentNullException.ThrowIfNull(device, nameof(device));
+            ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
             var brDevice = _clients!
-                .Where(d => d.Mac!.Equals(device.Mac))
+                .Where(d => d.Mac!.Equals(mac))
                 .First();
 
             brDevice.SetDownloadCap(0);
 
-            _logger!.Information("Service of type: {Type}, Clear device download limit",
-                typeof(IBlockerRedirector));
+            _logger!.Information("Service of type: {Type}, Clear download limit for device with MAC:{Mac}",
+                typeof(IBlockerRedirector), brDevice.Mac);
         }
 
-        public void ClearUpload(Device device)
+        public void ClearUpload(PhysicalAddress mac)
         {
-            ArgumentNullException.ThrowIfNull(device, nameof(device));
+            ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
             var brDevice = _clients!
-                .Where(d => d.Mac!.Equals(device.Mac))
+                .Where(d => d.Mac!.Equals(mac))
                 .First();
 
             brDevice.SetUploadCap(0);
 
-            _logger!.Information("Service of type: {Type}, Clear device upload limit",
-                typeof(IBlockerRedirector));
+            _logger!.Information("Service of type: {Type}, Clear upload limit for device with MAC:{Mac}",
+                typeof(IBlockerRedirector), brDevice.Mac);
         }
 
         public void Dispose()

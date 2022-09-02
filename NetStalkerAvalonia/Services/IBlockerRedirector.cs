@@ -1,20 +1,20 @@
 ﻿using System;
+using System.Net.NetworkInformation;
 using NetStalkerAvalonia.Models;
 
 namespace NetStalkerAvalonia.Services
 {
-    public interface IBlockerRedirector : IDisposable
+    public interface IBlockerRedirector : IService, IDisposable
     {
-        void Block(Device device);
-        void UnBlock(Device device);
-        void Redirect(Device device);
-        void UnRedirect(Device device);
-        void Limit(Device device, int download, int upload);
-        void LimitDownload(Device device, int download);
-        void LimitUpload(Device device, int upload);
-        void ClearLimits(Device device);
-        void ClearDownload(Device device);
-        void ClearUpload(Device device);
-        public bool IsStarted { get; }
+        void Block(PhysicalAddress mac);
+        void UnBlock(PhysicalAddress mac);
+        void Redirect(PhysicalAddress mac);
+        void UnRedirect(PhysicalAddress mac);
+        void Limit(PhysicalAddress mac, int download, int upload);
+        void LimitDownload(PhysicalAddress mac, int download);
+        void LimitUpload(PhysicalAddress mac, int upload);
+        void ClearLimits(PhysicalAddress mac);
+        void ClearDownload(PhysicalAddress mac);
+        void ClearUpload(PhysicalAddress mac);
     }
 }
