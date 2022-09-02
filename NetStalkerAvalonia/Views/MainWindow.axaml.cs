@@ -34,12 +34,13 @@ namespace NetStalkerAvalonia.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private async Task DoShowLimitDialogAsync(InteractionContext<Unit, DeviceLimitResult?> interaction)
+        private async Task DoShowLimitDialogAsync(
+            InteractionContext<DeviceLimitsModel?, DeviceLimitsModel?> interaction)
         {
             var dialog = new LimitDialogWindow();
-            dialog.DataContext = new LimitDialogViewModel();
+            dialog.DataContext = new LimitDialogViewModel() { DeviceLimits = interaction.Input };
 
-            var result = await dialog.ShowDialog<DeviceLimitResult>(this);
+            var result = await dialog.ShowDialog<DeviceLimitsModel>(this);
             interaction.SetOutput(result);
         }
 

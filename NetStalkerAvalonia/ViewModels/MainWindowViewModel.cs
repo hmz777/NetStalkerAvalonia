@@ -78,7 +78,7 @@ namespace NetStalkerAvalonia.ViewModels
 
         #region Interactions
 
-        public Interaction<Unit, DeviceLimitResult?>? ShowLimitDialogInteraction { get; set; }
+        public Interaction<DeviceLimitsModel?, DeviceLimitsModel?>? ShowLimitDialogInteraction { get; set; }
         public Interaction<StatusMessage, Unit>? ShowStatusMessageInteraction { get; set; }
 
         #endregion
@@ -185,7 +185,7 @@ namespace NetStalkerAvalonia.ViewModels
 
             #region Limit Dialog
 
-            ShowLimitDialogInteraction = new Interaction<Unit, DeviceLimitResult?>();
+            ShowLimitDialogInteraction = new Interaction<DeviceLimitsModel?, DeviceLimitsModel?>();
             Limit = ReactiveCommand.CreateFromTask<PhysicalAddress?>(DeviceLimitation);
 
             #endregion
@@ -237,7 +237,7 @@ namespace NetStalkerAvalonia.ViewModels
 
         private async Task BlockDevice(PhysicalAddress? mac)
         {
-            var validationResult = await CheckIfMacAddressIsValid(mac);
+            var validationResult = await CheckIfMacAddressIsValidAsync(mac);
 
             if (validationResult.isValid == false)
                 return;
@@ -245,44 +245,48 @@ namespace NetStalkerAvalonia.ViewModels
             if (validationResult.device.Blocked == false)
             {
                 _blockerRedirector?
-                    .Block(validationResult.device);
+                    .Block(mac!);
             }
             else
             {
                 _blockerRedirector?
-                    .UnBlock(validationResult.device);
+                    .UnBlock(mac!);
             }
         }
 
         private async Task RedirectDevice(PhysicalAddress? mac)
         {
-            var validationResult = await CheckIfMacAddressIsValid(mac);
+            var validationResult = await CheckIfMacAddressIsValidAsync(mac);
 
             if (validationResult.isValid == false)
                 return;
 
             if (validationResult.device.Redirected == false)
             {
-                _blockerRedirector?.Redirect(validationResult.device);
+                _blockerRedirector?.Redirect(mac!);
             }
             else
             {
-                _blockerRedirector?.UnRedirect(validationResult.device);
+                _blockerRedirector?.UnRedirect(mac!);
             }
         }
 
         private async Task DeviceLimitation(PhysicalAddress? mac)
         {
-            var validationResult = await CheckIfMacAddressIsValid(mac);
+            var validationResult = await CheckIfMacAddressIsValidAsync(mac);
 
             if (validationResult.isValid == false)
                 return;
 
-            var result = await ShowLimitDialogInteraction!.Handle(Unit.Default);
+            var device = validationResult.device;
+
+            var result =
+                await ShowLimitDialogInteraction!.Handle(new DeviceLimitsModel(device.DownloadCap / 1024,
+                    device.UploadCap / 1024));
 
             if (result != null)
             {
-                _blockerRedirector?.Limit(validationResult.device, result.Download, result.Upload);
+                _blockerRedirector?.Limit(mac!, result.Download, result.Upload);
             }
         }
 
@@ -296,7 +300,7 @@ namespace NetStalkerAvalonia.ViewModels
             return routableViewModel?.UrlPathSegment ?? "Device List";
         }
 
-        private async Task<(bool isValid, Device device)> CheckIfMacAddressIsValid(PhysicalAddress? mac)
+        private async Task<(bool isValid, Device device)> CheckIfMacAddressIsValidAsync(PhysicalAddress? mac)
         {
             var device = _devicesReadOnly.FirstOrDefault(x => x.Mac!.Equals(mac));
 
