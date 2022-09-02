@@ -6,12 +6,12 @@ namespace NetStalkerAvalonia.ViewModels;
 
 public class LimitDialogViewModel : ViewModelBase
 {
-    public ReactiveCommand<Unit, DeviceLimitResult?> Apply { get; set; }
-    public DeviceLimitResult? DeviceLimitResult { get; set; }
+    public ReactiveCommand<Unit, DeviceLimitsModel?> Apply { get; set; }
+    public DeviceLimitsModel? DeviceLimits { get; set; }
 
     public LimitDialogViewModel()
     {
-        Apply = ReactiveCommand.Create(() => { return DeviceLimitResult; });
-        DeviceLimitResult = new DeviceLimitResult();
+        Apply = ReactiveCommand.Create(() => { return DeviceLimits; });
+        DeviceLimits = new DeviceLimitsModel(0, 0);
     }
 }

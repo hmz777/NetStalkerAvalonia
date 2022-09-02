@@ -39,11 +39,11 @@
                             VerticalAlignment="Center">
                     <StackPanel>
                         <Label>Download</Label>
-                        <NumericUpDown Minimum="0" Value="{Binding DeviceLimitResult.Download}" />
+                        <NumericUpDown Minimum="0" Value="{Binding DeviceLimits.Download}" />
                     </StackPanel>
                     <StackPanel>
                         <Label>Upload</Label>
-                        <NumericUpDown Minimum="0" Value="{Binding DeviceLimitResult.Upload}" />
+                        <NumericUpDown Minimum="0" Value="{Binding DeviceLimits.Upload}" />
                     </StackPanel>
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Center"
