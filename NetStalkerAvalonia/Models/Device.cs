@@ -23,6 +23,16 @@ namespace NetStalkerAvalonia.Models
             _isResolving = this.WhenAnyValue(x => x.Name)
                 .Select(state => state == "Resolving...")
                 .ToProperty(this, x => x.IsResolving);
+
+            _uploadSpeed = this.WhenAnyValue(x => x.BytesSentSinceLastReset)
+                .Throttle(TimeSpan.FromMilliseconds(100))
+                .Select(bytes => bytes / 1024f)
+                .ToProperty(this, x => x.UploadSpeed);
+
+            _downloadSpeed = this.WhenAnyValue(x => x.BytesReceivedSinceLastReset)
+                .Throttle(TimeSpan.FromMilliseconds(100))
+                .Select(bytes => bytes / 1024f)
+                .ToProperty(this, x => x.DownloadSpeed);
         }
 
         #region Properties
@@ -51,22 +61,6 @@ namespace NetStalkerAvalonia.Models
         {
             get => _redirected;
             set => this.RaiseAndSetIfChanged(ref _redirected, value);
-        }
-
-        private int _downloadSpeed;
-
-        public int DownloadSpeed
-        {
-            get => _downloadSpeed;
-            private set => this.RaiseAndSetIfChanged(ref _downloadSpeed, value);
-        }
-
-        private int _uploadSpeed;
-
-        public int UploadSpeed
-        {
-            get => _uploadSpeed;
-            private set => this.RaiseAndSetIfChanged(ref _uploadSpeed, value);
         }
 
         private int _downloadCap;
@@ -120,6 +114,12 @@ namespace NetStalkerAvalonia.Models
         private readonly ObservableAsPropertyHelper<bool> _isResolving;
         public bool IsResolving => _isResolving.Value;
 
+        private readonly ObservableAsPropertyHelper<float> _downloadSpeed;
+        public float DownloadSpeed => _downloadSpeed.Value;
+
+        private readonly ObservableAsPropertyHelper<float> _uploadSpeed;
+        public float UploadSpeed => _uploadSpeed.Value;
+
         #endregion
 
         #region Methods
@@ -134,6 +134,8 @@ namespace NetStalkerAvalonia.Models
         public void SetUploadCap(int uploadCap) => UploadCap = uploadCap * 1024;
         public void IncrementSentBytes(long bytes) => BytesSentSinceLastReset += bytes;
         public void IncrementReceivedBytes(long bytes) => BytesReceivedSinceLastReset += bytes;
+        public void ResetSentBytes() => BytesSentSinceLastReset = 0;
+        public void ResetReceivedBytes() => BytesReceivedSinceLastReset = 0;
         public void UpdateLastArpTime() => TimeSinceLastArp = DateTime.Now;
 
         public bool IsGateway() => Mac!.Equals(HostInfo.GatewayMac);

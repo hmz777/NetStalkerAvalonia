@@ -27,6 +27,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
         private LibPcapLiveDevice? _device;
         private bool _hasSpoofProtection;
 
+        private Timer? _byteCounterTimer;
+
         private ReadOnlyObservableCollection<Device>? _clients;
 
         private readonly ILogger? _logger;
@@ -51,7 +53,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
         #endregion
 
-        #region Internal
+        #region Init
 
         private void InitDevice()
         {
@@ -65,6 +67,32 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                 _device.Open(DeviceModes.Promiscuous, 1000);
                 _device.Filter = "ip";
                 _device.OnPacketArrival += DeviceOnOnPacketArrival;
+
+                // The state parameter here doesn't matter since we're initializing the timer
+                // it will be later started when this service is started
+                InitOrToggleByteCounterTimer(true);
+            }
+        }
+
+        private void InitOrToggleByteCounterTimer(bool state)
+        {
+            if (_byteCounterTimer == null)
+            {
+                _byteCounterTimer = new Timer(
+                    ByteCounterTimerOnElapsed,
+                    null,
+                    Timeout.InfiniteTimeSpan,
+                    Timeout.InfiniteTimeSpan);
+            }
+            else if (state)
+            {
+                _byteCounterTimer.Change(
+                    TimeSpan.Zero,
+                    TimeSpan.FromSeconds(1));
+            }
+            else
+            {
+                _byteCounterTimer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
             }
         }
 
@@ -77,6 +105,22 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                 .Bind(out _clients)
                 .DisposeMany()
                 .Subscribe();
+        }
+
+        #endregion
+
+        #region Internal
+
+        private void ByteCounterTimerOnElapsed(object? stateInfo)
+        {
+            if (_clients != null)
+            {
+                foreach (var client in _clients)
+                {
+                    client?.ResetSentBytes();
+                    client?.ResetReceivedBytes();
+                }
+            }
         }
 
         private void DeviceOnOnPacketArrival(object sender, PacketCapture e)
@@ -151,6 +195,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                             await Task.Delay(1000);
                         }
                     });
+
+                    InitOrToggleByteCounterTimer(true);
 
                     _isStarted = true;
                 }
@@ -295,6 +341,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
         private void Stop()
         {
             _cancellationTokenSource?.Cancel();
+            InitOrToggleByteCounterTimer(false);
             _isStarted = false;
             _device?.StopCapture();
 
@@ -487,6 +534,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
             if (_device != null)
             {
+                _byteCounterTimer?.Dispose();
                 _device.Close();
                 _device.OnPacketArrival -= DeviceOnOnPacketArrival;
                 _device.Dispose();
