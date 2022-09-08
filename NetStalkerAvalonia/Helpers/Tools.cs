@@ -1,10 +1,14 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Reactive;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.Services;
+using ReactiveUI;
+using Serilog;
+using Serilog.Core;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using Splat;
@@ -27,7 +31,7 @@ public class Tools
             throw new Exception(string.Format("The dependency locator returned null of type {0}.", typeof(T)));
         }
 
-        return dependency;
+        return dependency!;
     }
 
     public static string GetRootIp(IPAddress ipaddress, NetworkClass networkClass)
@@ -76,6 +80,15 @@ public class Tools
 
             HostInfo.GatewayMac = gatewayMac;
         }
+    }
+
+    public static void HandleError(Interaction<StatusMessage, Unit> interaction, StatusMessage statusMessage)
+    {
+        ArgumentNullException.ThrowIfNull(interaction, nameof(interaction));
+
+        Log.Error("Exception triggered with message:{Message}", statusMessage.Message);
+
+        interaction.Handle(statusMessage);
     }
 
     public static void ExitApp()

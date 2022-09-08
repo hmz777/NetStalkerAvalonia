@@ -33,7 +33,6 @@ namespace NetStalkerAvalonia.ViewModels
         // Required services
         private IDeviceScanner? _scanner;
         private IBlockerRedirector? _blockerRedirector;
-        private ILogger? _logger;
 
         #endregion
 
@@ -201,6 +200,23 @@ namespace NetStalkerAvalonia.ViewModels
             ShowStatusMessageInteraction = new Interaction<StatusMessage, Unit>();
 
             #endregion
+
+            #region Exception Handling
+
+            Scan.ThrownExceptions.Subscribe(x =>
+                Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+            Refresh.ThrownExceptions.Subscribe(x =>
+                Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+            BlockUnblock.ThrownExceptions.Subscribe(x =>
+                Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+            RedirectUnredirect.ThrownExceptions.Subscribe(x =>
+                Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+            BlockAll.ThrownExceptions.Subscribe(x =>
+                Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+            RedirectAll.ThrownExceptions.Subscribe(x =>
+                Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+
+            #endregion
         }
 
         #endregion
@@ -214,7 +230,6 @@ namespace NetStalkerAvalonia.ViewModels
             {
                 _scanner = Tools.ResolveIfNull<IDeviceScanner>(null!);
                 _blockerRedirector = Tools.ResolveIfNull<IBlockerRedirector>(null!);
-                _logger = Tools.ResolveIfNull<ILogger>(null!);
 
                 _servicesResolved = true;
             }
