@@ -2,8 +2,10 @@
 {
     public class AppTheme
     {
-        public static string WindowWidth => "950";
+        public static string WindowWidth => "1000";
+        public static string WindowMinWidth => "800";
         public static string WindowHeight => "600";
+        public static string WindowMinHeight => "300";
         public static string NavBorderColor => "#2C2C2C";
         public static string NavBackground => "#1E1E1E";
         public static string NavElementBackground => "#2C2C2C";

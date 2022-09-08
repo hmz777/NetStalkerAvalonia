@@ -7,6 +7,7 @@
         xmlns:cmpts="using:NetStalkerAvalonia.Components"
         xmlns:rvws="using:NetStalkerAvalonia.Views.RoutedViews"
         mc:Ignorable="d"
+        d:DesignWidth="800" d:DesignHeight="100"
         x:Class="NetStalkerAvalonia.Views.MainWindow"
         Title="NetStalkerAvalonia">
 
@@ -19,6 +20,8 @@
         <Style Selector="Window">
             <Setter Property="Width" Value="{Binding Theme.WindowWidth}" />
             <Setter Property="Height" Value="{Binding Theme.WindowHeight}" />
+            <Setter Property="MinWidth" Value="{Binding Theme.WindowMinWidth}" />
+            <Setter Property="MinHeight" Value="{Binding Theme.WindowMinHeight}" />
         </Style>
         <Style Selector="TextBox:focus /template/ Border">
             <Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
