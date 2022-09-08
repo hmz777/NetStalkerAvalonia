@@ -2,12 +2,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:NetStalkerAvalonia.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="NetStalkerAvalonia.Components.ListControls">
+
+    <Design.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Design.DataContext>
+
     <Border Classes="control-group">
         <StackPanel Orientation="Horizontal" Spacing="15">
-            <CheckBox Content="Block All" />
-            <CheckBox Content="Redirect All" />
+            <CheckBox Content="Block All"
+                      Command="{Binding BlockAll}"
+                      CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+            <CheckBox Content="Redirect All"
+                      Command="{Binding RedirectAll}"
+                      CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
         </StackPanel>
     </Border>
 </UserControl>

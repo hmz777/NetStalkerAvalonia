@@ -63,6 +63,8 @@ namespace NetStalkerAvalonia.ViewModels
 
         public ReactiveCommand<Unit, Unit>? Scan { get; }
         public ReactiveCommand<Unit, Unit>? Refresh { get; }
+        public ReactiveCommand<bool, Unit>? BlockAll { get; }
+        public ReactiveCommand<bool, Unit>? RedirectAll { get; }
 
         #endregion
 
@@ -175,6 +177,8 @@ namespace NetStalkerAvalonia.ViewModels
 
             Scan = ReactiveCommand.Create(ScanForDevices);
             Refresh = ReactiveCommand.Create(RefreshDevices);
+            BlockAll = ReactiveCommand.Create<bool>(BlockAllHandler);
+            RedirectAll = ReactiveCommand.Create<bool>(RedirectAllHandler);
 
             #endregion
 
@@ -287,6 +291,50 @@ namespace NetStalkerAvalonia.ViewModels
             if (result != null)
             {
                 _blockerRedirector?.Limit(mac!, result.Download, result.Upload);
+            }
+        }
+
+        private void BlockAllHandler(bool active)
+        {
+            var devices = _devicesReadOnly
+                .Where(d => d.IsGateway() == false && d.IsLocalDevice() == false)
+                .ToList();
+
+            if (active)
+            {
+                foreach (var device in devices)
+                {
+                    _blockerRedirector?.Block(device.Mac);
+                }
+            }
+            else
+            {
+                foreach (var device in devices)
+                {
+                    _blockerRedirector?.UnBlock(device.Mac);
+                }
+            }
+        }
+
+        private void RedirectAllHandler(bool active)
+        {
+            var devices = _devicesReadOnly
+                .Where(d => d.IsGateway() == false && d.IsLocalDevice() == false)
+                .ToList();
+
+            if (active)
+            {
+                foreach (var device in devices)
+                {
+                    _blockerRedirector?.Redirect(device.Mac);
+                }
+            }
+            else
+            {
+                foreach (var device in devices)
+                {
+                    _blockerRedirector?.UnRedirect(device.Mac);
+                }
             }
         }
 
