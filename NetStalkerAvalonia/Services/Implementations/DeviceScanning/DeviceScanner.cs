@@ -28,7 +28,6 @@ public class DeviceScanner : IDeviceScanner
     private bool _timerRanFirstTime;
     private bool _isStarted;
 
-    private readonly ILogger? _logger;
     private readonly IDeviceNameResolver? _deviceNameResolver;
     private readonly IDeviceTypeIdentifier? _deviceTypeIdentifier;
 
@@ -42,11 +41,9 @@ public class DeviceScanner : IDeviceScanner
     public DeviceScanner(
         PacketReceiveTechnique packetReceiveTechnique = PacketReceiveTechnique.EventHandler,
         IDeviceNameResolver? deviceNameResolver = null!,
-        IDeviceTypeIdentifier? deviceTypeIdentifier = null!,
-        ILogger? logger = null!)
+        IDeviceTypeIdentifier? deviceTypeIdentifier = null!)
     {
         _packetReceiveTechnique = packetReceiveTechnique;
-        _logger = Tools.ResolveIfNull(logger);
 
         try
         {
@@ -59,14 +56,14 @@ public class DeviceScanner : IDeviceScanner
         }
         catch (Exception e)
         {
-            _logger!.Warning("Service resolve error: {Message}",
+            Log.Warning("Service resolve error: {Message}",
                 e.Message);
         }
 
         Init();
         SetupBindings();
 
-        _logger!.Information("Service of type: {Type}, initialized",
+        Log.Information("Service of type: {Type}, initialized",
             typeof(IDeviceScanner));
     }
 
@@ -177,9 +174,6 @@ public class DeviceScanner : IDeviceScanner
 
         // Setup the device timout timer
         InitOrToggleAliveTimer(true);
-
-        _logger!.Information("Service of type: {Type}, started",
-            typeof(IDeviceScanner));
     }
 
     private void ReceivePackets()
@@ -314,10 +308,10 @@ public class DeviceScanner : IDeviceScanner
         {
             StartMonitoring();
             _isStarted = true;
+            
+            Log.Information("Service of type: {Type}, started",
+                typeof(IDeviceScanner));
         }
-
-        _logger!.Information("Service of type: {Type}, started",
-            typeof(IDeviceScanner));
     }
 
     public void Refresh()
@@ -334,7 +328,7 @@ public class DeviceScanner : IDeviceScanner
         _isStarted = false;
         _device?.StopCapture();
 
-        _logger!.Information("Service of type: {Type}, stopped",
+        Log.Information("Service of type: {Type}, stopped",
             typeof(IDeviceScanner));
     }
 
@@ -354,9 +348,11 @@ public class DeviceScanner : IDeviceScanner
             _cancellationTokenSource = null;
         }
 
-        _logger!.Information("Service of type: {Type}, disposed",
+        Log.Information("Service of type: {Type}, disposed",
             typeof(IDeviceScanner));
     }
 
     #endregion
+    
+    // TODO: Check why devices freeze on redirection or limitation and why then they disappear from the list.
 }

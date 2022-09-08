@@ -20,7 +20,6 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
         private bool _isStarted;
         private string? macLookupServiceUri;
 
-        private readonly ILogger? _logger;
         private readonly HttpClient? _client;
 
         // The queue is to prevent flooding the mac lookup service with requests
@@ -30,11 +29,9 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 
         #region Constructor
 
-        public DeviceTypeIdentifier(ILogger logger = null!,
-            HttpClient client = null!)
+        public DeviceTypeIdentifier(HttpClient client = null!)
         {
             _cancellationTokenSource = new CancellationTokenSource();
-            _logger = Tools.ResolveIfNull(logger);
 
             try
             {
@@ -42,7 +39,7 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
             }
             catch (Exception e)
             {
-                _logger.Warning("Service resolve error: {Message}",
+                Log.Warning("Service resolve error: {Message}",
                     e.Message);
             }
 
@@ -78,7 +75,7 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
                 }
                 catch (Exception e)
                 {
-                    _logger!.Error("Error in service of type: {Type}. Message: {Message}",
+                    Log.Error("Error in service of type: {Type}. Message: {Message}",
                         typeof(IDeviceTypeIdentifier),
                         e.Message);
                 }
