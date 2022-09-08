@@ -23,22 +23,9 @@ namespace NetStalkerAvalonia
                 {
                     DataContext = new MainWindowViewModel()
                 };
-
-                desktop.ShutdownRequested += Desktop_ShutdownRequested;
             }
 
             base.OnFrameworkInitializationCompleted();
-        }
-
-        private void Desktop_ShutdownRequested(object? sender, ShutdownRequestedEventArgs e)
-        {
-            var seriLogger = Locator.Current.GetService<ILogger>();
-
-            if (seriLogger != null)
-            {
-                var disposable = seriLogger as IDisposable;
-                disposable?.Dispose();
-            }
         }
     }
 }

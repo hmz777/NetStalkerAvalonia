@@ -17,7 +17,6 @@ using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Services.Implementations.DeviceScanning;
 using ReactiveUI;
-using ILogger = Serilog.ILogger;
 
 namespace NetStalkerAvalonia
 {
@@ -27,8 +26,22 @@ namespace NetStalkerAvalonia
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
         [STAThread]
-        public static void Main(string[] args) => BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+        public static void Main(string[] args)
+        {
+            try
+            {
+                BuildAvaloniaApp()
+                    .StartWithClassicDesktopLifetime(args);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Exception triggered with message:{Message}", e.Message);
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
 
         // Avalonia configuration, don't remove; also used by visual designer.
         private static AppBuilder BuildAvaloniaApp()
@@ -42,7 +55,7 @@ namespace NetStalkerAvalonia
 
             // Register required app services
             RegisterRequiredServices();
-            
+
             // Register optional services
             RegisterOptionalServices();
 
@@ -54,13 +67,11 @@ namespace NetStalkerAvalonia
 
         private static void ConfigureAndRegisterLogging()
         {
-            var log = new LoggerConfiguration()
+            Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console()
                 .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "log.txt"),
                     rollingInterval: RollingInterval.Day)
                 .CreateLogger();
-
-            Locator.CurrentMutable.RegisterLazySingleton(() => log, typeof(ILogger));
         }
 
         private static void RegisterRequiredServices()
