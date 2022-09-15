@@ -43,7 +43,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             _hasSpoofProtection = ConfigurationManager
                 .AppSettings[nameof(ConfigKeys.SpoofProtection)] == "true";
 
-            Log.Information("Service of type: {Type}, initialized",
+            Log.Information(LogMessageTemplates.ServiceInit,
                 typeof(IBlockerRedirector));
         }
 
@@ -166,39 +166,47 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
         private void StartIfNotStarted()
         {
-            if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+            try
             {
-                _cancellationTokenSource = new CancellationTokenSource();
-            }
-            else
-            {
-                if (_cancellationTokenSource.TryReset() == false)
-                    throw new InvalidOperationException("Can not reset the BlockerRedirector's cancellation token.");
-            }
-
-            if (_isStarted == false)
-            {
-                if (_device is not null && _device is { Opened: true, Started: false })
+                if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
                 {
-                    _device.StartCapture();
+                    _cancellationTokenSource = new CancellationTokenSource();
+                }
+                else
+                {
+                    if (_cancellationTokenSource.TryReset() == false)
+                        throw new InvalidOperationException("Can not reset the Blocker/Redirector cancellation token.");
+                }
 
-                    Task.Run(async () =>
+                if (_isStarted == false)
+                {
+                    if (_device is not null && _device is { Opened: true, Started: false })
                     {
-                        while (_cancellationTokenSource.IsCancellationRequested == false)
+                        _device.StartCapture();
+
+                        Task.Run(async () =>
                         {
-                            SpoofClients();
+                            while (_cancellationTokenSource.IsCancellationRequested == false)
+                            {
+                                SpoofClients();
 
-                            await Task.Delay(1000);
-                        }
-                    });
+                                await Task.Delay(1000);
+                            }
+                        });
 
-                    InitOrToggleByteCounterTimer(true);
+                        InitOrToggleByteCounterTimer(true);
 
-                    _isStarted = true;
+                        _isStarted = true;
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                Log.Error(LogMessageTemplates.ExceptionTemplate,
+                    e.GetType(), this.GetType(), e.Message);
+            }
 
-            Log.Information("Service of type: {Type}, started",
+            Log.Information(LogMessageTemplates.ServiceStart,
                 typeof(IBlockerRedirector));
         }
 
@@ -219,8 +227,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                     }
                     catch (Exception e)
                     {
-                        Log.Error(e, "Exception of type {Type} triggered with message:{Message}",
-                            e.GetType(), e.Message);
+                        Log.Error(LogMessageTemplates.ExceptionTemplate,
+                            e.GetType(), this.GetType(), e.Message);
                     }
                 }
             }
@@ -329,7 +337,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                 // so we don't do extra work on idle
                 Stop();
 
-                Log.Information("Service of type: {Type} stopped, Reason: No devices are active",
+                Log.Information(LogMessageTemplates.ServiceStop,
                     typeof(IBlockerRedirector));
             }
         }
@@ -341,7 +349,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             _isStarted = false;
             _device?.StopCapture();
 
-            Log.Information("Service of type: {Type}, stopped",
+            Log.Information(LogMessageTemplates.ServiceStop,
                 typeof(IBlockerRedirector));
         }
 
@@ -365,7 +373,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             brDevice.Block();
             StartIfNotStarted();
 
-            Log.Information("Service of type: {Type}, Block device with MAC:{Mac} - IP:{Ip}",
+            Log.Information(LogMessageTemplates.DeviceBlock,
                 typeof(IBlockerRedirector),
                 brDevice.Mac,
                 brDevice.Ip);
@@ -385,7 +393,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             brDevice.Redirect();
             StartIfNotStarted();
 
-            Log.Information("Service of type: {Type}, Redirect device with MAC:{Mac} - IP:{Ip}",
+            Log.Information(LogMessageTemplates.DeviceRedirect,
                 typeof(IBlockerRedirector),
                 brDevice.Mac,
                 brDevice.Ip);
@@ -402,7 +410,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             brDevice.UnBlock();
             TryPauseIfNoDevicesLeft();
 
-            Log.Information("Service of type: {Type}, Unblock device with MAC:{Mac} - IP:{Ip}",
+            Log.Information(LogMessageTemplates.DeviceUnblock,
                 typeof(IBlockerRedirector),
                 brDevice.Mac,
                 brDevice.Ip);
@@ -419,7 +427,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             brDevice.UnRedirect();
             TryPauseIfNoDevicesLeft();
 
-            Log.Information("Service of type: {Type}, Unredirect device with MAC:{Mac} - IP:{Ip}",
+            Log.Information(LogMessageTemplates.DeviceUnRedirect,
                 typeof(IBlockerRedirector),
                 brDevice.Mac,
                 brDevice.Ip);
@@ -436,13 +444,12 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             brDevice.SetDownloadCap(download);
             brDevice.SetUploadCap(upload);
 
-            Log.Information("Service of type: {Type}, Limit device with MAC:{Mac} - IP:{Ip} - " +
-                                 "Download: {Download} - Upload: {Upload}",
+            Log.Information(LogMessageTemplates.DeviceLimit,
                 typeof(IBlockerRedirector),
                 brDevice.Mac,
                 brDevice.Ip,
-                download,
-                upload);
+                brDevice.DownloadCap,
+                brDevice.UploadCap);
         }
 
         public void LimitDownload(PhysicalAddress mac, int download)
@@ -455,12 +462,12 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
             brDevice.SetDownloadCap(download);
 
-            Log.Information("Service of type: {Type}, Limit device with MAC:{Mac} - IP:{Ip} - " +
-                                 "Download: {Download}",
+            Log.Information(LogMessageTemplates.DeviceLimit,
                 typeof(IBlockerRedirector),
                 brDevice.Mac,
                 brDevice.Ip,
-                download);
+                brDevice.DownloadCap,
+                brDevice.UploadCap);
         }
 
         public void LimitUpload(PhysicalAddress mac, int upload)
@@ -473,12 +480,12 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
             brDevice.SetUploadCap(upload);
 
-            Log.Information("Service of type: {Type}, Limit device with MAC:{Mac} - IP:{Ip} - " +
-                                 "Upload: {Upload}",
+            Log.Information(LogMessageTemplates.DeviceLimit,
                 typeof(IBlockerRedirector),
                 brDevice.Mac,
                 brDevice.Ip,
-                upload);
+                brDevice.DownloadCap,
+                brDevice.UploadCap);
         }
 
         public void ClearLimits(PhysicalAddress mac)
@@ -492,7 +499,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
             brDevice.SetDownloadCap(0);
             brDevice.SetUploadCap(0);
 
-            Log.Information("Service of type: {Type}, Limits cleared for device with MAC:{Mac}",
+            Log.Information(LogMessageTemplates.DeviceLimitsClear,
                 typeof(IBlockerRedirector), brDevice.Mac);
         }
 
@@ -506,7 +513,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
             brDevice.SetDownloadCap(0);
 
-            Log.Information("Service of type: {Type}, Clear download limit for device with MAC:{Mac}",
+            Log.Information(LogMessageTemplates.DeviceDownloadLimitClear,
                 typeof(IBlockerRedirector), brDevice.Mac);
         }
 
@@ -520,7 +527,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
             brDevice.SetUploadCap(0);
 
-            Log.Information("Service of type: {Type}, Clear upload limit for device with MAC:{Mac}",
+            Log.Information(LogMessageTemplates.DeviceUploadLimitClear,
                 typeof(IBlockerRedirector), brDevice.Mac);
         }
 
@@ -539,7 +546,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
                 _cancellationTokenSource = null;
             }
 
-            Log.Information("Service of type: {Type}, disposed",
+            Log.Information(LogMessageTemplates.ServiceDispose,
                 typeof(IBlockerRedirector));
         }
 

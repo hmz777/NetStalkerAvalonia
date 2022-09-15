@@ -56,14 +56,14 @@ public class DeviceScanner : IDeviceScanner
         }
         catch (Exception e)
         {
-            Log.Warning("Service resolve error: {Message}",
+            Log.Error(LogMessageTemplates.ServiceResolveError,
                 e.Message);
         }
 
         Init();
         SetupBindings();
 
-        Log.Information("Service of type: {Type}, initialized",
+        Log.Information(LogMessageTemplates.ServiceInit,
             typeof(IDeviceScanner));
     }
 
@@ -253,7 +253,7 @@ public class DeviceScanner : IDeviceScanner
             // Get hostname for current target
             // We fire and forget since failing to resolve the hostname won't affect
             // the functionality
-            _deviceNameResolver?.GetDeviceNameAsync(presentClient.Value);
+            _deviceNameResolver?.ResolveDeviceNameAsync(presentClient.Value);
 
             // Get vendor info for current target if the feature is available
             if (OptionalFeatures.AvailableFeatures.Contains(typeof(IDeviceTypeIdentifier)))
@@ -267,20 +267,20 @@ public class DeviceScanner : IDeviceScanner
 
     private EthernetPacket BuildArpPacket(IPAddress targetIpAddress)
     {
-        var arpRequestpacket = new ArpPacket(ArpOperation.Request,
+        var arpRequestPacket = new ArpPacket(ArpOperation.Request,
             targetHardwareAddress: HostInfo.EmptyMac,
             targetProtocolAddress: targetIpAddress,
             senderHardwareAddress: HostInfo.HostMac,
             senderProtocolAddress: HostInfo.HostIp);
 
-        var ethernetpacket = new EthernetPacket(
+        var ethernetPacket = new EthernetPacket(
             sourceHardwareAddress: HostInfo.HostMac,
             destinationHardwareAddress: HostInfo.BroadcastMac,
             EthernetType.Arp);
 
-        ethernetpacket.PayloadPacket = arpRequestpacket;
+        ethernetPacket.PayloadPacket = arpRequestPacket;
 
-        return ethernetpacket;
+        return ethernetPacket;
     }
 
     private void AliveTimerOnElapsed(object? stateInfo)
@@ -308,8 +308,8 @@ public class DeviceScanner : IDeviceScanner
         {
             StartMonitoring();
             _isStarted = true;
-            
-            Log.Information("Service of type: {Type}, started",
+
+            Log.Information(LogMessageTemplates.ServiceStart,
                 typeof(IDeviceScanner));
         }
     }
@@ -328,7 +328,7 @@ public class DeviceScanner : IDeviceScanner
         _isStarted = false;
         _device?.StopCapture();
 
-        Log.Information("Service of type: {Type}, stopped",
+        Log.Information(LogMessageTemplates.ServiceStop,
             typeof(IDeviceScanner));
     }
 
@@ -348,11 +348,11 @@ public class DeviceScanner : IDeviceScanner
             _cancellationTokenSource = null;
         }
 
-        Log.Information("Service of type: {Type}, disposed",
+        Log.Information(LogMessageTemplates.ServiceDispose,
             typeof(IDeviceScanner));
     }
 
     #endregion
-    
+
     // TODO: Check why devices freeze on redirection or limitation and why then they disappear from the list.
 }

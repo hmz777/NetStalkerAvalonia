@@ -39,7 +39,7 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
             }
             catch (Exception e)
             {
-                Log.Warning("Service resolve error: {Message}",
+                Log.Error(LogMessageTemplates.ServiceResolveError,
                     e.Message);
             }
 
@@ -75,9 +75,8 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Error in service of type: {Type}. Message: {Message}",
-                        typeof(IDeviceTypeIdentifier),
-                        e.Message);
+                    Log.Error(LogMessageTemplates.ExceptionTemplate,
+                        e.GetType(), this.GetType(), e.Message);
                 }
             }
         }
