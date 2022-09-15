@@ -138,7 +138,7 @@
                                                   CommandParameter="{Binding Mac}"
                                                   IsEnabled="True" />
                                         <MenuItem Header="Clear name"
-                                                  Command="{Binding $parent[Window].DataContext.ClearName}"
+                                                  Command="{Binding $parent[Window].DataContext.ClearFriendlyName}"
                                                   CommandParameter="{Binding Mac}"
                                                   IsEnabled="True" />
                                     </ContextMenu>

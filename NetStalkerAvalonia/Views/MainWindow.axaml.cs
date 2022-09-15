@@ -25,6 +25,11 @@ namespace NetStalkerAvalonia.Views
                     .RegisterHandler(DoShowMessageDialogAsync)
                     .DisposeWith(disposables);
 
+                ViewModel!
+                    .SetFriendlyNameInteraction!
+                    .RegisterHandler(DoShowSetFriendlyDeviceNameDialogAsync)
+                    .DisposeWith(disposables);
+
                 var adapterSelect = new AdapterSelectWindow();
                 adapterSelect.DataContext = new AdapterSelectViewModel();
 
@@ -50,6 +55,15 @@ namespace NetStalkerAvalonia.Views
             statusMessageDialog.DataContext = new StatusMessageViewModel() { StatusMessage = interaction.Input };
 
             var result = await statusMessageDialog.ShowDialog<Unit>(this);
+            interaction.SetOutput(result);
+        }
+
+        private async Task DoShowSetFriendlyDeviceNameDialogAsync(InteractionContext<string?, string?> interaction)
+        {
+            var setNameDialogWindow = new SetNameDialogWindow();
+            setNameDialogWindow.DataContext = new SetNameDialogViewModel() { Name = interaction.Input };
+
+            var result = await setNameDialogWindow.ShowDialog<string?>(this);
             interaction.SetOutput(result);
         }
     }

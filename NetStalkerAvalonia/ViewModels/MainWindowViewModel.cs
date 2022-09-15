@@ -33,6 +33,7 @@ namespace NetStalkerAvalonia.ViewModels
         // Required services
         private IDeviceScanner? _scanner;
         private IBlockerRedirector? _blockerRedirector;
+        private IDeviceNameResolver? _deviceNameResolver;
 
         #endregion
 
@@ -73,7 +74,7 @@ namespace NetStalkerAvalonia.ViewModels
         public ReactiveCommand<PhysicalAddress?, Unit> RedirectUnredirect { get; set; }
         public ReactiveCommand<PhysicalAddress?, Unit> Limit { get; }
         public ReactiveCommand<PhysicalAddress?, Unit> SetFriendlyName { get; set; }
-        public ReactiveCommand<PhysicalAddress?, Unit> ClearName { get; set; }
+        public ReactiveCommand<PhysicalAddress?, Unit> ClearFriendlyName { get; set; }
 
         #endregion
 
@@ -81,6 +82,7 @@ namespace NetStalkerAvalonia.ViewModels
 
         public Interaction<DeviceLimitsModel?, DeviceLimitsModel?>? ShowLimitDialogInteraction { get; set; }
         public Interaction<StatusMessage, Unit>? ShowStatusMessageInteraction { get; set; }
+        public Interaction<string?, string?>? SetFriendlyNameInteraction { get; set; }
 
         #endregion
 
@@ -193,6 +195,14 @@ namespace NetStalkerAvalonia.ViewModels
 
             #endregion
 
+            #region Friendly Target Name
+
+            SetFriendlyNameInteraction = new Interaction<string?, string?>();
+            SetFriendlyName = ReactiveCommand.CreateFromTask<PhysicalAddress?>(SetDeviceFriendlyName);
+            ClearFriendlyName = ReactiveCommand.CreateFromTask<PhysicalAddress?>(ClearDeviceFriendlyName);
+
+            #endregion
+
             #endregion
 
             #region Status message
@@ -230,7 +240,7 @@ namespace NetStalkerAvalonia.ViewModels
             {
                 _scanner = Tools.ResolveIfNull<IDeviceScanner>(null!);
                 _blockerRedirector = Tools.ResolveIfNull<IBlockerRedirector>(null!);
-
+                _deviceNameResolver = Tools.ResolveIfNull<IDeviceNameResolver>(null!);
                 _servicesResolved = true;
             }
         }
@@ -351,6 +361,33 @@ namespace NetStalkerAvalonia.ViewModels
                     _blockerRedirector?.UnRedirect(device.Mac);
                 }
             }
+        }
+
+        private async Task SetDeviceFriendlyName(PhysicalAddress? mac)
+        {
+            var validationResult = await CheckIfMacAddressIsValidAsync(mac);
+
+            if (validationResult.isValid == false)
+                return;
+
+            var result =
+                await SetFriendlyNameInteraction!.Handle(validationResult.device.Name);
+
+            validationResult.device.SetFriendlyName(result);
+
+            await _deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly.ToList())!;
+        }
+
+        private async Task ClearDeviceFriendlyName(PhysicalAddress? mac)
+        {
+            var validationResult = await CheckIfMacAddressIsValidAsync(mac);
+
+            if (validationResult.isValid == false)
+                return;
+
+            validationResult.device.ClearFriendlyName();
+            
+            await _deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly.ToList())!;
         }
 
         #endregion

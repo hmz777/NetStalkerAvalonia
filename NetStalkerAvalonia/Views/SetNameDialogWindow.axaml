@@ -1,0 +1,43 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:components="clr-namespace:NetStalkerAvalonia.Components"
+        xmlns:viewModels="clr-namespace:NetStalkerAvalonia.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="NetStalkerAvalonia.Views.SetNameDialogWindow"
+        Title="Set Friendly Name">
+
+    <Design.DataContext>
+        <viewModels:SetNameDialogViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
+        <Style Selector="Window">
+            <Setter Property="Width" Value="500" />
+            <Setter Property="Height" Value="270" />
+            <Setter Property="MaxWidth" Value="500" />
+            <Setter Property="MinWidth" Value="500" />
+            <Setter Property="MaxHeight" Value="270" />
+            <Setter Property="MinHeight" Value="270" />
+            <Setter Property="WindowStartupLocation" Value="CenterOwner" />
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,*">
+        <components:PageTitle Grid.Row="0" VerticalAlignment="Stretch" Text="{Binding $parent[Window].Title}" />
+        <Border Grid.Row="1" Padding="15">
+            <StackPanel Orientation="Vertical" Spacing="20">
+                <StackPanel Orientation="Vertical">
+                    <Label Margin="0,0,0, 5">Friendly Name</Label>
+                    <TextBox Watermark="Name" Text="{Binding Name, Mode=TwoWay}" />
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom">
+                    <Button Padding="100,10,100,10" Command="{Binding Apply }">Set</Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
