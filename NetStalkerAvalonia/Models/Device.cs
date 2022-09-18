@@ -124,7 +124,8 @@ namespace NetStalkerAvalonia.Models
 
         #region Methods
 
-        public void SetFriendlyName(string name) => Name = name;
+        public void SetFriendlyName(string? name) => Name = string.IsNullOrWhiteSpace(name) ? Ip.ToString() : name;
+        public void ClearFriendlyName() => Name = null;
         public void SetVendor(string vendor) => Vendor = vendor;
         public void Block() => Blocked = true;
         public void UnBlock() => Blocked = false;
