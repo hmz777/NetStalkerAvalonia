@@ -35,7 +35,8 @@ namespace NetStalkerAvalonia
             }
             catch (Exception e)
             {
-                Log.Error(e, "Exception triggered with message:{Message}", e.Message);
+                Log.Error(LogMessageTemplates.ExceptionTemplate,
+                    e.GetType(), "Main", e.Message);
             }
             finally
             {
