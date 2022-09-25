@@ -42,6 +42,7 @@ namespace NetStalkerAvalonia.Models
         public string? Vendor { get; private set; }
         public DeviceType Type { get; private set; }
         public DateTime DateAdded { get; }
+        public bool HasFriendlyName { get; set; }
 
         #endregion
 
@@ -124,8 +125,26 @@ namespace NetStalkerAvalonia.Models
 
         #region Methods
 
-        public void SetFriendlyName(string? name) => Name = string.IsNullOrWhiteSpace(name) ? Ip.ToString() : name;
-        public void ClearFriendlyName() => Name = null;
+        public void SetFriendlyName(string? name, bool isResolvedHostName = false)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Name = Ip.ToString();
+                HasFriendlyName = false;
+            }
+            else
+            {
+                Name = name;
+                HasFriendlyName = !isResolvedHostName;
+            }
+        }
+
+        public void ClearFriendlyName()
+        {
+            Name = null;
+            HasFriendlyName = false;
+        }
+
         public void SetVendor(string vendor) => Vendor = vendor;
         public void Block() => Blocked = true;
         public void UnBlock() => Blocked = false;

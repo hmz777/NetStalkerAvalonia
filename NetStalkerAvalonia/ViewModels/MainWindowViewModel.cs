@@ -407,7 +407,7 @@ namespace NetStalkerAvalonia.ViewModels
 
         private async Task SetDeviceFriendlyName(PhysicalAddress? mac)
         {
-            var validationResult = await CheckIfMacAddressIsValidAsync(mac);
+            var validationResult = await CheckIfMacAddressIsValidAsync(mac, true);
 
             if (validationResult.isValid == false)
                 return;
@@ -422,12 +422,13 @@ namespace NetStalkerAvalonia.ViewModels
 
         private async Task ClearDeviceFriendlyName(PhysicalAddress? mac)
         {
-            var validationResult = await CheckIfMacAddressIsValidAsync(mac);
+            var validationResult = await CheckIfMacAddressIsValidAsync(mac, true);
 
             if (validationResult.isValid == false)
                 return;
 
-            validationResult.device.ClearFriendlyName();
+            // It doesn't matter if we specify the second optional parameter or not
+            validationResult.device.SetFriendlyName(null!);
 
             await _deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly.ToList())!;
         }
@@ -442,7 +443,9 @@ namespace NetStalkerAvalonia.ViewModels
             return routableViewModel?.UrlPathSegment ?? "Device List";
         }
 
-        private async Task<(bool isValid, Device device)> CheckIfMacAddressIsValidAsync(PhysicalAddress? mac)
+        // canBeAppliedToGatewayAndLocal parameter means friendly commands like setting device name, clear name, etc.
+        private async Task<(bool isValid, Device device)> CheckIfMacAddressIsValidAsync(PhysicalAddress? mac,
+            bool canBeAppliedToGatewayAndLocal = false)
         {
             var device = _devicesReadOnly.FirstOrDefault(x => x.Mac!.Equals(mac));
 
@@ -453,14 +456,14 @@ namespace NetStalkerAvalonia.ViewModels
 
                 return (false, null!);
             }
-            else if (device!.IsGateway())
+            else if (device!.IsGateway() && canBeAppliedToGatewayAndLocal == false)
             {
                 await ShowStatusMessageInteraction!.Handle(new StatusMessage(MessageType.Error,
                     "Gateway can't be targeted!"));
 
                 return (false, null!);
             }
-            else if (device!.IsLocalDevice())
+            else if (device!.IsLocalDevice() && canBeAppliedToGatewayAndLocal == false)
             {
                 await ShowStatusMessageInteraction!.Handle(new StatusMessage(MessageType.Error,
                     "You can't target your own device!"));
@@ -470,6 +473,8 @@ namespace NetStalkerAvalonia.ViewModels
 
             return (true, device);
         }
+
+        public IEnumerable<Device> GetUiDeviceCollection() => _devicesReadOnly;
 
         #endregion
 

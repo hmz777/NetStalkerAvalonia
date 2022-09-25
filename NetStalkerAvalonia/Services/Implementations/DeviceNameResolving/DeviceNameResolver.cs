@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,25 +30,26 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
         {
             ArgumentNullException.ThrowIfNull(device, nameof(device));
 
-            var deviceFriendlyName = DevicesNames
-                .Where(dn => dn.Mac.Equals(device.Mac))
-                .FirstOrDefault();
+            try
+            {
+                var deviceFriendlyName = DevicesNames
+                    .Where(dn => PhysicalAddress.Parse(dn.Mac).Equals(device.Mac))
+                    .FirstOrDefault();
 
-            if (deviceFriendlyName != null)
-            {
-                device.SetFriendlyName(deviceFriendlyName.Name);
-            }
-            else
-            {
-                try
+                if (deviceFriendlyName != null)
+                {
+                    device.SetFriendlyName(deviceFriendlyName.Name);
+                }
+                else
                 {
                     var ipHostEntry = await Dns.GetHostEntryAsync(device.Ip!);
-                    device.SetFriendlyName(ipHostEntry.HostName);
+                    device.SetFriendlyName(ipHostEntry.HostName, true);
                 }
-                catch
-                {
-                    device.SetFriendlyName(device.Ip.ToString());
-                }
+            }
+            catch
+            {
+                // It doesn't matter if we specify the second optional parameter or not
+                device.SetFriendlyName(null!);
             }
         }
 
@@ -70,12 +72,15 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
             }
         }
 
-        public async Task SaveDeviceNamesAsync(List<Device> devices, CancellationToken cancellationToken = default)
+        public async Task SaveDeviceNamesAsync(IEnumerable<Device> devices,
+            CancellationToken cancellationToken = default)
         {
             try
             {
                 var deviceNamesJson = JsonSerializer
-                    .Serialize(devices.Select(device => new DeviceNameModel(device.Mac, device.Name)));
+                    .Serialize(devices
+                        .Where(d => d.HasFriendlyName)
+                        .Select(device => new DeviceNameModel(device.Mac.ToString(), device.Name)));
 
                 await File.WriteAllTextAsync(_deviceNamesResource, deviceNamesJson, cancellationToken);
             }
@@ -88,7 +93,10 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
 
         public void ClearDeviceNames()
         {
-            File.Delete(_deviceNamesResource);
+            if (File.Exists(_deviceNamesResource))
+            {
+                File.Delete(_deviceNamesResource);
+            }
         }
     }
 }

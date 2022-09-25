@@ -35,7 +35,7 @@
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Center"
                             VerticalAlignment="Bottom">
-                    <Button Padding="100,10,100,10" Command="{Binding Apply }">Set</Button>
+                    <Button Padding="100,10,100,10" Command="{Binding Accept}">Set</Button>
                 </StackPanel>
             </StackPanel>
         </Border>

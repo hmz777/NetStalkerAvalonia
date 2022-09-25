@@ -4,10 +4,10 @@ namespace NetStalkerAvalonia.Models;
 
 public class DeviceNameModel
 {
-    public PhysicalAddress Mac { get; set; }
+    public string Mac { get; set; }
     public string? Name { get; set; }
 
-    public DeviceNameModel(PhysicalAddress mac, string? name)
+    public DeviceNameModel(string? mac, string? name)
     {
         Mac = mac;
         Name = name;

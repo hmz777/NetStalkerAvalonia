@@ -9,7 +9,7 @@ namespace NetStalkerAvalonia.Services
     {
         public List<DeviceNameModel> DevicesNames { get; }
         Task ResolveDeviceNameAsync(Device device);
-        Task SaveDeviceNamesAsync(List<Device> devices, CancellationToken cancellationToken = default);
+        Task SaveDeviceNamesAsync(IEnumerable<Device> devices, CancellationToken cancellationToken = default);
         void ClearDeviceNames();
     }
 }
