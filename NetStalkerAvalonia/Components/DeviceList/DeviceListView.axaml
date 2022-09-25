@@ -126,7 +126,7 @@
                                                   CommandParameter="{Binding Mac}"
                                                   IsEnabled="True" />
                                         <MenuItem Header="Redirect/Undo Redirection"
-                                                  Command="{Binding $parent[Window].DataContext.RedirectUnredirect}"
+                                                  Command="{Binding $parent[Window].DataContext.RedirectUnRedirect}"
                                                   CommandParameter="{Binding Mac}"
                                                   IsEnabled="True" />
                                         <MenuItem Header="Limit Speed"

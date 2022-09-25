@@ -14,10 +14,12 @@
         <StackPanel Orientation="Horizontal" Spacing="15">
             <CheckBox Content="Block All"
                       Command="{Binding BlockAll}"
-                      CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                      CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                      IsChecked="{Binding AllBlocked, Mode=TwoWay}" />
             <CheckBox Content="Redirect All"
                       Command="{Binding RedirectAll}"
-                      CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}" />
+                      CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+                      IsChecked="{Binding AllRedirected, Mode=TwoWay}" />
         </StackPanel>
     </Border>
 </UserControl>

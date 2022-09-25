@@ -70,19 +70,19 @@ namespace NetStalkerAvalonia.ViewModels
 
         #region Context Menu Commands
 
-        public ReactiveCommand<PhysicalAddress?, Unit> BlockUnblock { get; set; }
-        public ReactiveCommand<PhysicalAddress?, Unit> RedirectUnredirect { get; set; }
+        public ReactiveCommand<PhysicalAddress?, Unit> BlockUnblock { get; }
+        public ReactiveCommand<PhysicalAddress?, Unit> RedirectUnRedirect { get; }
         public ReactiveCommand<PhysicalAddress?, Unit> Limit { get; }
-        public ReactiveCommand<PhysicalAddress?, Unit> SetFriendlyName { get; set; }
-        public ReactiveCommand<PhysicalAddress?, Unit> ClearFriendlyName { get; set; }
+        public ReactiveCommand<PhysicalAddress?, Unit> SetFriendlyName { get; }
+        public ReactiveCommand<PhysicalAddress?, Unit> ClearFriendlyName { get; }
 
         #endregion
 
         #region Interactions
 
-        public Interaction<DeviceLimitsModel?, DeviceLimitsModel?>? ShowLimitDialogInteraction { get; set; }
-        public Interaction<StatusMessage, Unit>? ShowStatusMessageInteraction { get; set; }
-        public Interaction<string?, string?>? SetFriendlyNameInteraction { get; set; }
+        public Interaction<DeviceLimitsModel?, DeviceLimitsModel?> ShowLimitDialogInteraction { get; set; }
+        public Interaction<StatusMessage, Unit> ShowStatusMessageInteraction { get; set; }
+        public Interaction<string?, string?> SetFriendlyNameInteraction { get; set; }
 
         #endregion
 
@@ -94,6 +94,22 @@ namespace NetStalkerAvalonia.ViewModels
         {
             get => _selectedDevice;
             set => this.RaiseAndSetIfChanged(ref _selectedDevice, value);
+        }
+
+        private bool _allBlocked;
+
+        public bool AllBlocked
+        {
+            get => _allBlocked;
+            set => this.RaiseAndSetIfChanged(ref _allBlocked, value);
+        }
+
+        private bool _allRedirected;
+
+        public bool AllRedirected
+        {
+            get => _allRedirected;
+            set => this.RaiseAndSetIfChanged(ref _allRedirected, value);
         }
 
         private readonly ObservableAsPropertyHelper<string> _pageTitle;
@@ -178,15 +194,15 @@ namespace NetStalkerAvalonia.ViewModels
 
             Scan = ReactiveCommand.Create(ScanForDevices);
             Refresh = ReactiveCommand.Create(RefreshDevices);
-            BlockAll = ReactiveCommand.Create<bool>(BlockAllHandler);
-            RedirectAll = ReactiveCommand.Create<bool>(RedirectAllHandler);
+            BlockAll = ReactiveCommand.CreateFromTask<bool>(BlockAllHandler);
+            RedirectAll = ReactiveCommand.CreateFromTask<bool>(RedirectAllHandler);
 
             #endregion
 
             #region Context Menu command wiring
 
             BlockUnblock = ReactiveCommand.CreateFromTask<PhysicalAddress?>(BlockDevice);
-            RedirectUnredirect = ReactiveCommand.CreateFromTask<PhysicalAddress?>(RedirectDevice);
+            RedirectUnRedirect = ReactiveCommand.CreateFromTask<PhysicalAddress?>(RedirectDevice);
 
             #region Limit Dialog
 
@@ -219,7 +235,7 @@ namespace NetStalkerAvalonia.ViewModels
                 Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
             BlockUnblock.ThrownExceptions.Subscribe(x =>
                 Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
-            RedirectUnredirect.ThrownExceptions.Subscribe(x =>
+            RedirectUnRedirect.ThrownExceptions.Subscribe(x =>
                 Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
             BlockAll.ThrownExceptions.Subscribe(x =>
                 Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
@@ -319,8 +335,19 @@ namespace NetStalkerAvalonia.ViewModels
             }
         }
 
-        private void BlockAllHandler(bool active)
+        private async Task BlockAllHandler(bool active)
         {
+            if (AllRedirected && active)
+            {
+                AllBlocked = false;
+
+                await ShowStatusMessageInteraction
+                    .Handle(
+                        new StatusMessage(MessageType.Error,
+                            "You have to uncheck the Redirect All toggle first!"));
+                return;
+            }
+
             var devices = _devicesReadOnly
                 .Where(d => d.IsGateway() == false && d.IsLocalDevice() == false)
                 .ToList();
@@ -339,10 +366,23 @@ namespace NetStalkerAvalonia.ViewModels
                     _blockerRedirector?.UnBlock(device.Mac);
                 }
             }
+
+            AllBlocked = active;
         }
 
-        private void RedirectAllHandler(bool active)
+        private async Task RedirectAllHandler(bool active)
         {
+            if (AllBlocked && active)
+            {
+                AllRedirected = false;
+
+                await ShowStatusMessageInteraction
+                    .Handle(
+                        new StatusMessage(MessageType.Error,
+                            "You have to uncheck the Block All toggle first!"));
+                return;
+            }
+
             var devices = _devicesReadOnly
                 .Where(d => d.IsGateway() == false && d.IsLocalDevice() == false)
                 .ToList();
@@ -361,6 +401,8 @@ namespace NetStalkerAvalonia.ViewModels
                     _blockerRedirector?.UnRedirect(device.Mac);
                 }
             }
+
+            AllRedirected = active;
         }
 
         private async Task SetDeviceFriendlyName(PhysicalAddress? mac)
@@ -386,7 +428,7 @@ namespace NetStalkerAvalonia.ViewModels
                 return;
 
             validationResult.device.ClearFriendlyName();
-            
+
             await _deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly.ToList())!;
         }
 
