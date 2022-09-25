@@ -156,19 +156,19 @@ namespace NetStalkerAvalonia.ViewModels
                 .ToProperty(this, x => x.CanGoBack);
 
             GoToSniffer = ReactiveCommand.CreateFromObservable(
-                () => Router.Navigate.Execute(new SnifferViewModel(this)));
+                () => Router.Navigate.Execute(Tools.ViewModels[1] as IRoutableViewModel));
 
             GoToOptions = ReactiveCommand.CreateFromObservable(
-                () => Router.Navigate.Execute(new OptionsViewModel(this)));
+                () => Router.Navigate.Execute(Tools.ViewModels[2] as IRoutableViewModel));
 
             GoToRules = ReactiveCommand.CreateFromObservable(
-                () => Router.Navigate.Execute(new RuleBuilderViewModel(this)));
+                () => Router.Navigate.Execute(Tools.ViewModels[3] as IRoutableViewModel));
 
             GoToHelp = ReactiveCommand.CreateFromObservable(
-                () => Router.Navigate.Execute(new HelpViewModel(this)));
+                () => Router.Navigate.Execute(Tools.ViewModels[4] as IRoutableViewModel));
 
             GoToAbout = ReactiveCommand.CreateFromObservable(
-                () => Router.Navigate.Execute(new AboutViewModel(this)));
+                () => Router.Navigate.Execute(Tools.ViewModels[5] as IRoutableViewModel));
 
             #endregion
 

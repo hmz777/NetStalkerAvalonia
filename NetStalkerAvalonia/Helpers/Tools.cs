@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reactive;
@@ -6,6 +7,8 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.Services;
+using NetStalkerAvalonia.ViewModels;
+using NetStalkerAvalonia.ViewModels.RoutedViewModels;
 using ReactiveUI;
 using Serilog;
 using Serilog.Core;
@@ -17,6 +20,23 @@ namespace NetStalkerAvalonia.Helpers;
 
 public class Tools
 {
+    public static List<ViewModelBase> ViewModels = new();
+
+    public static void InitViewModels()
+    {
+        var mainViewModel = new MainWindowViewModel();
+
+        ViewModels = new List<ViewModelBase>
+        {
+            mainViewModel,
+            new SnifferViewModel(mainViewModel),
+            new OptionsViewModel(mainViewModel),
+            new RuleBuilderViewModel(mainViewModel),
+            new HelpViewModel(mainViewModel),
+            new AboutViewModel(mainViewModel)
+        };
+    }
+
     public static T ResolveIfNull<T>(T dependency)
     {
         if (dependency != null)
