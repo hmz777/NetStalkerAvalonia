@@ -192,30 +192,30 @@ namespace NetStalkerAvalonia.ViewModels
 
             #region Nav Command wiring
 
-            Scan = ReactiveCommand.Create(ScanForDevices);
-            Refresh = ReactiveCommand.Create(RefreshDevices);
-            BlockAll = ReactiveCommand.CreateFromTask<bool>(BlockAllHandler);
-            RedirectAll = ReactiveCommand.CreateFromTask<bool>(RedirectAllHandler);
+            Scan = ReactiveCommand.Create(ScanImpl);
+            Refresh = ReactiveCommand.Create(RefreshImpl);
+            BlockAll = ReactiveCommand.CreateFromTask<bool>(BlockAllImpl);
+            RedirectAll = ReactiveCommand.CreateFromTask<bool>(RedirectAllImpl);
 
             #endregion
 
             #region Context Menu command wiring
 
-            BlockUnblock = ReactiveCommand.CreateFromTask<PhysicalAddress?>(BlockDevice);
-            RedirectUnRedirect = ReactiveCommand.CreateFromTask<PhysicalAddress?>(RedirectDevice);
+            BlockUnblock = ReactiveCommand.CreateFromTask<PhysicalAddress?>(BlockUnblockImpl);
+            RedirectUnRedirect = ReactiveCommand.CreateFromTask<PhysicalAddress?>(RedirectUnRedirectImpl);
 
             #region Limit Dialog
 
             ShowLimitDialogInteraction = new Interaction<DeviceLimitsModel?, DeviceLimitsModel?>();
-            Limit = ReactiveCommand.CreateFromTask<PhysicalAddress?>(DeviceLimitation);
+            Limit = ReactiveCommand.CreateFromTask<PhysicalAddress?>(LimitImpl);
 
             #endregion
 
             #region Friendly Target Name
 
             SetFriendlyNameInteraction = new Interaction<string?, string?>();
-            SetFriendlyName = ReactiveCommand.CreateFromTask<PhysicalAddress?>(SetDeviceFriendlyName);
-            ClearFriendlyName = ReactiveCommand.CreateFromTask<PhysicalAddress?>(ClearDeviceFriendlyName);
+            SetFriendlyName = ReactiveCommand.CreateFromTask<PhysicalAddress?>(SetFriendlyNameImpl);
+            ClearFriendlyName = ReactiveCommand.CreateFromTask<PhysicalAddress?>(ClearFriendlyNameImpl);
 
             #endregion
 
@@ -265,14 +265,14 @@ namespace NetStalkerAvalonia.ViewModels
 
         #region Command Handlers
 
-        private void ScanForDevices()
+        private void ScanImpl()
         {
             ResolveRequiredServices();
 
             _scanner?.Scan();
         }
 
-        private void RefreshDevices()
+        private void RefreshImpl()
         {
             ResolveRequiredServices();
 
@@ -280,7 +280,7 @@ namespace NetStalkerAvalonia.ViewModels
             Task.Run(() => _scanner?.Refresh());
         }
 
-        private async Task BlockDevice(PhysicalAddress? mac)
+        private async Task BlockUnblockImpl(PhysicalAddress? mac)
         {
             var validationResult = await CheckIfMacAddressIsValidAsync(mac);
 
@@ -299,7 +299,7 @@ namespace NetStalkerAvalonia.ViewModels
             }
         }
 
-        private async Task RedirectDevice(PhysicalAddress? mac)
+        private async Task RedirectUnRedirectImpl(PhysicalAddress? mac)
         {
             var validationResult = await CheckIfMacAddressIsValidAsync(mac);
 
@@ -316,7 +316,7 @@ namespace NetStalkerAvalonia.ViewModels
             }
         }
 
-        private async Task DeviceLimitation(PhysicalAddress? mac)
+        private async Task LimitImpl(PhysicalAddress? mac)
         {
             var validationResult = await CheckIfMacAddressIsValidAsync(mac);
 
@@ -335,7 +335,7 @@ namespace NetStalkerAvalonia.ViewModels
             }
         }
 
-        private async Task BlockAllHandler(bool active)
+        private async Task BlockAllImpl(bool active)
         {
             if (AllRedirected && active)
             {
@@ -370,7 +370,7 @@ namespace NetStalkerAvalonia.ViewModels
             AllBlocked = active;
         }
 
-        private async Task RedirectAllHandler(bool active)
+        private async Task RedirectAllImpl(bool active)
         {
             if (AllBlocked && active)
             {
@@ -405,7 +405,7 @@ namespace NetStalkerAvalonia.ViewModels
             AllRedirected = active;
         }
 
-        private async Task SetDeviceFriendlyName(PhysicalAddress? mac)
+        private async Task SetFriendlyNameImpl(PhysicalAddress? mac)
         {
             var validationResult = await CheckIfMacAddressIsValidAsync(mac, true);
 
@@ -420,7 +420,7 @@ namespace NetStalkerAvalonia.ViewModels
             await _deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly.ToList())!;
         }
 
-        private async Task ClearDeviceFriendlyName(PhysicalAddress? mac)
+        private async Task ClearFriendlyNameImpl(PhysicalAddress? mac)
         {
             var validationResult = await CheckIfMacAddressIsValidAsync(mac, true);
 
