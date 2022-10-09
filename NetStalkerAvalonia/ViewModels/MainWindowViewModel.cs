@@ -26,6 +26,15 @@ namespace NetStalkerAvalonia.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase, IScreen
     {
+        #region Members
+
+        private bool _blockAllHandlerAttached;
+        private IDisposable? _blockAllFutureHandlerSubscription = null;
+        private bool _redirectAllHandlerAttached;
+        private IDisposable? _redirectAllFutureHandlerSubscription = null;
+
+        #endregion
+
         #region Services
 
         private bool _servicesResolved;
@@ -348,22 +357,40 @@ namespace NetStalkerAvalonia.ViewModels
                 return;
             }
 
-            var devices = _devicesReadOnly
-                .Where(d => d.IsGateway() == false && d.IsLocalDevice() == false)
-                .ToList();
-
             if (active)
             {
+                var devices = _devicesReadOnly
+                    .Where(d => d.IsGateway() == false && d.IsLocalDevice() == false & d.Blocked == false)
+                    .ToList();
+
                 foreach (var device in devices)
                 {
                     _blockerRedirector?.Block(device.Mac);
                 }
+
+                // Attach handler to block all future detections
+                if (_blockAllHandlerAttached == false)
+                {
+                    AttachBlockAllFutureDetectionsHandler();
+                    _blockAllHandlerAttached = true;
+                }
             }
             else
             {
+                var devices = _devicesReadOnly
+                    .Where(d => d.IsGateway() == false && d.IsLocalDevice() == false & d.Blocked == true)
+                    .ToList();
+
                 foreach (var device in devices)
                 {
                     _blockerRedirector?.UnBlock(device.Mac);
+                }
+
+                // Remove handler to block all future detections
+                if (_blockAllHandlerAttached == true)
+                {
+                    RemoveBlockAllFutureDetectionsHandler();
+                    _blockAllHandlerAttached = false;
                 }
             }
 
@@ -383,22 +410,40 @@ namespace NetStalkerAvalonia.ViewModels
                 return;
             }
 
-            var devices = _devicesReadOnly
-                .Where(d => d.IsGateway() == false && d.IsLocalDevice() == false)
-                .ToList();
-
             if (active)
             {
+                var devices = _devicesReadOnly
+                    .Where(d => d.IsGateway() == false && d.IsLocalDevice() == false && d.Redirected == false)
+                    .ToList();
+
                 foreach (var device in devices)
                 {
                     _blockerRedirector?.Redirect(device.Mac);
                 }
+
+                // Attach handler to redirect all future detections
+                if (_redirectAllHandlerAttached == false)
+                {
+                    AttachRedirectAllFutureDetectionsHandler();
+                    _redirectAllHandlerAttached = true;
+                }
             }
             else
             {
+                var devices = _devicesReadOnly
+                    .Where(d => d.IsGateway() == false && d.IsLocalDevice() == false && d.Redirected == true)
+                    .ToList();
+
                 foreach (var device in devices)
                 {
                     _blockerRedirector?.UnRedirect(device.Mac);
+                }
+
+                // Remove handler to redirect all future detections
+                if (_redirectAllHandlerAttached == true)
+                {
+                    RemoveRedirectAllFutureDetectionsHandler();
+                    _redirectAllHandlerAttached = false;
                 }
             }
 
@@ -476,6 +521,35 @@ namespace NetStalkerAvalonia.ViewModels
 
         public IEnumerable<Device> GetUiDeviceCollection() => _devicesReadOnly;
 
+        private void AttachBlockAllFutureDetectionsHandler()
+        {
+            _blockAllFutureHandlerSubscription =
+                _devicesReadOnly
+                    .ToObservableChangeSet()
+                    .Where(change => change.Adds > 0)
+                    .ToCollection()
+                    .Subscribe(x => BlockAllImpl(true));
+        }
+
+        private void RemoveBlockAllFutureDetectionsHandler()
+        {
+            _blockAllFutureHandlerSubscription.Dispose();
+        }
+
+        private void AttachRedirectAllFutureDetectionsHandler()
+        {
+            _redirectAllFutureHandlerSubscription =
+                _devicesReadOnly
+                    .ToObservableChangeSet()
+                    .Where(change => change.Adds > 0)
+                    .ToCollection()
+                    .Subscribe(x => RedirectAllImpl(true));
+        }
+
+        private void RemoveRedirectAllFutureDetectionsHandler()
+        {
+            _redirectAllFutureHandlerSubscription.Dispose();
+z`
         #endregion
 
         #region Testing
@@ -493,6 +567,8 @@ namespace NetStalkerAvalonia.ViewModels
         // For debugging
         public void TestMethod(Device? device = null)
         {
+            var encText = Tools.StringEncrypt("This is a secret!");
+            //var decText = Tools.StringDecrypt("This is a secret!");
         }
 
         private static string GetRandomMacAddress()
