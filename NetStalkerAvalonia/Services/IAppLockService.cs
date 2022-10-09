@@ -2,9 +2,8 @@
 {
     public interface IAppLockService
     {
-        void Lock();
-        void Unlock();
-        void SetPassword(string newPassword, string oldPassword);
-        void ClearPassword();
+        void SetPassword(string newPassword, string currentPassword);
+        void ClearPassword(string currentPassword);
+        public bool IsLocked { get; }
     }
 }
