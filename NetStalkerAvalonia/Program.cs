@@ -36,7 +36,7 @@ namespace NetStalkerAvalonia
             catch (Exception e)
             {
                 Log.Error(LogMessageTemplates.ExceptionTemplate,
-                    e.GetType(), "Main", e.Message);
+                    e.GetType(), nameof(Main), e.Message);
             }
             finally
             {
