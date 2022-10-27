@@ -33,6 +33,7 @@
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/about.png"
 							   TextContent="About"
 							   Command="{Binding GoToAbout}"></cmpts:ImageButton>
+			<Button Command="{Binding TestMethod}">Text</Button>
 		</StackPanel>
 	</Border>
 </UserControl>
