@@ -4,5 +4,6 @@ public enum ContractKeys
 {
     MacLookupClient,
     ScannerStream,
-    UiStream
+    UiStream,
+    StatusMessage
 }
