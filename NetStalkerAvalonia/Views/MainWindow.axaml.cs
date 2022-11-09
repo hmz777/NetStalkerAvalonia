@@ -31,7 +31,7 @@ namespace NetStalkerAvalonia.Views
                     .DisposeWith(disposables);
 
                 var adapterSelect = new AdapterSelectWindow();
-                adapterSelect.DataContext = new AdapterSelectViewModel();
+                adapterSelect.DataContext = new AdapterSelectViewModel(null!);
 
                 adapterSelect.ShowDialog(this).DisposeWith(disposables);
             });
