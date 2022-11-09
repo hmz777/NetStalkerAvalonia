@@ -536,12 +536,13 @@ namespace NetStalkerAvalonia.ViewModels
                     .ToObservableChangeSet()
                     .Where(change => change.Adds > 0)
                     .ToCollection()
-                    .Subscribe(x => BlockAllImpl(true));
+                    .Select(x => BlockAllImpl(true))
+                    .Subscribe();
         }
 
         private void RemoveBlockAllFutureDetectionsHandler()
         {
-            _blockAllFutureHandlerSubscription.Dispose();
+            _blockAllFutureHandlerSubscription?.Dispose();
         }
 
         private void AttachRedirectAllFutureDetectionsHandler()
@@ -551,13 +552,15 @@ namespace NetStalkerAvalonia.ViewModels
                     .ToObservableChangeSet()
                     .Where(change => change.Adds > 0)
                     .ToCollection()
-                    .Subscribe(x => RedirectAllImpl(true));
+                    .Select(x => RedirectAllImpl(true))
+                    .Subscribe();
         }
 
         private void RemoveRedirectAllFutureDetectionsHandler()
         {
-            _redirectAllFutureHandlerSubscription.Dispose();
-z`
+            _redirectAllFutureHandlerSubscription?.Dispose();
+        }
+
         private async Task<Unit> ShowStatusMessage(StatusMessage statusMessage)
         {
             await ShowStatusMessageInteraction.Handle(statusMessage);
