@@ -234,6 +234,14 @@ namespace NetStalkerAvalonia.ViewModels
 
             ShowStatusMessageInteraction = new Interaction<StatusMessage, Unit>();
 
+            // This message bus listener is used for displaying status messages by other components in the app
+            MessageBus
+                .Current
+                .Listen<StatusMessage>(ContractKeys.StatusMessage.ToString())
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Select(x => ShowStatusMessage(x))
+                .Subscribe();
+
             #endregion
 
             #region Exception Handling
@@ -550,6 +558,12 @@ namespace NetStalkerAvalonia.ViewModels
         {
             _redirectAllFutureHandlerSubscription.Dispose();
 z`
+        private async Task<Unit> ShowStatusMessage(StatusMessage statusMessage)
+        {
+            await ShowStatusMessageInteraction.Handle(statusMessage);
+            return Unit.Default;
+        }
+
         #endregion
 
         #region Testing
