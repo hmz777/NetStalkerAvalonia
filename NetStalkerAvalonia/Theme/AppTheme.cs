@@ -18,7 +18,7 @@
         public static string TitleBarButtonsHoverColor => "#1F1F1F";
         public static string PageTitleColor => "white";
         public static string AccentColor => "Teal";
-        public static string PageTitleSize => "35";
+        public static string PageTitleSize => "25";
         public static string ListRowSelectedBackColor => "Teal";
         public static string ListColumnHeaderBackColor => "#2C2C2C";
         public static string PagePadding => "15";
