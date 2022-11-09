@@ -1,111 +1,111 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:NetStalkerAvalonia.ViewModels.RoutedViewModels"
-             mc:Ignorable="d"
-             x:Class="NetStalkerAvalonia.Views.RoutedViews.OptionsView">
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:NetStalkerAvalonia.ViewModels.RoutedViewModels"
+			 mc:Ignorable="d"
+			 x:Class="NetStalkerAvalonia.Views.RoutedViews.OptionsView">
 
-    <Design.DataContext>
-        <vm:OptionsViewModel />
-    </Design.DataContext>
+	<Design.DataContext>
+		<vm:OptionsViewModel />
+	</Design.DataContext>
 
-    <UserControl.Styles>
-        <Style Selector="Border.controlWrapper">
-            <Setter Property="Padding" Value="15" />
-        </Style>
-        <Style Selector="StackPanel.section">
-            <Setter Property="Orientation" Value="Vertical" />
-            <Setter Property="Margin" Value="0,0,0,20" />
-        </Style>
-        <Style Selector="Border.sectionTitle">
-            <Setter Property="Margin" Value="0,0,0,10" />
-            <Setter Property="BorderThickness" Value="0,0,0,1" />
-            <Setter Property="BorderBrush" Value="White" />
-            <Setter Property="Padding" Value="0,0,0,5" />
-        </Style>
-        <Style Selector="Border.sectionTitle > TextBlock">
-            <Setter Property="FontSize" Value="20" />
-        </Style>
-        <Style Selector="StackPanel.horizontalCont">
-            <Setter Property="Orientation" Value="Horizontal" />
-            <Setter Property="Spacing" Value="10" />
-        </Style>
-        <Style Selector="StackPanel.verticalCont">
-            <Setter Property="Orientation" Value="Vertical" />
-            <Setter Property="Spacing" Value="10" />
-        </Style>
-        <Style Selector="StackPanel.btnContainer">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="Margin" Value="0,10,0,0" />
-        </Style>
-        <Style Selector="StackPanel.left">
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-        </Style>
-        <Style Selector="StackPanel.right">
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="Margin" Value="20,0,0,0" />
-        </Style>
-    </UserControl.Styles>
+	<UserControl.Styles>
+		<Style Selector="Border.controlWrapper">
+			<Setter Property="Padding" Value="15" />
+		</Style>
+		<Style Selector="StackPanel.section">
+			<Setter Property="Orientation" Value="Vertical" />
+			<Setter Property="Margin" Value="0,0,0,20" />
+		</Style>
+		<Style Selector="Border.sectionTitle">
+			<Setter Property="Margin" Value="0,0,0,10" />
+			<Setter Property="BorderThickness" Value="0,0,0,1" />
+			<Setter Property="BorderBrush" Value="White" />
+			<Setter Property="Padding" Value="0,0,0,5" />
+		</Style>
+		<Style Selector="Border.sectionTitle > TextBlock">
+			<Setter Property="FontSize" Value="20" />
+		</Style>
+		<Style Selector="StackPanel.horizontalCont">
+			<Setter Property="Orientation" Value="Horizontal" />
+			<Setter Property="Spacing" Value="10" />
+		</Style>
+		<Style Selector="StackPanel.verticalCont">
+			<Setter Property="Orientation" Value="Vertical" />
+			<Setter Property="Spacing" Value="10" />
+		</Style>
+		<Style Selector="StackPanel.btnContainer">
+			<Setter Property="HorizontalAlignment" Value="Left" />
+			<Setter Property="Margin" Value="0,10,0,0" />
+		</Style>
+		<Style Selector="StackPanel.left">
+			<Setter Property="HorizontalAlignment" Value="Stretch" />
+		</Style>
+		<Style Selector="StackPanel.right">
+			<Setter Property="HorizontalAlignment" Value="Stretch" />
+			<Setter Property="Margin" Value="20,0,0,0" />
+		</Style>
+	</UserControl.Styles>
 
-    <Border Classes="controlWrapper">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Classes="section" Grid.Row="0" Grid.Column="0">
-                <Border Classes="sectionTitle">
-                    <TextBlock Text="Password Protection" />
-                </Border>
-                <StackPanel Classes="verticalCont">
-                    <TextBox PasswordChar="*" Watermark="Set Password" />
-                    <TextBox PasswordChar="*" Watermark="Confirm Password" />
-                </StackPanel>
-                <StackPanel Classes="horizontalCont btnContainer">
-                    <Button>Remove</Button>
-                    <Button>Set</Button>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel Classes="section" Grid.Row="1" Grid.Column="0">
-                <Border Classes="sectionTitle">
-                    <TextBlock Text="Other Options" />
-                </Border>
-                <StackPanel>
-                    <CheckBox Content="Spoof Protection" />
-                    <CheckBox Content="Suppress Notifications" />
-                </StackPanel>
-                <StackPanel Classes="horizontalCont btnContainer">
-                    <Button>Clear Device Info</Button>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel Classes="section right" Grid.Row="0" Grid.Column="1">
-                <Border Classes="sectionTitle">
-                    <TextBlock Text="Minimize Application" />
-                </Border>
-                <CheckBox Content="Spoof Protection" />
-                <CheckBox Content="Suppress Notifications" />
-                <StackPanel Classes="horizontalCont btnContainer">
-                    <RadioButton Content="Tray" />
-                    <RadioButton Content="Taskbar" />
-                </StackPanel>
-            </StackPanel>
-            <StackPanel Classes="section right" Grid.Row="1" Grid.Column="1">
-                <Border Classes="sectionTitle">
-                    <TextBlock Text="Mac API Token" />
-                </Border>
-                <TextBlock TextWrapping="Wrap"
-                           Margin="0,0,0,10"
-                           Text="If you can't use the device's manufacturer, acquire a new token from the link below and enter it in the API field." />
-                <TextBox Watermark="Token" />
-                <StackPanel Classes="horizontalCont btnContainer">
-                    <Button>Mac Vendors API</Button>
-                </StackPanel>
-            </StackPanel>
-        </Grid>
-    </Border>
+	<Border Classes="controlWrapper">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<StackPanel Classes="section" Grid.Row="0" Grid.Column="0">
+				<Border Classes="sectionTitle">
+					<TextBlock Text="Password Protection" />
+				</Border>
+				<StackPanel Classes="verticalCont">
+					<TextBox PasswordChar="*" Watermark="Current Password" IsVisible="{Binding IsAppLocked}" Text="{Binding CurrentPassword, Mode=TwoWay}" />
+					<TextBox PasswordChar="*" Watermark="New Password" Text="{Binding NewPassword, Mode=TwoWay}" />
+				</StackPanel>
+				<StackPanel Classes="horizontalCont btnContainer">
+					<Button Command="{Binding ClearPassword}" IsVisible="{Binding IsAppLocked}">Remove</Button>
+					<Button Command="{Binding SetPassword}">Set</Button>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Classes="section" Grid.Row="1" Grid.Column="0">
+				<Border Classes="sectionTitle">
+					<TextBlock Text="Other Options" />
+				</Border>
+				<StackPanel>
+					<CheckBox Content="Spoof Protection" />
+					<CheckBox Content="Suppress Notifications" />
+				</StackPanel>
+				<StackPanel Classes="horizontalCont btnContainer">
+					<Button>Clear Device Info</Button>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Classes="section right" Grid.Row="0" Grid.Column="1">
+				<Border Classes="sectionTitle">
+					<TextBlock Text="Minimize Application" />
+				</Border>
+				<CheckBox Content="Spoof Protection" />
+				<CheckBox Content="Suppress Notifications" />
+				<StackPanel Classes="horizontalCont btnContainer">
+					<RadioButton Content="Tray" />
+					<RadioButton Content="Taskbar" />
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Classes="section right" Grid.Row="1" Grid.Column="1">
+				<Border Classes="sectionTitle">
+					<TextBlock Text="Mac API Token" />
+				</Border>
+				<TextBlock TextWrapping="Wrap"
+						   Margin="0,0,0,10"
+						   Text="If you can't use the device's manufacturer, acquire a new token from the link below and enter it in the API field." />
+				<TextBox Watermark="Token" />
+				<StackPanel Classes="horizontalCont btnContainer">
+					<Button>Mac Vendors API</Button>
+				</StackPanel>
+			</StackPanel>
+		</Grid>
+	</Border>
 </UserControl>

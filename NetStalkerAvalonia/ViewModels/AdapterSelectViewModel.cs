@@ -25,6 +25,12 @@ namespace NetStalkerAvalonia.ViewModels;
 
 public class AdapterSelectViewModel : ViewModelBase
 {
+    #region Services
+
+    private readonly IAppLockService _appLockService;
+
+    #endregion
+
     #region Members
 
     private List<NetworkInterface> networkInterfaces = new();
@@ -97,6 +103,9 @@ public class AdapterSelectViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _driverVersion, value);
     }
 
+    private readonly ObservableAsPropertyHelper<bool> _isAppLocked;
+    public bool IsAppLocked => _isAppLocked.Value;
+
     #endregion
 
     #endregion
@@ -104,6 +113,11 @@ public class AdapterSelectViewModel : ViewModelBase
     #region Constructor
 
     public AdapterSelectViewModel()
+    {
+
+    }
+
+    public AdapterSelectViewModel(IAppLockService appLockService = null!)
     {
         #region Populate network data
 
@@ -135,6 +149,15 @@ public class AdapterSelectViewModel : ViewModelBase
         #endregion
         
         CheckDriverAndGetVersion();
+
+        #region App Lock
+
+        _appLockService = Tools.ResolveIfNull<IAppLockService>(null!);
+
+        _isAppLocked = this.WhenAnyValue(x => x._appLockService!.IsLocked)
+                      .ToProperty(this, x => x.IsAppLocked);
+
+        #endregion
     }
 
     #endregion
