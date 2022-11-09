@@ -16,11 +16,11 @@
         <StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
         <Style Selector="Window">
             <Setter Property="Width" Value="450" />
-            <Setter Property="Height" Value="450" />
+            <Setter Property="Height" Value="430" />
             <Setter Property="MaxWidth" Value="450"/>
             <Setter Property="MinWidth" Value="450"/>
-            <Setter Property="MaxHeight" Value="450"/>
-            <Setter Property="MinHeight" Value="450"/>
+            <Setter Property="MaxHeight" Value="430"/>
+            <Setter Property="MinHeight" Value="430"/>
             <Setter Property="WindowStartupLocation" Value="CenterOwner" />
             <Setter Property="SizeToContent" Value="Height" />
             <Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>
