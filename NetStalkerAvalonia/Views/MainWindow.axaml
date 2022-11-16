@@ -23,12 +23,6 @@
             <Setter Property="MinWidth" Value="{Binding Theme.WindowMinWidth}" />
             <Setter Property="MinHeight" Value="{Binding Theme.WindowMinHeight}" />
         </Style>
-        <Style Selector="TextBox:focus /template/ Border">
-            <Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
-        </Style>
-        <Style Selector="CheckBox:checked /template/ Border">
-            <Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
-        </Style>
     </Window.Styles>
 
     <Grid HorizontalAlignment="Stretch"

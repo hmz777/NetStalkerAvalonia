@@ -1,36 +1,42 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.PreviewWith>
-        <Border Padding="20">
-            <!-- Add Controls for Previewer Here -->
-        </Border>
-    </Design.PreviewWith>
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Design.PreviewWith>
+		<Border Padding="20">
+			<!-- Add Controls for Previewer Here -->
+		</Border>
+	</Design.PreviewWith>
 
-    <Style Selector="Window">
-        <!--<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>-->
-        <!--<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>-->
-        <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
-        <Setter Property="Background" Value="{Binding Theme.WindowBackground}" />
-        <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
-        <Setter Property="Icon" Value="/Assets/avalonia-logo.ico" />
-        <Setter Property="FontFamily" Value="/Assets/Fonts/Montserrat.ttf#Montserrat" />
-        <!-- <Setter Property="FontFamily" Value="/Assets/Fonts/Oswald.ttf#Oswald" /> -->
-        <!-- <Setter Property="FontFamily" Value="/Assets/Fonts/Poppins.ttf.ttf#Poppins" /> -->
-        <Setter Property="FontWeight" Value="DemiBold" />
-    </Style>
+	<Style Selector="Window">
+		<!--<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>-->
+		<!--<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>-->
+		<Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
+		<Setter Property="Background" Value="{Binding Theme.WindowBackground}" />
+		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+		<Setter Property="Icon" Value="/Assets/avalonia-logo.ico" />
+		<Setter Property="FontFamily" Value="/Assets/Fonts/Montserrat.ttf#Montserrat" />
+		<!-- <Setter Property="FontFamily" Value="/Assets/Fonts/Oswald.ttf#Oswald" /> -->
+		<!-- <Setter Property="FontFamily" Value="/Assets/Fonts/Poppins.ttf.ttf#Poppins" /> -->
+		<Setter Property="FontWeight" Value="DemiBold" />
+	</Style>
 
-    <Style Selector="Border.label">
-        <Setter Property="Background" Value="{Binding Theme.NavElementBackground}" />
-        <Setter Property="Padding" Value="10,5,10,5" />
-        <Setter Property="CornerRadius" Value="10" />
-    </Style>
-    <Style Selector="Border.label > StackPanel > TextBlock">
-        <Setter Property="Foreground" Value="{Binding Theme.AccentColor}" />
-    </Style>
+	<Style Selector="Border.label">
+		<Setter Property="Background" Value="{Binding Theme.NavElementBackground}" />
+		<Setter Property="Padding" Value="10,5,10,5" />
+		<Setter Property="CornerRadius" Value="10" />
+	</Style>
+	<Style Selector="Border.label > StackPanel > TextBlock">
+		<Setter Property="Foreground" Value="{Binding Theme.AccentColor}" />
+	</Style>
 
-    <Style Selector="Border.control-group">
-        <Setter Property="Background" Value="{Binding Theme.NavElementBackground}" />
-        <Setter Property="Padding" Value="15,5,15,5" />
-        <Setter Property="CornerRadius" Value="10" />
-    </Style>
+	<Style Selector="Border.control-group">
+		<Setter Property="Background" Value="{Binding Theme.NavElementBackground}" />
+		<Setter Property="Padding" Value="15,5,15,5" />
+		<Setter Property="CornerRadius" Value="10" />
+	</Style>
+	<Style Selector="TextBox:focus /template/ Border">
+		<Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
+	</Style>
+	<Style Selector="CheckBox:checked /template/ Border">
+		<Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
+	</Style>
 </Styles>
