@@ -1,26 +1,23 @@
-using System;
-using System.Windows.Forms.VisualStyles;
-using System;
 using Avalonia.Controls.Mixins;
-using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using NetStalkerAvalonia.ViewModels;
 using ReactiveUI;
+using System;
 
 namespace NetStalkerAvalonia.Views;
 
 public partial class StatusMessageWindow : ReactiveWindow<StatusMessageViewModel>
 {
-    public StatusMessageWindow()
-    {
-        this.WhenActivated(disposables => { ViewModel!.Close.Subscribe(x => Close()).DisposeWith(disposables); });
+	public StatusMessageWindow()
+	{
+		this.WhenActivated(disposables => { ViewModel!.Close.Subscribe(x => Close()).DisposeWith(disposables); });
 
-        InitializeComponent();
-    }
+		InitializeComponent();
+	}
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+	private void InitializeComponent()
+	{
+		AvaloniaXamlLoader.Load(this);
+	}
 }
