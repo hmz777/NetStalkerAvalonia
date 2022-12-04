@@ -25,14 +25,14 @@ namespace NetStalkerAvalonia.Models
 				.ToProperty(this, x => x.IsResolving);
 
 			_uploadSpeed = this.WhenAnyValue(x => x.BytesSentSinceLastReset)
-				.Sample(TimeSpan.FromSeconds(1), RxApp.MainThreadScheduler)
-				.Select(bytes => bytes / 1024f)
+				.Throttle(TimeSpan.FromMilliseconds(50))
+				.Select(bytes => Math.Round(bytes / 1024f, 2))
 				.ObserveOn(RxApp.MainThreadScheduler)
 				.ToProperty(this, x => x.UploadSpeed);
 
 			_downloadSpeed = this.WhenAnyValue(x => x.BytesReceivedSinceLastReset)
-				.Sample(TimeSpan.FromSeconds(1), RxApp.MainThreadScheduler)
-				.Select(bytes => bytes / 1024f)
+				.Throttle(TimeSpan.FromMilliseconds(50))
+				.Select(bytes => Math.Round(bytes / 1024f, 2))
 				.ObserveOn(RxApp.MainThreadScheduler)
 				.ToProperty(this, x => x.DownloadSpeed);
 		}
@@ -117,11 +117,11 @@ namespace NetStalkerAvalonia.Models
 		private readonly ObservableAsPropertyHelper<bool> _isResolving;
 		public bool IsResolving => _isResolving.Value;
 
-		private readonly ObservableAsPropertyHelper<float> _downloadSpeed;
-		public float DownloadSpeed => _downloadSpeed.Value;
+		private readonly ObservableAsPropertyHelper<double> _downloadSpeed;
+		public double DownloadSpeed => _downloadSpeed.Value;
 
-		private readonly ObservableAsPropertyHelper<float> _uploadSpeed;
-		public float UploadSpeed => _uploadSpeed.Value;
+		private readonly ObservableAsPropertyHelper<double> _uploadSpeed;
+		public double UploadSpeed => _uploadSpeed.Value;
 
 		#endregion
 
