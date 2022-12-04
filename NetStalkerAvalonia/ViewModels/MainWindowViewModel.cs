@@ -129,10 +129,10 @@ namespace NetStalkerAvalonia.ViewModels
         #region Devices List
 
         // Collection projected from source for UI
-        private ReadOnlyObservableCollection<Device> _devicesReadOnly;
+        private static ReadOnlyObservableCollection<Device> _devicesReadOnly;
 
         // Accessor to expose the UI device list
-        public ReadOnlyObservableCollection<Device> Devices => _devicesReadOnly;
+        public static ReadOnlyObservableCollection<Device> Devices => _devicesReadOnly;
 
         // Configure the device list view
         public DeviceListViewSettings DeviceListViewSettings { get; set; } = new();
@@ -193,9 +193,9 @@ namespace NetStalkerAvalonia.ViewModels
                 .DisposeMany()
                 .Subscribe();
 
-            MessageBus
-                .Current
-                .RegisterMessageSource(_devicesReadOnly.ToObservableChangeSet(), ContractKeys.UiStream.ToString());
+            //MessageBus
+            //    .Current
+            //    .RegisterMessageSource(_devicesReadOnly.ToObservableChangeSet(), ContractKeys.UiStream.ToString());
 
             #endregion
 

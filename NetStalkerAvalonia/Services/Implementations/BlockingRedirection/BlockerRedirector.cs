@@ -2,6 +2,7 @@
 using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.ViewModels;
 using PacketDotNet;
 using ReactiveUI;
 using Serilog;
@@ -29,7 +30,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private Timer? _byteCounterTimer;
 
-		private ReadOnlyObservableCollection<Device>? _clients;
+		private static ReadOnlyObservableCollection<Device> Clients = MainWindowViewModel.Devices;
 
 		#endregion
 
@@ -94,13 +95,13 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private void BindClients()
 		{
-			MessageBus
-				.Current
-				.Listen<IChangeSet<Device>>(ContractKeys.UiStream.ToString())
-				.ObserveOn(RxApp.MainThreadScheduler)
-				.Bind(out _clients)
-				.DisposeMany()
-				.Subscribe();
+			//MessageBus
+			//	.Current
+			//	.Listen<IChangeSet<Device>>(ContractKeys.UiStream.ToString())
+			//	.ObserveOn(RxApp.MainThreadScheduler)
+			//	.Bind(out Clients)
+			//	.DisposeMany()
+			//	.Subscribe();
 		}
 
 		#endregion
@@ -109,9 +110,9 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private void ByteCounterTimerOnElapsed(object? stateInfo)
 		{
-			if (_clients != null)
+			if (Clients != null)
 			{
-				foreach (var client in _clients)
+				foreach (var client in Clients)
 				{
 					client?.ResetSentBytes();
 					client?.ResetReceivedBytes();
@@ -130,7 +131,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 			if (packet == null)
 				return;
 
-			var outTarget = _clients?
+			var outTarget = Clients?
 				.FirstOrDefault(x => x.Mac.Equals(packet.SourceHardwareAddress));
 
 			if (outTarget is not null
@@ -147,7 +148,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 			else if (packet.SourceHardwareAddress.Equals(HostInfo.GatewayMac))
 			{
 				var ipv4Packet = packet.Extract<IPv4Packet>();
-				var inTarget = _clients?
+				var inTarget = Clients?
 					.FirstOrDefault(x => x.Ip!.Equals(ipv4Packet.DestinationAddress));
 
 				if (inTarget is not null
@@ -212,7 +213,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private void SpoofClients()
 		{
-			foreach (var client in _clients!)
+			foreach (var client in Clients!)
 			{
 				if ((client.Blocked || client.Redirected)
 					&& client.IsLocalDevice() == false
@@ -331,7 +332,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private void TryPauseIfNoDevicesLeft()
 		{
-			if ((bool)_clients?.Any(client => client.Blocked || client.Redirected) == false)
+			if ((bool)Clients?.Any(client => client.Blocked || client.Redirected) == false)
 			{
 				// If no clients have active blocking or redirection we pause the service 
 				// so we don't do extra work on idle
@@ -363,7 +364,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
-			var brDevice = _clients!
+			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
 
@@ -383,7 +384,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
-			var brDevice = _clients!
+			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
 
@@ -403,7 +404,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
-			var brDevice = _clients!
+			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
 
@@ -420,7 +421,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
-			var brDevice = _clients!
+			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
 
@@ -437,7 +438,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			Redirect(mac);
 
-			var brDevice = _clients!
+			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
 
@@ -456,7 +457,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			Redirect(mac);
 
-			var brDevice = _clients!
+			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
 
@@ -474,7 +475,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			Redirect(mac);
 
-			var brDevice = _clients!
+			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
 
@@ -492,7 +493,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
-			var brDevice = _clients!
+			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
 
@@ -507,7 +508,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
-			var brDevice = _clients!
+			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
 
@@ -521,7 +522,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
-			var brDevice = _clients!
+			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
 
