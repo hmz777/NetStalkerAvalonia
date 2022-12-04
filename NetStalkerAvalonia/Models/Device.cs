@@ -7,160 +7,162 @@ using ReactiveUI;
 
 namespace NetStalkerAvalonia.Models
 {
-    public class Device : ReactiveObject
-    {
-        public Device(IPAddress ip, PhysicalAddress mac)
-        {
-            ArgumentNullException.ThrowIfNull(ip, nameof(ip));
-            ArgumentNullException.ThrowIfNull(mac, nameof(mac));
+	public class Device : ReactiveObject
+	{
+		public Device(IPAddress ip, PhysicalAddress mac)
+		{
+			ArgumentNullException.ThrowIfNull(ip, nameof(ip));
+			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
-            Ip = ip;
-            Mac = mac;
-            Name = "Resolving...";
-            Type = DeviceType.PC;
-            DateAdded = DateTime.Now;
+			Ip = ip;
+			Mac = mac;
+			Name = "Resolving...";
+			Type = DeviceType.PC;
+			DateAdded = DateTime.Now;
 
-            _isResolving = this.WhenAnyValue(x => x.Name)
-                .Select(state => state == "Resolving...")
-                .ToProperty(this, x => x.IsResolving);
+			_isResolving = this.WhenAnyValue(x => x.Name)
+				.Select(state => state == "Resolving...")
+				.ToProperty(this, x => x.IsResolving);
 
-            _uploadSpeed = this.WhenAnyValue(x => x.BytesSentSinceLastReset)
-                .Sample(TimeSpan.FromMilliseconds(2000), RxApp.MainThreadScheduler)
-                .Select(bytes => bytes / 1024f)
-                .ToProperty(this, x => x.UploadSpeed);
+			_uploadSpeed = this.WhenAnyValue(x => x.BytesSentSinceLastReset)
+				.Sample(TimeSpan.FromSeconds(1), RxApp.MainThreadScheduler)
+				.Select(bytes => bytes / 1024f)
+				.ObserveOn(RxApp.MainThreadScheduler)
+				.ToProperty(this, x => x.UploadSpeed);
 
-            _downloadSpeed = this.WhenAnyValue(x => x.BytesReceivedSinceLastReset)
-                .Sample(TimeSpan.FromMilliseconds(2000), RxApp.MainThreadScheduler)
-                .Select(bytes => bytes / 1024f)
-                .ToProperty(this, x => x.DownloadSpeed);
-        }
+			_downloadSpeed = this.WhenAnyValue(x => x.BytesReceivedSinceLastReset)
+				.Sample(TimeSpan.FromSeconds(1), RxApp.MainThreadScheduler)
+				.Select(bytes => bytes / 1024f)
+				.ObserveOn(RxApp.MainThreadScheduler)
+				.ToProperty(this, x => x.DownloadSpeed);
+		}
 
-        #region Properties
+		#region Properties
 
-        public IPAddress Ip { get; set; }
-        public PhysicalAddress Mac { get; private set; }
-        public string? Vendor { get; private set; }
-        public DeviceType Type { get; private set; }
-        public DateTime DateAdded { get; }
-        public bool HasFriendlyName { get; set; }
+		public IPAddress Ip { get; set; }
+		public PhysicalAddress Mac { get; private set; }
+		public string? Vendor { get; private set; }
+		public DeviceType Type { get; private set; }
+		public DateTime DateAdded { get; }
+		public bool HasFriendlyName { get; set; }
 
-        #endregion
+		#endregion
 
-        #region Reactive Properties
+		#region Reactive Properties
 
-        private bool _blocked;
+		private bool _blocked;
 
-        public bool Blocked
-        {
-            get => _blocked;
-            set => this.RaiseAndSetIfChanged(ref _blocked, value);
-        }
+		public bool Blocked
+		{
+			get => _blocked;
+			set => this.RaiseAndSetIfChanged(ref _blocked, value);
+		}
 
-        private bool _redirected;
+		private bool _redirected;
 
-        public bool Redirected
-        {
-            get => _redirected;
-            set => this.RaiseAndSetIfChanged(ref _redirected, value);
-        }
+		public bool Redirected
+		{
+			get => _redirected;
+			set => this.RaiseAndSetIfChanged(ref _redirected, value);
+		}
 
-        private int _downloadCap;
+		private int _downloadCap;
 
-        public int DownloadCap
-        {
-            get => _downloadCap;
-            private set => this.RaiseAndSetIfChanged(ref _downloadCap, value);
-        }
+		public int DownloadCap
+		{
+			get => _downloadCap;
+			private set => this.RaiseAndSetIfChanged(ref _downloadCap, value);
+		}
 
-        private int _uploadCap;
+		private int _uploadCap;
 
-        public int UploadCap
-        {
-            get => _uploadCap;
-            private set => this.RaiseAndSetIfChanged(ref _uploadCap, value);
-        }
+		public int UploadCap
+		{
+			get => _uploadCap;
+			private set => this.RaiseAndSetIfChanged(ref _uploadCap, value);
+		}
 
-        private string? _name;
+		private string? _name;
 
-        public string? Name
-        {
-            get => _name;
-            private set => this.RaiseAndSetIfChanged(ref _name, value);
-        }
+		public string? Name
+		{
+			get => _name;
+			private set => this.RaiseAndSetIfChanged(ref _name, value);
+		}
 
-        private DateTime _timeSinceLastArp;
+		private DateTime _timeSinceLastArp;
 
-        public DateTime TimeSinceLastArp
-        {
-            get => _timeSinceLastArp;
-            private set => this.RaiseAndSetIfChanged(ref _timeSinceLastArp, value);
-        }
+		public DateTime TimeSinceLastArp
+		{
+			get => _timeSinceLastArp;
+			private set => this.RaiseAndSetIfChanged(ref _timeSinceLastArp, value);
+		}
 
-        private long _bytesSentSinceLastReset;
+		private long _bytesSentSinceLastReset;
 
-        public long BytesSentSinceLastReset
-        {
-            get => _bytesSentSinceLastReset;
-            private set => this.RaiseAndSetIfChanged(ref _bytesSentSinceLastReset, value);
-        }
+		public long BytesSentSinceLastReset
+		{
+			get => _bytesSentSinceLastReset;
+			private set => this.RaiseAndSetIfChanged(ref _bytesSentSinceLastReset, value);
+		}
 
-        private long _bytesReceivedSinceLastReset;
+		private long _bytesReceivedSinceLastReset;
 
-        public long BytesReceivedSinceLastReset
-        {
-            get => _bytesReceivedSinceLastReset;
-            private set => this.RaiseAndSetIfChanged(ref _bytesReceivedSinceLastReset, value);
-        }
+		public long BytesReceivedSinceLastReset
+		{
+			get => _bytesReceivedSinceLastReset;
+			private set => this.RaiseAndSetIfChanged(ref _bytesReceivedSinceLastReset, value);
+		}
 
-        private readonly ObservableAsPropertyHelper<bool> _isResolving;
-        public bool IsResolving => _isResolving.Value;
+		private readonly ObservableAsPropertyHelper<bool> _isResolving;
+		public bool IsResolving => _isResolving.Value;
 
-        private readonly ObservableAsPropertyHelper<float> _downloadSpeed;
-        public float DownloadSpeed => _downloadSpeed.Value;
+		private readonly ObservableAsPropertyHelper<float> _downloadSpeed;
+		public float DownloadSpeed => _downloadSpeed.Value;
 
-        private readonly ObservableAsPropertyHelper<float> _uploadSpeed;
-        public float UploadSpeed => _uploadSpeed.Value;
+		private readonly ObservableAsPropertyHelper<float> _uploadSpeed;
+		public float UploadSpeed => _uploadSpeed.Value;
 
-        #endregion
+		#endregion
 
-        #region Methods
+		#region Methods
 
-        public void SetFriendlyName(string? name, bool isResolvedHostName = false)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                Name = Ip.ToString();
-                HasFriendlyName = false;
-            }
-            else
-            {
-                Name = name;
-                HasFriendlyName = !isResolvedHostName;
-            }
-        }
+		public void SetFriendlyName(string? name, bool isResolvedHostName = false)
+		{
+			if (string.IsNullOrWhiteSpace(name))
+			{
+				Name = Ip.ToString();
+				HasFriendlyName = false;
+			}
+			else
+			{
+				Name = name;
+				HasFriendlyName = !isResolvedHostName;
+			}
+		}
 
-        public void ClearFriendlyName()
-        {
-            Name = null;
-            HasFriendlyName = false;
-        }
+		public void ClearFriendlyName()
+		{
+			Name = null;
+			HasFriendlyName = false;
+		}
 
-        public void SetVendor(string vendor) => Vendor = vendor;
-        public void Block() => Blocked = true;
-        public void UnBlock() => Blocked = false;
-        public void Redirect() => Redirected = true;
-        public void UnRedirect() => Redirected = false;
-        public void SetDownloadCap(int downloadCap) => DownloadCap = downloadCap * 1024;
-        public void SetUploadCap(int uploadCap) => UploadCap = uploadCap * 1024;
-        public void IncrementSentBytes(long bytes) => BytesSentSinceLastReset += bytes;
-        public void IncrementReceivedBytes(long bytes) => BytesReceivedSinceLastReset += bytes;
-        public void ResetSentBytes() => BytesSentSinceLastReset = 0;
-        public void ResetReceivedBytes() => BytesReceivedSinceLastReset = 0;
-        public void UpdateLastArpTime() => TimeSinceLastArp = DateTime.Now;
+		public void SetVendor(string vendor) => Vendor = vendor;
+		public void Block() => Blocked = true;
+		public void UnBlock() => Blocked = false;
+		public void Redirect() => Redirected = true;
+		public void UnRedirect() => Redirected = false;
+		public void SetDownloadCap(int downloadCap) => DownloadCap = downloadCap * 1024;
+		public void SetUploadCap(int uploadCap) => UploadCap = uploadCap * 1024;
+		public void IncrementSentBytes(long bytes) => BytesSentSinceLastReset += bytes;
+		public void IncrementReceivedBytes(long bytes) => BytesReceivedSinceLastReset += bytes;
+		public void ResetSentBytes() => BytesSentSinceLastReset = 0;
+		public void ResetReceivedBytes() => BytesReceivedSinceLastReset = 0;
+		public void UpdateLastArpTime() => TimeSinceLastArp = DateTime.Now;
 
-        public bool IsGateway() => Mac!.Equals(HostInfo.GatewayMac);
-        public bool IsLocalDevice() => Mac!.Equals(HostInfo.HostMac);
+		public bool IsGateway() => Mac!.Equals(HostInfo.GatewayMac);
+		public bool IsLocalDevice() => Mac!.Equals(HostInfo.HostMac);
 
-        #endregion
-    }
+		#endregion
+	}
 }
