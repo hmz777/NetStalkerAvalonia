@@ -1,13 +1,90 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:NetStalkerAvalonia.ViewModels.RoutedViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="NetStalkerAvalonia.Views.RoutedViews.AboutView">
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:NetStalkerAvalonia.ViewModels.RoutedViewModels"
+			 xmlns:cmpts="using:NetStalkerAvalonia.Components"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="NetStalkerAvalonia.Views.RoutedViews.AboutView">
 
-    <Design.DataContext>
-        <vm:AboutViewModel />
-    </Design.DataContext>
+	<Design.DataContext>
+		<vm:AboutViewModel />
+	</Design.DataContext>
 
+	<UserControl.Styles>
+		<Style Selector="StackPanel.infoPanel">
+			<Setter Property="Orientation" Value="Horizontal"/>
+			<Setter Property="Margin" Value="0,0,0,5"/>
+		</Style>
+		<Style Selector="StackPanel.infoPanel > TextBlock.label">
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="FontSize" Value="18"/>
+			<Setter Property="Margin" Value="0,0,10,0"/>
+		</Style>
+		<Style Selector="StackPanel.infoPanel > TextBlock.labelValue">
+			<Setter Property="FontWeight" Value="Light"/>
+			<Setter Property="FontSize" Value="18"/>
+		</Style>
+		<Style Selector="TextBlock.title">
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="FontSize" Value="20"/>
+			<Setter Property="Margin" Value="0,10,0,10"/>
+		</Style>
+		<Style Selector="Separator.separator">
+			<Setter Property="CornerRadius" Value="20"/>
+			<Setter Property="Height" Value="4"/>
+			<Setter Property="Width" Value="200"/>
+			<Setter Property="Background" Value="Teal"/>
+		</Style>
+		<Style Selector="TextBlock.link">
+			<Setter Property="Foreground" Value="Cyan"/>
+			<Setter Property="Cursor" Value="Hand"/>
+		</Style>
+		<Style Selector="StackPanel.socialLinks">
+			<Setter Property="Margin" Value="0,20,0,20"/>
+
+		</Style>
+		<Style Selector="Image.social">
+			<Setter Property="Width" Value="30"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="Margin" Value="0,0,10,0"/>
+			<Setter Property="Cursor" Value="Hand"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Border Padding="20">
+		<StackPanel>
+			<TextBlock Text="Info" Classes="title"/>
+			<StackPanel Classes="infoPanel">
+				<TextBlock Classes="label" Text="Developed By"/>
+				<TextBlock Classes="labelValue" Text="Hamzi Alsheikh" />
+			</StackPanel>
+			<StackPanel Classes="infoPanel">
+				<TextBlock Classes="label" Text="Email"/>
+				<TextBlock Classes="labelValue" Text="hamzi_alsheikh@hotmail.com" />
+			</StackPanel>
+			<StackPanel Classes="infoPanel">
+				<TextBlock Classes="label" Text="Version"/>
+				<TextBlock Classes="labelValue" Text="{Binding AppVersion}" />
+			</StackPanel>
+			<StackPanel Name="sociallinks" Classes="socialLinks" Orientation="Horizontal">
+				<Image Tag="https://github.com/hmz777" Classes="social" Source="/Assets/About/github.png"/>
+				<Image Tag="https://stackoverflow.com/users/6843077/hmz" Classes="social" Source="/Assets/About/stackoverflow.png"/>
+				<Image Tag="https://www.hamzialsheikh.tk/" Classes="social" Source="/Assets/About/link.png"/>
+			</StackPanel>
+			<StackPanel>
+				<TextBlock Text="Libs" Classes="title"/>
+				<StackPanel Name="links" Orientation="Vertical">
+					<StackPanel Classes="infoPanel">
+						<TextBlock Classes="label" Text="SharpPcap - Packet.Net"/>
+						<TextBlock Classes="labelValue link" Text="https://github.com/chmorgan" />
+					</StackPanel>
+					<StackPanel Classes="infoPanel">
+						<TextBlock Classes="label" Text="ObjectListView"/>
+						<TextBlock Classes="labelValue link" Text="http://objectlistview.sourceforge.net" />
+					</StackPanel>
+				</StackPanel>
+			</StackPanel>
+		</StackPanel>
+	</Border>
 </UserControl>
