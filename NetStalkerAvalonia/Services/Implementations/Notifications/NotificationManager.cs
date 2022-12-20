@@ -4,13 +4,6 @@ namespace NetStalkerAvalonia.Services.Implementations.Notifications
 {
     public class NotificationManager : INotificationManager
     {
-        private readonly NotificationOptions notificationOptions;
-
-        public NotificationManager(NotificationOptions notificationOptions)
-        {
-            this.notificationOptions = notificationOptions;
-        }
-
         public void ClearNotifications()
         {
             throw new NotImplementedException();
@@ -21,7 +14,7 @@ namespace NetStalkerAvalonia.Services.Implementations.Notifications
             throw new NotImplementedException();
         }
 
-        public void SendNotification(NotificationOptions options)
+        public void SendNotification()
         {
             throw new NotImplementedException();
         }

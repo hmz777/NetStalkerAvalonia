@@ -2,7 +2,7 @@ namespace NetStalkerAvalonia.Configuration;
 
 public enum ConfigKeys
 {
-    NotificationOptions,
+    NotificationSuppression,
     SpoofProtection,
     MacLookupServiceUri,
     ApiKey

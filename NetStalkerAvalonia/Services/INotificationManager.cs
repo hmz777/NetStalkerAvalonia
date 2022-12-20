@@ -4,7 +4,7 @@ namespace NetStalkerAvalonia.Services
 {
     public interface INotificationManager
     {
-        void SendNotification(NotificationOptions options);
+        void SendNotification();
         void ClearNotifications();
         void DestroyService();
     }
