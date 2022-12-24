@@ -244,7 +244,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 					break;
 				case ArpPacketType.Protection:
-					MaintainTarget();
+					//MaintainTarget();
+					MaintainHost();
 					MaintainGateway();
 					break;
 			}
@@ -322,6 +323,25 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 				};
 
 				_device.SendPacket(etherPacketForGatewayProtection);
+			}
+
+			void MaintainHost()
+			{
+				var arpPacketForHostProtection = new ArpPacket(ArpOperation.Response,
+					targetHardwareAddress: HostInfo.GatewayMac,
+					targetProtocolAddress: HostInfo.GatewayIp,
+					senderHardwareAddress: HostInfo.HostMac,
+					senderProtocolAddress: HostInfo.HostIp);
+
+				var etherPacketForHostProtection = new EthernetPacket(
+					sourceHardwareAddress: HostInfo.HostMac,
+					destinationHardwareAddress: HostInfo.GatewayMac,
+					EthernetType.Arp)
+				{
+					PayloadPacket = arpPacketForHostProtection
+				};
+
+				_device.SendPacket(etherPacketForHostProtection);
 			}
 		}
 
