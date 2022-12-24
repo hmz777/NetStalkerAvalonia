@@ -24,9 +24,7 @@ namespace NetStalkerAvalonia
 			{
 				Tools.InitViewModels();
 
-				var mainViewModel = Tools.ViewModels.First() as MainWindowViewModel;
-
-				if (mainViewModel == null)
+				if (Tools.ViewModels.First() is not MainWindowViewModel mainViewModel)
 				{
 					throw new Exception("Error initializing view models!");
 				}

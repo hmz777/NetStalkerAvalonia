@@ -380,7 +380,7 @@ namespace NetStalkerAvalonia.ViewModels
 				if (_blockAllHandlerAttached == false)
 				{
 					_blockAllHandlerAttached = true;
-					AttachBlockAllFutureDetectionsHandler();                    
+					AttachBlockAllFutureDetectionsHandler();
 				}
 			}
 			else
@@ -398,7 +398,7 @@ namespace NetStalkerAvalonia.ViewModels
 				if (_blockAllHandlerAttached == true)
 				{
 					_blockAllHandlerAttached = false;
-					RemoveBlockAllFutureDetectionsHandler();					
+					RemoveBlockAllFutureDetectionsHandler();
 				}
 			}
 
@@ -433,7 +433,7 @@ namespace NetStalkerAvalonia.ViewModels
 				if (_redirectAllHandlerAttached == false)
 				{
 					_redirectAllHandlerAttached = true;
-					AttachRedirectAllFutureDetectionsHandler();					
+					AttachRedirectAllFutureDetectionsHandler();
 				}
 			}
 			else
@@ -451,7 +451,7 @@ namespace NetStalkerAvalonia.ViewModels
 				if (_redirectAllHandlerAttached == true)
 				{
 					_redirectAllHandlerAttached = false;
-					RemoveRedirectAllFutureDetectionsHandler();					
+					RemoveRedirectAllFutureDetectionsHandler();
 				}
 			}
 
