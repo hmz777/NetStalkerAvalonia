@@ -470,7 +470,7 @@ namespace NetStalkerAvalonia.ViewModels
 
 			validationResult.device.SetFriendlyName(result);
 
-			await _deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly.ToList())!;
+			_deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly!.ToList());
 		}
 
 		private async Task ClearFriendlyNameImpl(PhysicalAddress? mac)
@@ -483,7 +483,7 @@ namespace NetStalkerAvalonia.ViewModels
 			// It doesn't matter if we specify the second optional parameter or not
 			validationResult.device.SetFriendlyName(null!);
 
-			await _deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly.ToList())!;
+			_deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly!.ToList());
 		}
 
 		#endregion

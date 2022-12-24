@@ -5,11 +5,11 @@ using NetStalkerAvalonia.Models;
 
 namespace NetStalkerAvalonia.Services
 {
-    public interface IDeviceNameResolver
-    {
-        public List<DeviceNameModel> DevicesNames { get; }
-        Task ResolveDeviceNameAsync(Device device);
-        Task SaveDeviceNamesAsync(IEnumerable<Device> devices, CancellationToken cancellationToken = default);
-        void ClearDeviceNames();
-    }
+	public interface IDeviceNameResolver
+	{
+		public List<DeviceNameModel> DevicesNames { get; }
+		Task ResolveDeviceNameAsync(Device device);
+		void SaveDeviceNamesAsync(IEnumerable<Device> devices);
+		void ClearDeviceNames();
+	}
 }

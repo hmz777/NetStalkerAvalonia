@@ -14,89 +14,88 @@ using SharpPcap;
 
 namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
 {
-    public class DeviceNameResolver : IDeviceNameResolver
-    {
-        private string _deviceNamesResource = "Devices.json";
+	public class DeviceNameResolver : IDeviceNameResolver
+	{
+		private string _deviceNamesResource = "Devices.json";
 
-        public DeviceNameResolver()
-        {
-            DevicesNames = new List<DeviceNameModel>();
-            LoadDevicesNames();
-        }
+		public DeviceNameResolver()
+		{
+			DevicesNames = new List<DeviceNameModel>();
+			LoadDevicesNames();
+		}
 
-        public List<DeviceNameModel> DevicesNames { get; private set; }
+		public List<DeviceNameModel> DevicesNames { get; private set; }
 
-        public async Task ResolveDeviceNameAsync(Device device)
-        {
-            ArgumentNullException.ThrowIfNull(device, nameof(device));
+		public async Task ResolveDeviceNameAsync(Device device)
+		{
+			ArgumentNullException.ThrowIfNull(device, nameof(device));
 
-            try
-            {
-                var deviceFriendlyName = DevicesNames
-                    .Where(dn => PhysicalAddress.Parse(dn.Mac).Equals(device.Mac))
-                    .FirstOrDefault();
+			try
+			{
+				var deviceFriendlyName = DevicesNames
+					.Where(dn => PhysicalAddress.Parse(dn.Mac).Equals(device.Mac))
+					.FirstOrDefault();
 
-                if (deviceFriendlyName != null)
-                {
-                    device.SetFriendlyName(deviceFriendlyName.Name);
-                }
-                else
-                {
-                    var ipHostEntry = await Dns.GetHostEntryAsync(device.Ip!);
-                    device.SetFriendlyName(ipHostEntry.HostName, true);
-                }
-            }
-            catch
-            {
-                // It doesn't matter if we specify the second optional parameter or not
-                device.SetFriendlyName(null!);
-            }
-        }
+				if (deviceFriendlyName != null)
+				{
+					device.SetFriendlyName(deviceFriendlyName.Name);
+				}
+				else
+				{
+					var ipHostEntry = await Dns.GetHostEntryAsync(device.Ip!);
+					device.SetFriendlyName(ipHostEntry.HostName, true);
+				}
+			}
+			catch
+			{
+				// It doesn't matter if we specify the second optional parameter or not
+				device.SetFriendlyName(null!);
+			}
+		}
 
-        public void LoadDevicesNames()
-        {
-            try
-            {
-                using (var stream = new FileStream(_deviceNamesResource, FileMode.OpenOrCreate))
-                {
-                    var deviceNameModels = JsonSerializer
-                        .Deserialize<List<DeviceNameModel>>(stream);
+		public void LoadDevicesNames()
+		{
+			try
+			{
+				using (var stream = new FileStream(_deviceNamesResource, FileMode.OpenOrCreate))
+				{
+					var deviceNameModels = JsonSerializer
+						.Deserialize<List<DeviceNameModel>>(stream);
 
-                    DevicesNames = deviceNameModels == null ? new List<DeviceNameModel>() : deviceNameModels;
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(LogMessageTemplates.ExceptionTemplate,
-                    e.GetType(), this.GetType(), e.Message);
-            }
-        }
+					DevicesNames = deviceNameModels == null ? new List<DeviceNameModel>() : deviceNameModels;
+				}
+			}
+			catch (Exception e)
+			{
+				Log.Error(LogMessageTemplates.ExceptionTemplate,
+					e.GetType(), this.GetType(), e.Message);
+			}
+		}
 
-        public async Task SaveDeviceNamesAsync(IEnumerable<Device> devices,
-            CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                var deviceNamesJson = JsonSerializer
-                    .Serialize(devices
-                        .Where(d => d.HasFriendlyName)
-                        .Select(device => new DeviceNameModel(device.Mac.ToString(), device.Name)));
+		public void SaveDeviceNamesAsync(IEnumerable<Device> devices)
+		{
+			try
+			{
+				var deviceNamesJson = JsonSerializer
+					.Serialize(devices
+						.Where(d => d.HasFriendlyName)
+						.Select(device => new DeviceNameModel(device.Mac.ToString(), device.Name)));
 
-                await File.WriteAllTextAsync(_deviceNamesResource, deviceNamesJson, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                Log.Error(LogMessageTemplates.ExceptionTemplate,
-                    e.GetType(), this.GetType(), e.Message);
-            }
-        }
+				File.WriteAllText(_deviceNamesResource, deviceNamesJson);
+			}
+			catch (Exception e)
+			{
+				Log.Error(LogMessageTemplates.ExceptionTemplate,
+					e.GetType(), this.GetType(), e.Message);
+			}
+		}
 
-        public void ClearDeviceNames()
-        {
-            if (File.Exists(_deviceNamesResource))
-            {
-                File.Delete(_deviceNamesResource);
-            }
-        }
-    }
+		public void ClearDeviceNames()
+		{
+			if (File.Exists(_deviceNamesResource))
+			{
+				File.Delete(_deviceNamesResource);
+			}
+		}
+	}
 }

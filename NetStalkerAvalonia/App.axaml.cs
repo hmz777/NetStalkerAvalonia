@@ -38,11 +38,11 @@ namespace NetStalkerAvalonia
 						DataContext = mainViewModel
 					};
 
-					desktop.ShutdownRequested += async (sender, args) =>
+					desktop.ShutdownRequested += (sender, args) =>
 					{
 						// Save device friendly names before exiting
 						var deviceNameResolver = Tools.ResolveIfNull<IDeviceNameResolver>(null!);
-						await deviceNameResolver.SaveDeviceNamesAsync(mainViewModel.GetUiDeviceCollection());
+						deviceNameResolver.SaveDeviceNamesAsync(mainViewModel.GetUiDeviceCollection());
 					};
 				}
 
