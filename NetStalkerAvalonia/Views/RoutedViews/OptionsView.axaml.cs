@@ -5,12 +5,16 @@ using ReactiveUI;
 
 namespace NetStalkerAvalonia.Views.RoutedViews
 {
-    public partial class OptionsView : ReactiveUserControl<OptionsViewModel>
-    {
-        public OptionsView()
-        {
-            this.WhenActivated(disposables => { });
-            AvaloniaXamlLoader.Load(this);
-        }
-    }
+	public partial class OptionsView : ReactiveUserControl<OptionsViewModel>
+	{
+		public OptionsView()
+		{
+			this.WhenActivated(disposables =>
+			{
+				ViewModel!.AppSettings = Config.AppSettings!;
+			});
+
+			AvaloniaXamlLoader.Load(this);
+		}
+	}
 }

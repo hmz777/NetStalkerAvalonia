@@ -26,7 +26,6 @@ namespace NetStalkerAvalonia.Helpers;
 
 public class Tools
 {
-	public static AppSettings AppSettings { get; set; } = new AppSettings();
 	public static List<ViewModelBase> ViewModels = new();
 
 	public static void InitViewModels()

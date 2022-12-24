@@ -26,8 +26,6 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		private CancellationTokenSource? _cancellationTokenSource;
 		private bool _isStarted;
 		private LibPcapLiveDevice? _device;
-		private bool _hasSpoofProtection;
-
 		private Timer? _byteCounterTimer;
 
 		private static ReadOnlyObservableCollection<Device> Clients = MainWindowViewModel.Devices;
@@ -40,9 +38,6 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			InitDevice();
 			BindClients();
-
-			_hasSpoofProtection = ConfigurationManager
-				.AppSettings[nameof(ConfigKeys.SpoofProtection)] == "true";
 
 			Log.Information(LogMessageTemplates.ServiceInit,
 				typeof(IBlockerRedirector));
@@ -223,7 +218,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 					try
 					{
-						if (_hasSpoofProtection)
+						if (Config.AppSettings!.SpoofProtectionSetting)
 							ConstructAndSendArp(client, ArpPacketType.Protection);
 					}
 					catch (Exception e)

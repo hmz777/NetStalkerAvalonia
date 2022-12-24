@@ -18,6 +18,7 @@ using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Services.Implementations.DeviceScanning;
 using ReactiveUI;
 using NetStalkerAvalonia.Services.Implementations.AppLocking;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace NetStalkerAvalonia
 {
@@ -61,6 +62,9 @@ namespace NetStalkerAvalonia
 			// Register optional services
 			RegisterOptionalServices();
 
+			// Read app config
+			ReadConfiguration();
+
 			return AppBuilder.Configure<App>()
 				.UsePlatformDetect()
 				.LogToTrace()
@@ -89,12 +93,6 @@ namespace NetStalkerAvalonia
 			Locator.CurrentMutable.RegisterLazySingleton(() =>
 					new DeviceNameResolver(),
 				typeof(IDeviceNameResolver));
-
-			// Make sure an App.config file is present
-			if (File.Exists("App.config") == false)
-			{
-				File.Create("App.config");
-			}
 
 			Locator.CurrentMutable.RegisterLazySingleton(() =>
 					new NotificationManager(),
@@ -130,6 +128,12 @@ namespace NetStalkerAvalonia
 
 				OptionalFeatures.AvailableFeatures.Add(typeof(IDeviceTypeIdentifier));
 			}
+		}
+
+		private static void ReadConfiguration()
+		{
+			Config.AppSettings = new AppSettings();
+			Config.AppSettings.ReadConfiguration();
 		}
 	}
 }

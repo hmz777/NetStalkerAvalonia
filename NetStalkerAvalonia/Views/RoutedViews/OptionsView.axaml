@@ -76,8 +76,8 @@
 					<TextBlock Text="Other Options" />
 				</Border>
 				<StackPanel>
-					<CheckBox Content="Spoof Protection" />
-					<CheckBox Content="Suppress Notifications" />
+					<CheckBox Content="Spoof Protection" IsChecked="{Binding AppSettings.SpoofProtectionSetting, Mode=TwoWay}" />
+					<CheckBox Content="Suppress Notifications" IsChecked="{Binding AppSettings.NotificationSuppressionSetting, Mode=TwoWay}" />
 				</StackPanel>
 				<StackPanel Classes="horizontalCont btnContainer">
 					<Button>Clear Device Info</Button>
@@ -87,8 +87,6 @@
 				<Border Classes="sectionTitle">
 					<TextBlock Text="Minimize Application" />
 				</Border>
-				<CheckBox Content="Spoof Protection" />
-				<CheckBox Content="Suppress Notifications" />
 				<StackPanel Classes="horizontalCont btnContainer">
 					<RadioButton Content="Tray" />
 					<RadioButton Content="Taskbar" />

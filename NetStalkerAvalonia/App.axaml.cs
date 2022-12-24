@@ -43,6 +43,9 @@ namespace NetStalkerAvalonia
 						// Save device friendly names before exiting
 						var deviceNameResolver = Tools.ResolveIfNull<IDeviceNameResolver>(null!);
 						deviceNameResolver.SaveDeviceNamesAsync(mainViewModel.GetUiDeviceCollection());
+
+						// Save app settings to disk
+						Config.AppSettings?.SaveChanges();
 					};
 				}
 
