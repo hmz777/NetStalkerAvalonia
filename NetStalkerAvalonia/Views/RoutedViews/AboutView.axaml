@@ -5,7 +5,8 @@
 			 xmlns:vm="using:NetStalkerAvalonia.ViewModels.RoutedViewModels"
 			 xmlns:cmpts="using:NetStalkerAvalonia.Components"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-			 x:Class="NetStalkerAvalonia.Views.RoutedViews.AboutView">
+			 x:Class="NetStalkerAvalonia.Views.RoutedViews.AboutView"
+			 Classes="hasLinks">
 
 	<Design.DataContext>
 		<vm:AboutViewModel />
@@ -50,20 +51,20 @@
 				<TextBlock Classes="labelValue" Text="{Binding AppVersion}" />
 			</StackPanel>
 			<StackPanel Name="sociallinks" Classes="socialLinks" Orientation="Horizontal">
-				<Image Tag="https://github.com/hmz777" Classes="social" Source="/Assets/About/github.png"/>
-				<Image Tag="https://stackoverflow.com/users/6843077/hmz" Classes="social" Source="/Assets/About/stackoverflow.png"/>
-				<Image Tag="https://www.hamzialsheikh.tk/" Classes="social" Source="/Assets/About/link.png"/>
+				<cmpts:LinkButton Text="GitHub" Link="https://github.com/hmz777"></cmpts:LinkButton>
+				<cmpts:LinkButton Text="Stack Overflow" Link="https://stackoverflow.com/users/6843077/hmz"></cmpts:LinkButton>
+				<cmpts:LinkButton Text="Website" Link="https://www.hamzialsheikh.tk/"></cmpts:LinkButton>
 			</StackPanel>
 			<StackPanel>
 				<TextBlock Text="Libs" Classes="title"/>
 				<StackPanel Name="links" Orientation="Vertical">
 					<StackPanel Classes="infoPanel">
 						<TextBlock Classes="label" Text="SharpPcap - Packet.Net"/>
-						<TextBlock Classes="labelValue link" Text="https://github.com/chmorgan" />
+						<cmpts:LinkButton Text="GitHub" Link="https://github.com/chmorgan"></cmpts:LinkButton>
 					</StackPanel>
 					<StackPanel Classes="infoPanel">
 						<TextBlock Classes="label" Text="ObjectListView"/>
-						<TextBlock Classes="labelValue link" Text="http://objectlistview.sourceforge.net" />
+						<cmpts:LinkButton Text="SourceForge" Link="http://objectlistview.sourceforge.net"></cmpts:LinkButton>
 					</StackPanel>
 				</StackPanel>
 			</StackPanel>

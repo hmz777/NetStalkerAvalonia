@@ -3,6 +3,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="using:NetStalkerAvalonia.ViewModels.RoutedViewModels"
+			 xmlns:cmpts="using:NetStalkerAvalonia.Components"
 			 mc:Ignorable="d"
 			 x:Class="NetStalkerAvalonia.Views.RoutedViews.OptionsView">
 
@@ -80,7 +81,7 @@
 					<CheckBox Content="Suppress Notifications" IsChecked="{Binding AppSettings.NotificationSuppressionSetting, Mode=TwoWay}" />
 				</StackPanel>
 				<StackPanel Classes="horizontalCont btnContainer">
-					<Button>Clear Device Info</Button>
+					<Button ToolTip.Tip="Clears the custom device names stored by the user.">Clear Device Info</Button>
 				</StackPanel>
 			</StackPanel>
 			<StackPanel Classes="section right" Grid.Row="0" Grid.Column="1">
@@ -99,9 +100,9 @@
 				<TextBlock TextWrapping="Wrap"
 						   Margin="0,0,0,10"
 						   Text="If you can't use the device's manufacturer, acquire a new token from the link below and enter it in the API field." />
-				<TextBox Watermark="Token" />
+				<TextBox Watermark="Token" Text="{Binding AppSettings.VendorApiToken}" />
 				<StackPanel Classes="horizontalCont btnContainer">
-					<Button>Mac Vendors API</Button>
+					<cmpts:LinkButton Link="https://macvendors.com/api" Text="Mac Vendors API"></cmpts:LinkButton>
 				</StackPanel>
 			</StackPanel>
 		</Grid>
