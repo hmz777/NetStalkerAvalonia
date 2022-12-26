@@ -14,25 +14,88 @@
 					Orientation="Horizontal">
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/scan.png"
 							   TextContent="Scan"
-							   Command="{Binding Scan}"></cmpts:ImageButton>
+							   Command="{Binding Scan}">
+				<ToolTip.Tip>
+					<StackPanel>
+						<TextBlock Classes="h1">Scan Network</TextBlock>
+						<TextBlock Classes="p">
+							Scans for active devices on the network. You only need to press this once, then the app will continuously scan for active devices.
+						</TextBlock>
+					</StackPanel>
+				</ToolTip.Tip>
+			</cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/refresh.png"
 							   TextContent="Refresh"
-							   Command="{Binding Refresh}"></cmpts:ImageButton>
+							   Command="{Binding Refresh}">
+				<ToolTip.Tip>
+					<StackPanel>
+						<TextBlock Classes="h1">Refresh Devices</TextBlock>
+						<TextBlock Classes="p">
+							Refreshes the list of devices by manually initiating a scan. You can use this when you want devices to be discovered faster or when not all devices are discovered on the initial scan.&#10;(The app scans the network continuously, so you can always just wait a few seconds for all devices to be discovered)
+						</TextBlock>
+					</StackPanel>
+				</ToolTip.Tip>
+			</cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/rules.png"
 							   TextContent="Rules"
-							   Command="{Binding GoToRules}"></cmpts:ImageButton>
+							   Command="{Binding GoToRules}">
+				<ToolTip.Tip>
+					<StackPanel>
+						<TextBlock Classes="h1">Target Rules</TextBlock>
+						<TextBlock Classes="p" xml:space="preserve">
+							Apply custom rules for automatic targeting of devices that match a specific criteria.
+						</TextBlock>
+					</StackPanel>
+				</ToolTip.Tip>
+			</cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/sniffer.png"
 							   TextContent="Sniffer"
-							   Command="{Binding GoToSniffer}"></cmpts:ImageButton>
+							   Command="{Binding GoToSniffer}">
+				<ToolTip.Tip>
+					<StackPanel>
+						<TextBlock Classes="h1">Packet Sniffer</TextBlock>
+						<TextBlock Classes="p">
+							Monitor incoming and outgoing packets of a certain device and see their information and properties.
+						</TextBlock>
+					</StackPanel>
+				</ToolTip.Tip>
+			</cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/options.png"
 							   TextContent="Options"
-							   Command="{Binding GoToOptions}"></cmpts:ImageButton>
+							   Command="{Binding GoToOptions}">
+				<ToolTip.Tip>
+					<StackPanel>
+						<TextBlock Classes="h1">Options</TextBlock>
+						<TextBlock Classes="p">
+							Configure NetStalker options.
+						</TextBlock>
+					</StackPanel>
+				</ToolTip.Tip>
+			</cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/help.png"
 							   TextContent="Help"
-							   Command="{Binding GoToHelp}"></cmpts:ImageButton>
+							   Command="{Binding GoToHelp}">
+				<ToolTip.Tip>
+					<StackPanel>
+						<TextBlock Classes="h1">Help Section</TextBlock>
+						<TextBlock Classes="p">
+							Read for app use guidance and helpful tips.
+						</TextBlock>
+					</StackPanel>
+				</ToolTip.Tip>
+			</cmpts:ImageButton>
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/about.png"
 							   TextContent="About"
-							   Command="{Binding GoToAbout}"></cmpts:ImageButton>
+							   Command="{Binding GoToAbout}">
+				<ToolTip.Tip>
+					<StackPanel>
+						<TextBlock Classes="h1">About Section</TextBlock>
+						<TextBlock Classes="p">
+							Info about the app and developer.
+						</TextBlock>
+					</StackPanel>
+				</ToolTip.Tip>
+			</cmpts:ImageButton>
 		</StackPanel>
 	</Border>
 </UserControl>
