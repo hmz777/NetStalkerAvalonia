@@ -21,6 +21,7 @@ using Serilog.Core;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using Splat;
+using System.Diagnostics;
 
 namespace NetStalkerAvalonia.Helpers;
 
@@ -121,6 +122,15 @@ public class Tools
 	{
 		var app = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
 		app?.Shutdown();
+	}
+
+	public static void OpenLink(string link)
+	{
+		Process.Start(new ProcessStartInfo
+		{
+			FileName = link,
+			UseShellExecute = true
+		});
 	}
 
 	public static byte[]? StringEncrypt(string stringToEncrypt, byte[] key = null, byte[] iv = null)
