@@ -44,12 +44,12 @@ public class Tools
 		};
 	}
 
-	public static T ResolveIfNull<T>(T dependency)
+	public static T ResolveIfNull<T>(T dependency, string contract = null)
 	{
 		if (dependency != null)
 			return dependency;
 
-		dependency = Locator.Current.GetService<T>()!;
+		dependency = Locator.Current.GetService<T>(contract)!;
 
 		if (dependency == null &&
 			OptionalFeatures.AvailableFeatures.Contains(typeof(T)) == false)

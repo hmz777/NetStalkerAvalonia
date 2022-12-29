@@ -41,8 +41,6 @@ namespace NetStalkerAvalonia.Models
 
 		public IPAddress Ip { get; set; }
 		public PhysicalAddress Mac { get; private set; }
-		public string? Vendor { get; private set; }
-		public DeviceType Type { get; private set; }
 		public DateTime DateAdded { get; }
 		public bool HasFriendlyName { get; set; }
 
@@ -112,6 +110,20 @@ namespace NetStalkerAvalonia.Models
 		{
 			get => _bytesReceivedSinceLastReset;
 			private set => this.RaiseAndSetIfChanged(ref _bytesReceivedSinceLastReset, value);
+		}
+
+		private string? _vendor;
+		public string? Vendor
+		{
+			get => _vendor;
+			private set => this.RaiseAndSetIfChanged(ref _vendor, value);
+		}
+
+		private DeviceType _type;
+		public DeviceType Type
+		{
+			get => _type;
+			private set => this.RaiseAndSetIfChanged(ref _type, value);
 		}
 
 		private readonly ObservableAsPropertyHelper<bool> _isResolving;

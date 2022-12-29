@@ -6,6 +6,6 @@ namespace NetStalkerAvalonia.Services
 {
     public interface IDeviceTypeIdentifier : IDisposable
     {
-        Task IdentifyDeviceAsync(Device device);
+        void IdentifyDevice(Device device);
     }
 }

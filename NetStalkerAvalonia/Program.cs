@@ -53,6 +53,9 @@ namespace NetStalkerAvalonia
 			// view models, so we need to register our views.
 			Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetExecutingAssembly());
 
+			// Read app config
+			ReadConfiguration();
+
 			// Configure logging
 			ConfigureAndRegisterLogging();
 
@@ -61,9 +64,6 @@ namespace NetStalkerAvalonia
 
 			// Register optional services
 			RegisterOptionalServices();
-
-			// Read app config
-			ReadConfiguration();
 
 			return AppBuilder.Configure<App>()
 				.UsePlatformDetect()
@@ -105,19 +105,15 @@ namespace NetStalkerAvalonia
 
 		private static void RegisterOptionalServices()
 		{
-			var macLookupApiToken = ConfigurationManager
-				.AppSettings[nameof(ConfigKeys.ApiKey)];
-			var macLookupServiceUri = ConfigurationManager
-				.AppSettings[nameof(ConfigKeys.MacLookupServiceUri)];
+			var apiToken = Config.AppSettings?.VendorApiTokenSetting;
 
-			if (string.IsNullOrWhiteSpace(macLookupApiToken) == false &&
-				string.IsNullOrWhiteSpace(macLookupServiceUri) == false)
+			if (string.IsNullOrWhiteSpace(apiToken) == false)
 			{
 				Locator.CurrentMutable.RegisterLazySingleton(() =>
 				{
 					var client = new HttpClient();
 					client.DefaultRequestHeaders.Add("Authorization",
-						"Bearer " + ConfigurationManager.AppSettings[nameof(ConfigKeys.ApiKey)]);
+						"Bearer " + apiToken);
 
 					return client;
 				}, contract: nameof(ContractKeys.MacLookupClient));

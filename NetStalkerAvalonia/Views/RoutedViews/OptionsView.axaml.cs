@@ -1,5 +1,7 @@
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.ViewModels.RoutedViewModels;
 using ReactiveUI;
 

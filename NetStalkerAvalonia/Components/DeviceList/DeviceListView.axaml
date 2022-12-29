@@ -82,6 +82,9 @@
 				<DataGridTextColumn Header="Mac"
 									Binding="{Binding Mac, Converter={StaticResource MacToStringConv}}"
 									IsReadOnly="True" />
+				<DataGridTextColumn Header="Vendor"
+									Binding="{Binding Vendor}"
+									IsReadOnly="True" />
 				<DataGridTextColumn Header="Download (KB)"
 									Binding="{Binding DownloadSpeed}"
 									IsReadOnly="True" />

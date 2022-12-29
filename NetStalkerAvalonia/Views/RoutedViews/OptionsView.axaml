@@ -99,8 +99,8 @@
 				</Border>
 				<TextBlock TextWrapping="Wrap"
 						   Margin="0,0,0,10"
-						   Text="If you can't use the device's manufacturer, acquire a new token from the link below and enter it in the API field." />
-				<TextBox Watermark="Token" Text="{Binding AppSettings.VendorApiToken}" />
+						   Text="If you can't see the device's manufacturer, acquire a new token from the link below and enter it in the API field." />
+				<TextBox Watermark="Token" Text="{Binding AppSettings.VendorApiTokenSetting, Mode=TwoWay}" />
 				<StackPanel Classes="horizontalCont btnContainer">
 					<cmpts:LinkButton Link="https://macvendors.com/api" Text="Mac Vendors API"></cmpts:LinkButton>
 				</StackPanel>
