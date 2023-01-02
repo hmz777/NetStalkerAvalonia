@@ -89,8 +89,8 @@
 					<TextBlock Text="Minimize Application" />
 				</Border>
 				<StackPanel Classes="horizontalCont btnContainer">
-					<RadioButton Content="Tray" />
-					<RadioButton Content="Taskbar" />
+					<RadioButton Content="Tray" IsChecked="{Binding AppSettings.MinimizeToTraySetting, Mode=TwoWay}" />
+					<RadioButton Content="Taskbar" IsChecked="{Binding AppSettings.MinimizeToTaskbarSetting, Mode=TwoWay}" />
 				</StackPanel>
 			</StackPanel>
 			<StackPanel Classes="section right" Grid.Row="1" Grid.Column="1">

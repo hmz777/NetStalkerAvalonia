@@ -27,13 +27,11 @@ namespace NetStalkerAvalonia.Helpers;
 
 public class Tools
 {
-	public static List<ViewModelBase> ViewModels = new();
-
 	public static void InitViewModels()
 	{
 		var mainViewModel = new MainWindowViewModel();
 
-		ViewModels = new List<ViewModelBase>
+		StaticData.ViewModels = new List<ViewModelBase>
 		{
 			mainViewModel,
 			new SnifferViewModel(mainViewModel),
@@ -116,6 +114,16 @@ public class Tools
 		Log.Error("Exception triggered with message:{Message}", statusMessage.Message);
 
 		interaction.Handle(statusMessage);
+	}
+
+	public static void ShowApp()
+	{
+		// Temporary fix
+		// TODO: Find a more stable fix
+
+		StaticData.MainWindow!.WindowState = Avalonia.Controls.WindowState.Normal;
+		StaticData.MainWindow!.WindowState = Avalonia.Controls.WindowState.Minimized;
+		StaticData.MainWindow!.WindowState = Avalonia.Controls.WindowState.Normal;
 	}
 
 	public static void ExitApp()

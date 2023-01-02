@@ -13,7 +13,9 @@ namespace NetStalkerAvalonia.Services
 	{
 		public bool NotificationSuppressionSetting { get; set; }
 		public bool SpoofProtectionSetting { get; set; }
-		public string VendorApiTokenSetting { get; set; }
+		public string? VendorApiTokenSetting { get; set; }
+		public bool MinimizeToTraySetting { get; set; }
+		public bool MinimizeToTaskbarSetting { get; set; } = true;
 
 		public void ReadConfiguration()
 		{

@@ -24,13 +24,15 @@ namespace NetStalkerAvalonia
 			{
 				Tools.InitViewModels();
 
-				if (Tools.ViewModels.First() is not MainWindowViewModel mainViewModel)
+				if (StaticData.ViewModels.First() is not MainWindowViewModel mainViewModel)
 				{
 					throw new Exception("Error initializing view models!");
 				}
 
 				if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
 				{
+					DataContext = mainViewModel;
+
 					desktop.MainWindow = new MainWindow
 					{
 						DataContext = mainViewModel
@@ -45,6 +47,9 @@ namespace NetStalkerAvalonia
 						// Save app settings to disk
 						Config.AppSettings?.SaveChanges();
 					};
+
+					StaticData.MainWindow = desktop.MainWindow;
+					mainViewModel.InitTrayIcon();
 				}
 
 				base.OnFrameworkInitializationCompleted();

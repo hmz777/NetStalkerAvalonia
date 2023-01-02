@@ -21,6 +21,8 @@ using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Services;
 using Serilog;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia;
 
 namespace NetStalkerAvalonia.ViewModels
 {
@@ -84,6 +86,43 @@ namespace NetStalkerAvalonia.ViewModels
 		public ReactiveCommand<PhysicalAddress?, Unit> Limit { get; }
 		public ReactiveCommand<PhysicalAddress?, Unit> SetFriendlyName { get; }
 		public ReactiveCommand<PhysicalAddress?, Unit> ClearFriendlyName { get; }
+
+		#endregion
+
+		#region Tray Icon
+
+		private bool _trayIconVisible;
+		public bool TrayIconVisible
+		{
+			get => _trayIconVisible;
+			set => this.RaiseAndSetIfChanged(ref _trayIconVisible, value);
+		}
+
+		public ReactiveCommand<Unit, Unit>? ShowApp { get; }
+		public ReactiveCommand<Unit, Unit>? ExitApp { get; }
+
+		public void InitTrayIcon()
+		{
+			StaticData.MainWindow!.PropertyChanged += MainWindow_PropertyChanged;
+		}
+
+		private void MainWindow_PropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+		{
+			if (e.Property.Name == nameof(Window.WindowState))
+			{
+				var state = (WindowState)e.NewValue!;
+
+				if (state == WindowState.Minimized)
+				{
+					StaticData.MainWindow!.ShowInTaskbar = Config.AppSettings!.MinimizeToTraySetting == false;
+					TrayIconVisible = Config.AppSettings!.MinimizeToTraySetting;
+				}
+				else
+				{
+					StaticData.MainWindow!.ShowInTaskbar = true;
+				}
+			}
+		}
 
 		#endregion
 
@@ -165,19 +204,19 @@ namespace NetStalkerAvalonia.ViewModels
 				.ToProperty(this, x => x.CanGoBack);
 
 			GoToSniffer = ReactiveCommand.CreateFromObservable(
-				() => Router.Navigate.Execute(Tools.ViewModels[1] as IRoutableViewModel));
+				() => Router.Navigate.Execute(StaticData.ViewModels[1] as IRoutableViewModel));
 
 			GoToOptions = ReactiveCommand.CreateFromObservable(
-				() => Router.Navigate.Execute(Tools.ViewModels[2] as IRoutableViewModel));
+				() => Router.Navigate.Execute(StaticData.ViewModels[2] as IRoutableViewModel));
 
 			GoToRules = ReactiveCommand.CreateFromObservable(
-				() => Router.Navigate.Execute(Tools.ViewModels[3] as IRoutableViewModel));
+				() => Router.Navigate.Execute(StaticData.ViewModels[3] as IRoutableViewModel));
 
 			GoToHelp = ReactiveCommand.CreateFromObservable(
-				() => Router.Navigate.Execute(Tools.ViewModels[4] as IRoutableViewModel));
+				() => Router.Navigate.Execute(StaticData.ViewModels[4] as IRoutableViewModel));
 
 			GoToAbout = ReactiveCommand.CreateFromObservable(
-				() => Router.Navigate.Execute(Tools.ViewModels[5] as IRoutableViewModel));
+				() => Router.Navigate.Execute(StaticData.ViewModels[5] as IRoutableViewModel));
 
 			#endregion
 
@@ -258,6 +297,13 @@ namespace NetStalkerAvalonia.ViewModels
 				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
 			RedirectAll.ThrownExceptions.Subscribe(x =>
 				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+
+			#endregion
+
+			#region Tray Icon			
+
+			ShowApp = ReactiveCommand.Create(Tools.ShowApp);
+			ExitApp = ReactiveCommand.Create(Tools.ExitApp);
 
 			#endregion
 		}
