@@ -28,7 +28,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		private LibPcapLiveDevice? _device;
 		private Timer? _byteCounterTimer;
 
-		private static ReadOnlyObservableCollection<Device> Clients = MainWindowViewModel.Devices;
+		private static readonly ReadOnlyObservableCollection<Device> Clients = MainWindowViewModel.Devices;
 
 		#endregion
 
@@ -379,6 +379,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
+			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
+
 			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
@@ -398,6 +400,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		public void Redirect(PhysicalAddress mac)
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
+
+			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
 
 			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
@@ -419,6 +423,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
+			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
+
 			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
@@ -436,6 +442,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
+			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
+
 			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
@@ -452,6 +460,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		public void Limit(PhysicalAddress mac, int download, int upload)
 		{
 			Redirect(mac);
+
+			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
 
 			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
@@ -472,6 +482,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			Redirect(mac);
 
+			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
+
 			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
@@ -489,6 +501,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		public void LimitUpload(PhysicalAddress mac, int upload)
 		{
 			Redirect(mac);
+
+			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
 
 			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
@@ -508,6 +522,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
+			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
+
 			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
@@ -523,6 +539,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
 
+			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
+
 			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
 				.First();
@@ -536,6 +554,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		public void ClearUpload(PhysicalAddress mac)
 		{
 			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
+
+			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
 
 			var brDevice = Clients!
 				.Where(d => d.Mac!.Equals(mac))
