@@ -8,5 +8,7 @@
 	<Button Classes="link"
 			Content="{Binding $parent.Text}"
 			Command="{Binding $parent.OnClicked}"
-			CommandParameter="{Binding $parent.Link}"></Button>
+			CommandParameter="{Binding $parent.Link}"
+			Background="Transparent"
+			Foreground="White"></Button>
 </UserControl>

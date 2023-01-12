@@ -1,10 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.ReactiveUI;
 using NetStalkerAvalonia.Helpers;
 using ReactiveUI;
 using System.Reactive;
-using static System.Windows.Forms.LinkLabel;
 
 namespace NetStalkerAvalonia.Components
 {
