@@ -63,8 +63,12 @@
 						<cmpts:LinkButton Text="GitHub" Link="https://github.com/chmorgan"></cmpts:LinkButton>
 					</StackPanel>
 					<StackPanel Classes="infoPanel">
-						<TextBlock Classes="label" Text="ObjectListView"/>
-						<cmpts:LinkButton Text="SourceForge" Link="http://objectlistview.sourceforge.net"></cmpts:LinkButton>
+						<TextBlock Classes="label" Text="Avalonia"/>
+						<cmpts:LinkButton Text="Website" Link="https://avaloniaui.net"></cmpts:LinkButton>
+					</StackPanel>
+					<StackPanel Classes="infoPanel">
+						<TextBlock Classes="label" Text="ReactiveUI"/>
+						<cmpts:LinkButton Text="Website" Link="https://www.reactiveui.net"></cmpts:LinkButton>
 					</StackPanel>
 				</StackPanel>
 			</StackPanel>
