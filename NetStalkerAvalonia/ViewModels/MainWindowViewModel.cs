@@ -514,9 +514,11 @@ namespace NetStalkerAvalonia.ViewModels
 			var result =
 				await SetFriendlyNameInteraction!.Handle(validationResult.device.Name);
 
-			validationResult.device.SetFriendlyName(result);
-
-			_deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly!.ToList());
+			if (string.IsNullOrWhiteSpace(result) == false)
+			{
+				validationResult.device.SetFriendlyName(result);
+				_deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly!.ToList());
+			}
 		}
 
 		private async Task ClearFriendlyNameImpl(PhysicalAddress? mac)
