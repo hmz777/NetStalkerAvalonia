@@ -12,9 +12,6 @@
 	</Design.DataContext>
 
 	<UserControl.Styles>
-		<Style Selector="Border.controlWrapper">
-			<Setter Property="Padding" Value="15" />
-		</Style>
 		<Style Selector="StackPanel.section">
 			<Setter Property="Orientation" Value="Vertical" />
 			<Setter Property="Margin" Value="0,0,0,20" />
@@ -49,7 +46,7 @@
 		</Style>
 	</UserControl.Styles>
 
-	<Border Classes="controlWrapper">
+	<Border Classes="wrapper">
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*" />

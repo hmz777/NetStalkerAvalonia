@@ -18,7 +18,7 @@
 		</Style>
 	</UserControl.Styles>
 
-	<Border Padding="20">
+	<Border Classes="wrapper">
 		<StackPanel>
 			<TextBlock Text="Status Indicators" Classes="title"/>
 			<StackPanel Classes="infoPanel">

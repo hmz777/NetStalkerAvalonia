@@ -16,7 +16,6 @@
     <UserControl.Styles>
         <Style Selector="Border.nav-item">
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
         <Style Selector="Border.nav-item:nth-child(1)">
             <Setter Property="Margin" Value="0,0,0,0" />
@@ -41,10 +40,7 @@
                 <Border DockPanel.Dock="Left" Classes="nav-item">
                     <cmpts:Navbar />
                 </Border>
-                <Border DockPanel.Dock="Right" Classes="nav-item">
-                    <cmpts:StatsBox />
-                </Border>
-                <Border DockPanel.Dock="Right" Classes="nav-item">
+                <Border DockPanel.Dock="Right" HorizontalAlignment="Right" Classes="nav-item">
                     <cmpts:ListControls />
                 </Border>
             </DockPanel>
