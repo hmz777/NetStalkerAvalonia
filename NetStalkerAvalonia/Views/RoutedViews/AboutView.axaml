@@ -33,45 +33,69 @@
 			<Setter Property="Margin" Value="0,0,10,0"/>
 			<Setter Property="Cursor" Value="Hand"/>
 		</Style>
+		<Style Selector="Button.link">
+			<Setter Property="Margin" Value="10,0,0,0"/>
+		</Style>
 	</UserControl.Styles>
-
-	<Border Padding="20">
-		<StackPanel>
-			<TextBlock Text="Info" Classes="title"/>
-			<StackPanel Classes="infoPanel">
-				<TextBlock Classes="label" Text="Developed By"/>
-				<TextBlock Classes="labelValue" Text="Hamzi Alsheikh" />
-			</StackPanel>
-			<StackPanel Classes="infoPanel">
-				<TextBlock Classes="label" Text="Email"/>
-				<TextBlock Classes="labelValue" Text="hamzi_alsheikh@hotmail.com" />
-			</StackPanel>
-			<StackPanel Classes="infoPanel">
-				<TextBlock Classes="label" Text="Version"/>
-				<TextBlock Classes="labelValue" Text="{Binding AppVersion}" />
-			</StackPanel>
-			<StackPanel Name="sociallinks" Classes="socialLinks" Orientation="Horizontal">
-				<cmpts:LinkButton Text="GitHub" Link="https://github.com/hmz777"></cmpts:LinkButton>
-				<cmpts:LinkButton Text="Stack Overflow" Link="https://stackoverflow.com/users/6843077/hmz"></cmpts:LinkButton>
-				<cmpts:LinkButton Text="Website" Link="https://www.hamzialsheikh.tk/"></cmpts:LinkButton>
-			</StackPanel>
-			<StackPanel>
-				<TextBlock Text="Libs" Classes="title"/>
-				<StackPanel Name="links" Orientation="Vertical">
+	<ScrollViewer>
+		<Border Classes="wrapper">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<StackPanel Grid.Row="0" Grid.Column="0">
+					<StackPanel Classes="infoPanel" Margin="0,15,0,15">
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Classes="label" FontSize="40" Text="Net"/>
+							<TextBlock Classes="label" FontSize="40" Foreground="#FBB03B" Text="Stalker"/>
+						</StackPanel>
+						<TextBlock Classes="labelValue" Text="(Avalonia Edition)" />
+					</StackPanel>
+					<TextBlock Text="Info" Classes="title"/>
 					<StackPanel Classes="infoPanel">
-						<TextBlock Classes="label" Text="SharpPcap - Packet.Net"/>
-						<cmpts:LinkButton Text="GitHub" Link="https://github.com/chmorgan"></cmpts:LinkButton>
+						<TextBlock Classes="label" Text="Developed By"/>
+						<TextBlock Classes="labelValue" Text="Hamzi Alsheikh" />
 					</StackPanel>
 					<StackPanel Classes="infoPanel">
-						<TextBlock Classes="label" Text="Avalonia"/>
-						<cmpts:LinkButton Text="Website" Link="https://avaloniaui.net"></cmpts:LinkButton>
+						<TextBlock Classes="label" Text="Email"/>
+						<TextBlock Classes="labelValue" Text="hamzi_alsheikh@hotmail.com" />
 					</StackPanel>
 					<StackPanel Classes="infoPanel">
-						<TextBlock Classes="label" Text="ReactiveUI"/>
-						<cmpts:LinkButton Text="Website" Link="https://www.reactiveui.net"></cmpts:LinkButton>
+						<TextBlock Classes="label" Text="Version"/>
+						<TextBlock Classes="labelValue" Text="{Binding AppVersion}" />
+					</StackPanel>
+					<StackPanel Name="sociallinks" Classes="socialLinks" Orientation="Horizontal">
+						<cmpts:LinkButton Text="GitHub" Link="https://github.com/hmz777"></cmpts:LinkButton>
+						<cmpts:LinkButton Text="Stack Overflow" Link="https://stackoverflow.com/users/6843077/hmz"></cmpts:LinkButton>
+						<cmpts:LinkButton Text="Website" Link="https://www.hamzialsheikh.tk/"></cmpts:LinkButton>
+					</StackPanel>
+					<StackPanel>
+						<TextBlock Text="Built With" Classes="title"/>
+						<StackPanel Name="links" Orientation="Vertical">
+							<StackPanel Classes="infoPanel">
+								<TextBlock Classes="label" Text="SharpPcap - Packet.Net"/>
+								<cmpts:LinkButton Classes="s_link" Text="GitHub" Link="https://github.com/chmorgan"></cmpts:LinkButton>
+							</StackPanel>
+							<StackPanel Classes="infoPanel">
+								<TextBlock Classes="label" Text="Avalonia"/>
+								<cmpts:LinkButton Classes="s_link" Text="Website" Link="https://avaloniaui.net"></cmpts:LinkButton>
+							</StackPanel>
+							<StackPanel Classes="infoPanel">
+								<TextBlock Classes="label" Text="ReactiveUI"/>
+								<cmpts:LinkButton Classes="s_link" Text="Website" Link="https://www.reactiveui.net"></cmpts:LinkButton>
+							</StackPanel>
+						</StackPanel>
 					</StackPanel>
 				</StackPanel>
-			</StackPanel>
-		</StackPanel>
-	</Border>
+				<StackPanel Grid.Row="0" Grid.Column="1">
+					<Image Width="300"
+						   Height="300"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Center"
+						   Source="avares://NetStalkerAvalonia/Assets/Images/app_logo.png"/>
+				</StackPanel>
+			</Grid>
+		</Border>
+	</ScrollViewer>
 </UserControl>
