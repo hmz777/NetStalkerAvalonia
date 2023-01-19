@@ -160,6 +160,14 @@ namespace NetStalkerAvalonia.ViewModels
 			set => this.RaiseAndSetIfChanged(ref _allRedirected, value);
 		}
 
+		private bool _scanEnabled;
+
+		public bool ScanEnabled
+		{
+			get => _scanEnabled;
+			set => this.RaiseAndSetIfChanged(ref _scanEnabled, value);
+		}
+
 		private readonly ObservableAsPropertyHelper<string> _pageTitle;
 		public string PageTitle => _pageTitle.Value;
 
@@ -180,7 +188,7 @@ namespace NetStalkerAvalonia.ViewModels
 
 		#region Helpers
 
-		private IEqualityComparer<Device> _deviceEqualityComparer = new DeviceEqualityComparer();
+		private readonly IEqualityComparer<Device> _deviceEqualityComparer = new DeviceEqualityComparer();
 
 		#endregion
 
@@ -194,6 +202,8 @@ namespace NetStalkerAvalonia.ViewModels
 			_pageTitle = this.WhenAnyObservable(x => x.Router.CurrentViewModel)
 				.Select(GetPageNameFromViewModel)
 				.ToProperty(this, x => x.PageTitle);
+
+			ScanEnabled = true;
 
 			#endregion
 
@@ -333,6 +343,8 @@ namespace NetStalkerAvalonia.ViewModels
 			ResolveRequiredServices();
 
 			_scanner?.Scan();
+
+			ScanEnabled = false;
 		}
 
 		private void RefreshImpl()

@@ -14,7 +14,8 @@
 					Orientation="Horizontal">
 			<cmpts:ImageButton IconSource="/Assets/NavIcons/scan.png"
 							   TextContent="Scan"
-							   Command="{Binding Scan}">
+							   Command="{Binding Scan}"
+							   IsEnabled="{Binding ScanEnabled}">
 				<ToolTip.Tip>
 					<StackPanel>
 						<TextBlock Classes="h1">Scan Network</TextBlock>
