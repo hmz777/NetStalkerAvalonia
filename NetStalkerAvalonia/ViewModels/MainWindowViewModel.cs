@@ -23,10 +23,11 @@ using NetStalkerAvalonia.Services;
 using Serilog;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia;
+using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 
 namespace NetStalkerAvalonia.ViewModels
 {
-	public class MainWindowViewModel : ViewModelBase, IScreen
+    public class MainWindowViewModel : ViewModelBase, IScreen
 	{
 		#region Members
 
@@ -129,7 +130,7 @@ namespace NetStalkerAvalonia.ViewModels
 		#region Interactions
 
 		public Interaction<DeviceLimitsModel?, DeviceLimitsModel?> ShowLimitDialogInteraction { get; set; }
-		public Interaction<StatusMessage, Unit> ShowStatusMessageInteraction { get; set; }
+		public Interaction<StatusMessageModel, Unit> ShowStatusMessageInteraction { get; set; }
 		public Interaction<string?, string?> SetFriendlyNameInteraction { get; set; }
 
 		#endregion
@@ -281,12 +282,12 @@ namespace NetStalkerAvalonia.ViewModels
 
 			#region Status message
 
-			ShowStatusMessageInteraction = new Interaction<StatusMessage, Unit>();
+			ShowStatusMessageInteraction = new Interaction<StatusMessageModel, Unit>();
 
 			// This message bus listener is used for displaying status messages by other components in the app
 			MessageBus
 				.Current
-				.Listen<StatusMessage>(ContractKeys.StatusMessage.ToString())
+				.Listen<StatusMessageModel>(ContractKeys.StatusMessage.ToString())
 				.ObserveOn(RxApp.MainThreadScheduler)
 				.Select(x => ShowStatusMessage(x))
 				.Subscribe();
@@ -296,17 +297,17 @@ namespace NetStalkerAvalonia.ViewModels
 			#region Exception Handling
 
 			Scan.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
 			Refresh.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
 			BlockUnblock.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
 			RedirectUnRedirect.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
 			BlockAll.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
 			RedirectAll.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessage(MessageType.Error, x.Message)));
+				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
 
 			#endregion
 
@@ -418,7 +419,7 @@ namespace NetStalkerAvalonia.ViewModels
 
 				await ShowStatusMessageInteraction
 					.Handle(
-						new StatusMessage(MessageType.Error,
+						new StatusMessageModel(MessageType.Error,
 							"You have to uncheck the Redirect All toggle first!"));
 				return;
 			}
@@ -471,7 +472,7 @@ namespace NetStalkerAvalonia.ViewModels
 
 				await ShowStatusMessageInteraction
 					.Handle(
-						new StatusMessage(MessageType.Error,
+						new StatusMessageModel(MessageType.Error,
 							"You have to uncheck the Block All toggle first!"));
 				return;
 			}
@@ -564,21 +565,21 @@ namespace NetStalkerAvalonia.ViewModels
 
 			if (device == null)
 			{
-				await ShowStatusMessageInteraction!.Handle(new StatusMessage(MessageType.Error,
+				await ShowStatusMessageInteraction!.Handle(new StatusMessageModel(MessageType.Error,
 					"No device is selected!"));
 
 				return (false, null!);
 			}
 			else if (device!.IsGateway() && canBeAppliedToGatewayAndLocal == false)
 			{
-				await ShowStatusMessageInteraction!.Handle(new StatusMessage(MessageType.Error,
+				await ShowStatusMessageInteraction!.Handle(new StatusMessageModel(MessageType.Error,
 					"Gateway can't be targeted!"));
 
 				return (false, null!);
 			}
 			else if (device!.IsLocalDevice() && canBeAppliedToGatewayAndLocal == false)
 			{
-				await ShowStatusMessageInteraction!.Handle(new StatusMessage(MessageType.Error,
+				await ShowStatusMessageInteraction!.Handle(new StatusMessageModel(MessageType.Error,
 					"You can't target your own device!"));
 
 				return (false, null!);
@@ -621,7 +622,7 @@ namespace NetStalkerAvalonia.ViewModels
 			_redirectAllFutureHandlerSubscription?.Dispose();
 		}
 
-		private async Task<Unit> ShowStatusMessage(StatusMessage statusMessage)
+		private async Task<Unit> ShowStatusMessage(StatusMessageModel statusMessage)
 		{
 			await ShowStatusMessageInteraction.Handle(statusMessage);
 			return Unit.Default;
