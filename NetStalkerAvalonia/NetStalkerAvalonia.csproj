@@ -39,4 +39,15 @@
             <CopyToOutputDirectory></CopyToOutputDirectory>
         </AvaloniaResource>
     </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Views\AddUpdateRuleWindow.axaml.cs">
+        <DependentUpon>AddUpdateRuleWindow.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\LimitWindow.axaml.cs">
+        <DependentUpon>LimitWindow.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\SetNameWindow.axaml.cs">
+        <DependentUpon>SetNameWindow.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>

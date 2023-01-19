@@ -7,9 +7,9 @@ using System.Reactive.Disposables;
 
 namespace NetStalkerAvalonia.Views;
 
-public partial class SetNameDialogWindow : ReactiveWindow<SetNameDialogViewModel>
+public partial class SetNameWindow : ReactiveWindow<SetNameViewModel>
 {
-	public SetNameDialogWindow()
+	public SetNameWindow()
 	{
 		this.WhenActivated(disposables => { ViewModel!.Accept.Subscribe(Close).DisposeWith(disposables); });
 

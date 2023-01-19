@@ -5,13 +5,13 @@ using ReactiveUI;
 
 namespace NetStalkerAvalonia.ViewModels;
 
-public class SetNameDialogViewModel : ViewModelBase
+public class SetNameViewModel : ViewModelBase
 {
     public string? Name { get; set; }
 
     public ReactiveCommand<Unit, string> Accept { get; set; }
 
-    public SetNameDialogViewModel()
+    public SetNameViewModel()
     {
         Accept = ReactiveCommand.Create(() => Name!);
     }

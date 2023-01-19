@@ -5,11 +5,11 @@
         xmlns:vm="using:NetStalkerAvalonia.ViewModels"
         xmlns:cmpts="using:NetStalkerAvalonia.Components"
         mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="270"
-        x:Class="NetStalkerAvalonia.Views.LimitDialogWindow"
+        x:Class="NetStalkerAvalonia.Views.LimitWindow"
         Title="Limit Device">
 
     <Design.DataContext>
-        <vm:LimitDialogViewModel />
+        <vm:LimitViewModel />
     </Design.DataContext>
 
     <Window.Styles>

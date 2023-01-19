@@ -11,10 +11,11 @@ using System.Threading.Tasks;
 using NetStalkerAvalonia.Helpers;
 using Serilog;
 using SharpPcap;
+using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 
 namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
 {
-	public class DeviceNameResolver : IDeviceNameResolver
+    public class DeviceNameResolver : IDeviceNameResolver
 	{
 		private string _deviceNamesResource = "Devices.json";
 

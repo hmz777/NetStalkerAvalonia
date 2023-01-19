@@ -1,6 +1,6 @@
 using System.Net.NetworkInformation;
 
-namespace NetStalkerAvalonia.Models;
+namespace NetStalkerAvalonia.ViewModels.InteractionViewModels;
 
 public class SetDeviceFriendlyNameModel
 {

@@ -2,6 +2,7 @@
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.Services;
+using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System;
 using System.Reactive;
@@ -9,7 +10,7 @@ using System.Reactive.Linq;
 
 namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 {
-	public class OptionsViewModel : ViewModelBase, IRoutableViewModel
+    public class OptionsViewModel : ViewModelBase, IRoutableViewModel
 	{
 		#region Routing
 
@@ -78,17 +79,17 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 		public void SetPasswordImpl()
 		{
 			if (IsAppLocked && string.IsNullOrWhiteSpace(CurrentPassword))
-				MessageBus.Current.SendMessage<StatusMessage>(new StatusMessage(MessageType.Error, "Current password is incorrect!"), ContractKeys.StatusMessage.ToString());
+				MessageBus.Current.SendMessage<StatusMessageModel>(new StatusMessageModel(MessageType.Error, "Current password is incorrect!"), ContractKeys.StatusMessage.ToString());
 			else if (string.IsNullOrWhiteSpace(NewPassword))
-				MessageBus.Current.SendMessage<StatusMessage>(new StatusMessage(MessageType.Error, "New password is invalid!"), ContractKeys.StatusMessage.ToString());
+				MessageBus.Current.SendMessage<StatusMessageModel>(new StatusMessageModel(MessageType.Error, "New password is invalid!"), ContractKeys.StatusMessage.ToString());
 			else
 			{
 				var result = _appLockService.SetPassword(NewPassword, CurrentPassword);
 
 				if (result == false)
-					MessageBus.Current.SendMessage<StatusMessage>(new StatusMessage(MessageType.Error, "Unable to set the password!"), ContractKeys.StatusMessage.ToString());
+					MessageBus.Current.SendMessage<StatusMessageModel>(new StatusMessageModel(MessageType.Error, "Unable to set the password!"), ContractKeys.StatusMessage.ToString());
 				else
-					MessageBus.Current.SendMessage<StatusMessage>(new StatusMessage(MessageType.Success, "Password has been set!"), ContractKeys.StatusMessage.ToString());
+					MessageBus.Current.SendMessage<StatusMessageModel>(new StatusMessageModel(MessageType.Success, "Password has been set!"), ContractKeys.StatusMessage.ToString());
 			}
 
 			ClearPasswordFields();
@@ -97,15 +98,15 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 		public void ClearPasswordImpl()
 		{
 			if (string.IsNullOrWhiteSpace(CurrentPassword))
-				MessageBus.Current.SendMessage<StatusMessage>(new StatusMessage(MessageType.Error, "Current password is incorrect!"), ContractKeys.StatusMessage.ToString());
+				MessageBus.Current.SendMessage<StatusMessageModel>(new StatusMessageModel(MessageType.Error, "Current password is incorrect!"), ContractKeys.StatusMessage.ToString());
 			else
 			{
 				var result = _appLockService.ClearPassword(CurrentPassword);
 
 				if (result == false)
-					MessageBus.Current.SendMessage<StatusMessage>(new StatusMessage(MessageType.Error, "Unable to clear the password!"), ContractKeys.StatusMessage.ToString());
+					MessageBus.Current.SendMessage<StatusMessageModel>(new StatusMessageModel(MessageType.Error, "Unable to clear the password!"), ContractKeys.StatusMessage.ToString());
 				else
-					MessageBus.Current.SendMessage<StatusMessage>(new StatusMessage(MessageType.Success, "Password has been cleared!"), ContractKeys.StatusMessage.ToString());
+					MessageBus.Current.SendMessage<StatusMessageModel>(new StatusMessageModel(MessageType.Success, "Password has been cleared!"), ContractKeys.StatusMessage.ToString());
 			}
 
 			ClearPasswordFields();
