@@ -1,11 +1,10 @@
 <Styles xmlns="https://github.com/avaloniaui"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Design.PreviewWith>
-		<Border Padding="20">
-			<!-- Add Controls for Previewer Here -->
+		<Border Padding="20">			
 		</Border>
 	</Design.PreviewWith>
-
+	
 	<Style Selector="Window">
 		<!--<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>-->
 		<!--<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>-->
@@ -27,7 +26,6 @@
 	<Style Selector="Border.label > StackPanel > TextBlock">
 		<Setter Property="Foreground" Value="{Binding Theme.AccentColor}" />
 	</Style>
-
 	<Style Selector="Border.control-group">
 		<Setter Property="Background" Value="{Binding Theme.NavElementBackground}" />
 		<Setter Property="Padding" Value="15,5,15,5" />
