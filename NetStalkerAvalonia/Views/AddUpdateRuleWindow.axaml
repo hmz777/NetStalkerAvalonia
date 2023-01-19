@@ -1,0 +1,69 @@
+<Window xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		xmlns:components="clr-namespace:NetStalkerAvalonia.Components"
+		xmlns:viewModels="clr-namespace:NetStalkerAvalonia.ViewModels"
+		x:Class="NetStalkerAvalonia.Views.AddUpdateRuleWindow"
+		Title="Add/Update Rule">
+
+	<Design.DataContext>
+		<viewModels:AddUpdateRuleViewModel />
+	</Design.DataContext>
+
+	<Window.Styles>
+		<StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
+		<Style Selector="Window">
+			<Setter Property="Width" Value="550" />
+			<Setter Property="Height" Value="350" />
+			<Setter Property="MaxWidth" Value="550" />
+			<Setter Property="MinWidth" Value="550" />
+			<Setter Property="MaxHeight" Value="350" />
+			<Setter Property="MinHeight" Value="350" />
+			<Setter Property="WindowStartupLocation" Value="CenterOwner" />
+		</Style>
+	</Window.Styles>
+
+	<Grid RowDefinitions="Auto,*">
+		<components:PageTitle Grid.Row="0" VerticalAlignment="Stretch" Text="{Binding $parent[Window].Title}" />
+		<Border Grid.Row="1" Padding="15">
+			<StackPanel Orientation="Vertical" Spacing="20">
+				<StackPanel Orientation="Vertical">
+					<Label Margin="0,0,0,5">Target</Label>
+					<TextBox Text="{Binding Target, Mode=OneWayToSource}"/>
+				</StackPanel>
+				<StackPanel Orientation="Vertical">
+					<Label Margin="0,0,0,5">Action</Label>
+					<ComboBox Items="{Binding RuleActions}"
+							  SelectedItem="{Binding Action, Mode=OneWayToSource}"/>
+				</StackPanel>
+				<StackPanel Orientation="Vertical">
+					<Label Margin="0,0,0,5">Source</Label>
+					<ComboBox Items="{Binding SourceValue}"
+							  SelectedItem="{Binding SourceValue, Mode=OneWayToSource}"/>
+				</StackPanel>
+				<StackPanel Orientation="Vertical" IsVisible="{Binding IsLimitRule}">
+					<Label Margin="0,0,0,5">Upload</Label>
+					<NumericUpDown Value="{Binding Upload,Mode=OneWayToSource}"/>
+				</StackPanel>
+				<StackPanel Orientation="Vertical" IsVisible="{Binding IsLimitRule}">
+					<Label Margin="0,0,0,5">Download</Label>
+					<NumericUpDown Value="{Binding Download,Mode=OneWayToSource}"/>
+				</StackPanel>
+				<StackPanel Orientation="Vertical">
+					<Label Margin="0,0,0,5">Regex</Label>
+					<CheckBox IsChecked="{Binding IsRegex, Mode=OneWayToSource}"/>
+				</StackPanel>
+				<StackPanel Orientation="Vertical">
+					<Label Margin="0,0,0,5">Active</Label>
+					<CheckBox IsChecked="{Binding Active, Mode=OneWayToSource}"/>
+				</StackPanel>
+				<StackPanel HorizontalAlignment="Center"
+							VerticalAlignment="Bottom">
+					<Button Padding="100,10,100,10" Command="{Binding Accept}">Submit</Button>
+				</StackPanel>
+			</StackPanel>
+		</Border>
+	</Grid>
+</Window>
