@@ -22,6 +22,8 @@ using SharpPcap;
 using SharpPcap.LibPcap;
 using Splat;
 using System.Diagnostics;
+using Windows.UI.ViewManagement;
+using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 
 namespace NetStalkerAvalonia.Helpers;
 
@@ -107,7 +109,7 @@ public class Tools
 		}
 	}
 
-	public static void HandleError(Interaction<StatusMessage, Unit> interaction, StatusMessage statusMessage)
+	public static void HandleError(Interaction<StatusMessageModel, Unit> interaction, StatusMessageModel statusMessage)
 	{
 		ArgumentNullException.ThrowIfNull(interaction, nameof(interaction));
 
