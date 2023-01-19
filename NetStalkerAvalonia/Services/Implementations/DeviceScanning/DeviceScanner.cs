@@ -18,341 +18,348 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceScanning;
 
 public class DeviceScanner : IDeviceScanner
 {
-    #region Members
+	#region Members
 
-    private readonly PacketReceiveTechnique _packetReceiveTechnique;
-    private CancellationTokenSource? _cancellationTokenSource;
-    private LibPcapLiveDevice? _device;
-    private Timer? _discoveryTimer;
-    private Timer? _aliveTimer;
-    private bool _timerRanFirstTime;
-    private bool _isStarted;
+	private readonly PacketReceiveTechnique _packetReceiveTechnique;
+	private CancellationTokenSource? _cancellationTokenSource;
+	private LibPcapLiveDevice? _device;
+	private Timer? _discoveryTimer;
+	private Timer? _aliveTimer;
+	private bool _timerRanFirstTime;
+	private bool _isStarted;
 
-    private readonly IDeviceNameResolver? _deviceNameResolver;
-    private readonly IDeviceTypeIdentifier? _deviceTypeIdentifier;
+	private readonly IDeviceNameResolver? _deviceNameResolver;
+	private readonly IDeviceTypeIdentifier? _deviceTypeIdentifier;
+	private readonly IRuleService? _ruleService;
 
-    // This is the original source of clients and all other collections are projections from this
-    private SourceCache<Device, string> _clients = new(x => x.Mac!.ToString());
+	// This is the original source of clients and all other collections are projections from this
+	private SourceCache<Device, string> _clients = new(x => x.Mac!.ToString());
 
-    #endregion
+	#endregion
 
-    #region Constructor
+	#region Constructor
 
-    public DeviceScanner(
-        PacketReceiveTechnique packetReceiveTechnique = PacketReceiveTechnique.EventHandler,
-        IDeviceNameResolver? deviceNameResolver = null!,
-        IDeviceTypeIdentifier? deviceTypeIdentifier = null!)
-    {
-        _packetReceiveTechnique = packetReceiveTechnique;
+	public DeviceScanner(
+		PacketReceiveTechnique packetReceiveTechnique = PacketReceiveTechnique.EventHandler,
+		IDeviceNameResolver? deviceNameResolver = null!,
+		IDeviceTypeIdentifier? deviceTypeIdentifier = null!,
+		IRuleService? ruleService = null!)
+	{
+		_packetReceiveTechnique = packetReceiveTechnique;
 
-        try
-        {
-            _deviceNameResolver = Tools.ResolveIfNull(deviceNameResolver);
+		try
+		{
+			_deviceNameResolver = Tools.ResolveIfNull(deviceNameResolver);
+			_ruleService = Tools.ResolveIfNull(ruleService);
 
-            if (OptionalFeatures.AvailableFeatures.Contains(typeof(IDeviceTypeIdentifier)))
-            {
-                _deviceTypeIdentifier = Tools.ResolveIfNull(deviceTypeIdentifier);
-            }
-        }
-        catch (Exception e)
-        {
-            Log.Error(LogMessageTemplates.ServiceResolveError,
-                e.Message);
-        }
+			if (OptionalFeatures.AvailableFeatures.Contains(typeof(IDeviceTypeIdentifier)))
+			{
+				_deviceTypeIdentifier = Tools.ResolveIfNull(deviceTypeIdentifier);
+			}
+		}
+		catch (Exception e)
+		{
+			Log.Error(LogMessageTemplates.ServiceResolveError,
+				e.Message);
+		}
 
-        Init();
-        SetupBindings();
+		Init();
+		SetupBindings();
 
-        Log.Information(LogMessageTemplates.ServiceInit,
-            typeof(IDeviceScanner));
-    }
+		Log.Information(LogMessageTemplates.ServiceInit,
+			typeof(IDeviceScanner));
+	}
 
-    #endregion
+	#endregion
 
-    #region Init
+	#region Init
 
-    private void Init()
-    {
-        Tools.ResolveGateway();
+	private void Init()
+	{
+		Tools.ResolveGateway();
 
-        if (_device == null)
-        {
-            var adapterName = (from deviceX in LibPcapLiveDeviceList.Instance
-                where deviceX.Interface.FriendlyName == HostInfo.NetworkAdapterName
-                select deviceX).ToList()[0].Name;
+		if (_device == null)
+		{
+			var adapterName = (from deviceX in LibPcapLiveDeviceList.Instance
+							   where deviceX.Interface.FriendlyName == HostInfo.NetworkAdapterName
+							   select deviceX).ToList()[0].Name;
 
-            _device = LibPcapLiveDeviceList.New()[adapterName];
-            _device.Open(DeviceModes.Promiscuous, 20);
-            _device.Filter = "arp";
+			_device = LibPcapLiveDeviceList.New()[adapterName];
+			_device.Open(DeviceModes.Promiscuous, 20);
+			_device.Filter = "arp";
 
-            // The state parameter here doesn't matter since we're initializing the timer
-            // it will be later started when the scan functionality is started
-            InitOrToggleDiscoveryTimer(true);
-            InitOrToggleAliveTimer(true);
+			// The state parameter here doesn't matter since we're initializing the timer
+			// it will be later started when the scan functionality is started
+			InitOrToggleDiscoveryTimer(true);
+			InitOrToggleAliveTimer(true);
 
-            _cancellationTokenSource = new CancellationTokenSource();
-        }
-    }
+			_cancellationTokenSource = new CancellationTokenSource();
+		}
+	}
 
-    private void SetupBindings() => MessageBus
-        .Current
-        .RegisterMessageSource(_clients.Connect(), ContractKeys.ScannerStream.ToString());
+	private void SetupBindings() => MessageBus
+		.Current
+		.RegisterMessageSource(_clients.Connect(), ContractKeys.ScannerStream.ToString());
 
-    private void InitOrToggleDiscoveryTimer(bool state)
-    {
-        if (_discoveryTimer == null)
-        {
-            _discoveryTimer = new Timer(DiscoveryTimerOnElapsed, null,
-                Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
-        }
-        else
-        {
-            if (state)
-            {
-                if (_timerRanFirstTime == false)
-                {
-                    _discoveryTimer?.Change(
-                        TimeSpan.Zero, Timeout.InfiniteTimeSpan);
+	private void InitOrToggleDiscoveryTimer(bool state)
+	{
+		if (_discoveryTimer == null)
+		{
+			_discoveryTimer = new Timer(DiscoveryTimerOnElapsed, null,
+				Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+		}
+		else
+		{
+			if (state)
+			{
+				if (_timerRanFirstTime == false)
+				{
+					_discoveryTimer?.Change(
+						TimeSpan.Zero, Timeout.InfiniteTimeSpan);
 
-                    _timerRanFirstTime = true;
-                }
-                else
-                {
-                    _discoveryTimer?.Change(
-                        TimeSpan.FromMilliseconds((int)HostInfo.NetworkClass), Timeout.InfiniteTimeSpan);
-                }
-            }
-            else
-                _discoveryTimer?.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
-        }
-    }
+					_timerRanFirstTime = true;
+				}
+				else
+				{
+					_discoveryTimer?.Change(
+						TimeSpan.FromMilliseconds((int)HostInfo.NetworkClass), Timeout.InfiniteTimeSpan);
+				}
+			}
+			else
+				_discoveryTimer?.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+		}
+	}
 
-    private void InitOrToggleAliveTimer(bool state)
-    {
-        if (_aliveTimer == null)
-        {
-            _aliveTimer = new Timer(
-                AliveTimerOnElapsed,
-                null,
-                Timeout.InfiniteTimeSpan,
-                Timeout.InfiniteTimeSpan);
-        }
-        else if (state)
-        {
-            _aliveTimer.Change(
-                TimeSpan.Zero,
-                TimeSpan.FromSeconds(30));
-        }
-        else
-        {
-            _aliveTimer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
-        }
-    }
+	private void InitOrToggleAliveTimer(bool state)
+	{
+		if (_aliveTimer == null)
+		{
+			_aliveTimer = new Timer(
+				AliveTimerOnElapsed,
+				null,
+				Timeout.InfiniteTimeSpan,
+				Timeout.InfiniteTimeSpan);
+		}
+		else if (state)
+		{
+			_aliveTimer.Change(
+				TimeSpan.Zero,
+				TimeSpan.FromSeconds(30));
+		}
+		else
+		{
+			_aliveTimer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+		}
+	}
 
-    #endregion
+	#endregion
 
-    #region Internal
+	#region Internal
 
-    private void DiscoveryTimerOnElapsed(object? stateInfo)
-    {
-        // Stop the timer until the probing packets are sent
-        InitOrToggleDiscoveryTimer(false);
+	private void DiscoveryTimerOnElapsed(object? stateInfo)
+	{
+		// Stop the timer until the probing packets are sent
+		InitOrToggleDiscoveryTimer(false);
 
-        ProbeDevices();
+		ProbeDevices();
 
-        // Resume the timer
-        InitOrToggleDiscoveryTimer(true);
-    }
+		// Resume the timer
+		InitOrToggleDiscoveryTimer(true);
+	}
 
-    private void StartMonitoring()
-    {
-        // Start receiving packets
-        ReceivePackets();
+	private void StartMonitoring()
+	{
+		// Start receiving packets
+		ReceivePackets();
 
-        // Setup the discovery timer
-        InitOrToggleDiscoveryTimer(true);
+		// Setup the discovery timer
+		InitOrToggleDiscoveryTimer(true);
 
-        // Setup the device timout timer
-        InitOrToggleAliveTimer(true);
-    }
+		// Setup the device timout timer
+		InitOrToggleAliveTimer(true);
+	}
 
-    private void ReceivePackets()
-    {
-        if (_packetReceiveTechnique == PacketReceiveTechnique.EventHandler)
-        {
-            _device!.OnPacketArrival += (_, e) =>
-            {
-                if (_cancellationTokenSource?.IsCancellationRequested == false)
-                    ProcessPacket(e);
-            };
+	private void ReceivePackets()
+	{
+		if (_packetReceiveTechnique == PacketReceiveTechnique.EventHandler)
+		{
+			_device!.OnPacketArrival += (_, e) =>
+			{
+				if (_cancellationTokenSource?.IsCancellationRequested == false)
+					ProcessPacket(e);
+			};
 
-            _device?.StartCapture();
-        }
-        else
-        {
-            Task.Run(() =>
-            {
-                while (_cancellationTokenSource?.IsCancellationRequested == false)
-                {
-                    var packetResult = _device!.GetNextPacket(out var e);
+			_device?.StartCapture();
+		}
+		else
+		{
+			Task.Run(() =>
+			{
+				while (_cancellationTokenSource?.IsCancellationRequested == false)
+				{
+					var packetResult = _device!.GetNextPacket(out var e);
 
-                    if (packetResult != GetPacketStatus.PacketRead)
-                        continue;
+					if (packetResult != GetPacketStatus.PacketRead)
+						continue;
 
-                    ProcessPacket(e);
-                }
-            }, _cancellationTokenSource!.Token);
-        }
-    }
+					ProcessPacket(e);
+				}
+			}, _cancellationTokenSource!.Token);
+		}
+	}
 
-    private void ProbeDevices()
-    {
-        switch (HostInfo.NetworkClass)
-        {
-            case NetworkClass.A:
-                for (var i = 1; i <= 255; i++)
-                for (var j = 1; j <= 255; j++)
-                for (var k = 1; k <= 255; k++)
-                    _device.SendPacket(BuildArpPacket(IPAddress.Parse(HostInfo.RootIp + i + '.' + j + '.' + k)));
-                break;
-            case NetworkClass.B:
-                for (var i = 1; i <= 255; i++)
-                for (var j = 1; j <= 255; j++)
-                    _device.SendPacket(BuildArpPacket(IPAddress.Parse(HostInfo.RootIp + i + '.' + j)));
-                break;
-            case NetworkClass.C:
-                for (var i = 1; i <= 255; i++)
-                    _device.SendPacket(BuildArpPacket(IPAddress.Parse(HostInfo.RootIp + i)));
-                break;
-            case NetworkClass.D:
-                throw new NotImplementedException("The detected network class is not supported.");
-            case NetworkClass.E:
-                throw new NotImplementedException("The detected network class is not supported.");
-            default:
-                throw new InvalidOperationException("The detected network class is invalid.");
-        }
-    }
+	private void ProbeDevices()
+	{
+		switch (HostInfo.NetworkClass)
+		{
+			case NetworkClass.A:
+				for (var i = 1; i <= 255; i++)
+					for (var j = 1; j <= 255; j++)
+						for (var k = 1; k <= 255; k++)
+							_device.SendPacket(BuildArpPacket(IPAddress.Parse(HostInfo.RootIp + i + '.' + j + '.' + k)));
+				break;
+			case NetworkClass.B:
+				for (var i = 1; i <= 255; i++)
+					for (var j = 1; j <= 255; j++)
+						_device.SendPacket(BuildArpPacket(IPAddress.Parse(HostInfo.RootIp + i + '.' + j)));
+				break;
+			case NetworkClass.C:
+				for (var i = 1; i <= 255; i++)
+					_device.SendPacket(BuildArpPacket(IPAddress.Parse(HostInfo.RootIp + i)));
+				break;
+			case NetworkClass.D:
+				throw new NotImplementedException("The detected network class is not supported.");
+			case NetworkClass.E:
+				throw new NotImplementedException("The detected network class is not supported.");
+			default:
+				throw new InvalidOperationException("The detected network class is invalid.");
+		}
+	}
 
-    private void ProcessPacket(PacketCapture packetCapture)
-    {
-        var rawCapture = packetCapture.GetPacket();
-        var packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-        var arpPacket = packet.Extract<ArpPacket>();
+	private void ProcessPacket(PacketCapture packetCapture)
+	{
+		var rawCapture = packetCapture.GetPacket();
+		var packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+		var arpPacket = packet.Extract<ArpPacket>();
 
-        if (arpPacket == null)
-            return;
+		if (arpPacket == null)
+			return;
 
-        var client = _clients.Lookup(arpPacket.SenderHardwareAddress.ToString());
+		var client = _clients.Lookup(arpPacket.SenderHardwareAddress.ToString());
 
-        if (client.HasValue == false)
-        {
-            _clients.AddOrUpdate(new Device(arpPacket.SenderProtocolAddress, arpPacket.SenderHardwareAddress));
+		if (client.HasValue == false)
+		{
+			_clients.AddOrUpdate(new Device(arpPacket.SenderProtocolAddress, arpPacket.SenderHardwareAddress));
 
-            var presentClient = _clients.Lookup(arpPacket.SenderHardwareAddress.ToString());
+			var presentClient = _clients.Lookup(arpPacket.SenderHardwareAddress.ToString());
+			var device = presentClient.Value;
 
-            // Get hostname for current target
-            // We fire and forget since failing to resolve the hostname won't affect
-            // the functionality
-            _deviceNameResolver?.ResolveDeviceNameAsync(presentClient.Value);
+			// Get hostname for current target
+			// We fire and forget since failing to resolve the hostname won't affect
+			// the functionality
+			_deviceNameResolver?.ResolveDeviceNameAsync(device);
 
-            // Get vendor info for current target if the feature is available
-            if (OptionalFeatures.AvailableFeatures.Contains(typeof(IDeviceTypeIdentifier)))
-                _deviceTypeIdentifier?.IdentifyDevice(presentClient.Value);
-        }
-        else
-        {
-            client.Value.UpdateLastArpTime();
-        }
-    }
+			// Get vendor info for current target if the feature is available
+			if (OptionalFeatures.AvailableFeatures.Contains(typeof(IDeviceTypeIdentifier)))
+				_deviceTypeIdentifier?.IdentifyDevice(device);
 
-    private EthernetPacket BuildArpPacket(IPAddress targetIpAddress)
-    {
-        var arpRequestPacket = new ArpPacket(ArpOperation.Request,
-            targetHardwareAddress: HostInfo.EmptyMac,
-            targetProtocolAddress: targetIpAddress,
-            senderHardwareAddress: HostInfo.HostMac,
-            senderProtocolAddress: HostInfo.HostIp);
+			// See if there is a rule that matches this device and apply it
+			_ruleService?.ApplyIfMatch(device);
+		}
+		else
+		{
+			client.Value.UpdateLastArpTime();
+		}
+	}
 
-        var ethernetPacket = new EthernetPacket(
-            sourceHardwareAddress: HostInfo.HostMac,
-            destinationHardwareAddress: HostInfo.BroadcastMac,
-            EthernetType.Arp);
+	private EthernetPacket BuildArpPacket(IPAddress targetIpAddress)
+	{
+		var arpRequestPacket = new ArpPacket(ArpOperation.Request,
+			targetHardwareAddress: HostInfo.EmptyMac,
+			targetProtocolAddress: targetIpAddress,
+			senderHardwareAddress: HostInfo.HostMac,
+			senderProtocolAddress: HostInfo.HostIp);
 
-        ethernetPacket.PayloadPacket = arpRequestPacket;
+		var ethernetPacket = new EthernetPacket(
+			sourceHardwareAddress: HostInfo.HostMac,
+			destinationHardwareAddress: HostInfo.BroadcastMac,
+			EthernetType.Arp);
 
-        return ethernetPacket;
-    }
+		ethernetPacket.PayloadPacket = arpRequestPacket;
 
-    private void AliveTimerOnElapsed(object? stateInfo)
-    {
-        foreach (var client in _clients.Items)
-        {
-            if (client.IsGateway() == false &&
-                client.IsLocalDevice() == false &&
-                DateTime.Now.Second - client.TimeSinceLastArp.Second > 30)
-            {
-                _clients.Remove(client);
-            }
-        }
-    }
+		return ethernetPacket;
+	}
 
-    #endregion
+	private void AliveTimerOnElapsed(object? stateInfo)
+	{
+		foreach (var client in _clients.Items)
+		{
+			if (client.IsGateway() == false &&
+				client.IsLocalDevice() == false &&
+				DateTime.Now.Second - client.TimeSinceLastArp.Second > 30)
+			{
+				_clients.Remove(client);
+			}
+		}
+	}
 
-    #region API
+	#endregion
 
-    public bool Status => _isStarted;
+	#region API
 
-    public void Scan()
-    {
-        if (_isStarted == false)
-        {
-            StartMonitoring();
-            _isStarted = true;
+	public bool Status => _isStarted;
 
-            Log.Information(LogMessageTemplates.ServiceStart,
-                typeof(IDeviceScanner));
-        }
-    }
+	public void Scan()
+	{
+		if (_isStarted == false)
+		{
+			StartMonitoring();
+			_isStarted = true;
 
-    public void Refresh()
-    {
-        ProbeDevices();
-    }
+			Log.Information(LogMessageTemplates.ServiceStart,
+				typeof(IDeviceScanner));
+		}
+	}
 
-    public void Stop()
-    {
-        InitOrToggleDiscoveryTimer(false);
-        InitOrToggleAliveTimer(false);
+	public void Refresh()
+	{
+		ProbeDevices();
+	}
 
-        _cancellationTokenSource?.Cancel();
-        _isStarted = false;
-        _device?.StopCapture();
+	public void Stop()
+	{
+		InitOrToggleDiscoveryTimer(false);
+		InitOrToggleAliveTimer(false);
 
-        Log.Information(LogMessageTemplates.ServiceStop,
-            typeof(IDeviceScanner));
-    }
+		_cancellationTokenSource?.Cancel();
+		_isStarted = false;
+		_device?.StopCapture();
 
-    public void Dispose()
-    {
-        Stop();
+		Log.Information(LogMessageTemplates.ServiceStop,
+			typeof(IDeviceScanner));
+	}
 
-        if (_device != null)
-        {
-            _discoveryTimer?.Dispose();
-            _aliveTimer?.Dispose();
+	public void Dispose()
+	{
+		Stop();
 
-            _device.Close();
-            _device.Dispose();
-            _device = null;
-            _cancellationTokenSource?.Dispose();
-            _cancellationTokenSource = null;
-        }
+		if (_device != null)
+		{
+			_discoveryTimer?.Dispose();
+			_aliveTimer?.Dispose();
 
-        Log.Information(LogMessageTemplates.ServiceDispose,
-            typeof(IDeviceScanner));
-    }
+			_device.Close();
+			_device.Dispose();
+			_device = null;
+			_cancellationTokenSource?.Dispose();
+			_cancellationTokenSource = null;
+		}
 
-    #endregion
+		Log.Information(LogMessageTemplates.ServiceDispose,
+			typeof(IDeviceScanner));
+	}
 
-    // TODO: Check why devices freeze on redirection or limitation and why then they disappear from the list.
+	#endregion
+
+	// TODO: Check why devices freeze on redirection or limitation and why then they disappear from the list.
 }

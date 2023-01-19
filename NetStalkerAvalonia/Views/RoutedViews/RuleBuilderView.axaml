@@ -1,13 +1,131 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:NetStalkerAvalonia.ViewModels.RoutedViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="NetStalkerAvalonia.Views.RoutedViews.RuleBuilderView">
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:NetStalkerAvalonia.ViewModels.RoutedViewModels"
+			 xmlns:ru="using:NetStalkerAvalonia.Rules"
+			 xmlns:convos="using:NetStalkerAvalonia.Converters"
+			 xmlns:cmpts="using:NetStalkerAvalonia.Components"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="NetStalkerAvalonia.Views.RoutedViews.RuleBuilderView">
 
-    <Design.DataContext>
-        <vm:RuleBuilderViewModel />
-    </Design.DataContext>
-    
+	<Design.DataContext>
+		<vm:RuleBuilderViewModel />
+	</Design.DataContext>
+
+	<UserControl.Styles>
+		<Style Selector="Border.ruleItem">
+			<Setter Property="CornerRadius" Value="5"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		</Style>
+		<Style Selector="Border.ruleItem_Inner">
+			<Setter Property="Padding" Value="7"/>
+		</Style>
+		<Style Selector="Border.ruleItem_Block > DockPanel > Rectangle">
+			<Setter Property="Fill" Value="#FF5555"/>
+		</Style>
+		<Style Selector="Border.ruleItem_Redirect > DockPanel > Rectangle">
+			<Setter Property="Fill" Value="#AAAA00"/>
+		</Style>
+		<Style Selector="Border.ruleItem_Limit > DockPanel > Rectangle">
+			<Setter Property="Fill" Value="#5555FF"/>
+		</Style>
+		<Style Selector="Border.ruleItem_Attribute">
+			<Setter Property="Padding" Value="5"/>
+			<Setter Property="CornerRadius" Value="5"/>
+			<Setter Property="Background" Value="{Binding $parent[UserControl].DataContext.Theme.AccentColor}"/>
+			<Setter Property="HorizontalAlignment" Value="Left"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Margin" Value="10,0,0,0"/>
+			<Setter Property="BorderBrush" Value="White"/>
+			<Setter Property="BorderThickness" Value="0.5"/>
+		</Style>
+		<Style Selector="Border.ruleItem_Attribute > TextBlock">
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<Style Selector="TextBlock.ruleItem_Target">
+			<Setter Property="FontSize" Value="20"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+		<Style Selector="Image.ruleItem_Status">
+			<Setter Property="Width" Value="30"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="HorizontalAlignment" Value="Right"/>
+		</Style>
+		<Style Selector="cmpts|IconButton.ruleBuilder_Control">
+			<Setter Property="Margin" Value="0,0,0,5"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Border Classes="wrapper">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="4*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<ListBox CornerRadius="5" Grid.Row="0" Grid.Column="0" Items="{Binding Rules}">
+				<ListBox.Styles>
+					<Style Selector="ListBoxItem">
+						<Setter Property="Padding" Value="0"/>
+						<Setter Property="Margin" Value="0,0,0,4"/>
+					</Style>
+					<Style Selector="ListBoxItem:focus /template/ ContentPresenter">
+						<Setter Property="Background" Value="{Binding $parent[UserControl].DataContext.Theme.AccentColor}"/>
+					</Style>
+				</ListBox.Styles>
+				<ListBox.ItemTemplate>
+					<DataTemplate DataType="ru:RuleBase">
+						<Border Classes="ruleItem"
+								Classes.ruleItem_Block="{Binding Action, Converter={x:Static convos:RuleActionConverter.Instance}, ConverterParameter=Block}"
+								Classes.ruleItem_Redirect="{Binding Action, Converter={x:Static convos:RuleActionConverter.Instance}, ConverterParameter=Redirect}"
+								Classes.ruleItem_Limit="{Binding Action, Converter={x:Static convos:RuleActionConverter.Instance}, ConverterParameter=Limit}">
+							<DockPanel HorizontalAlignment="Stretch">
+								<Rectangle Width="10" Margin="0,0,10,0" VerticalAlignment="Stretch"/>
+								<Border Classes="ruleItem_Inner">
+									<DockPanel HorizontalAlignment="Stretch"
+											   VerticalAlignment="Stretch">
+										<TextBlock Classes="ruleItem_Target" Text="{Binding Target}"/>
+										<Border Classes="ruleItem_Attribute ruleItem_Order">
+											<TextBlock Text="{Binding Order}"/>
+										</Border>
+										<Border Classes="ruleItem_Attribute ruleItem_Source">
+											<TextBlock Text="{Binding SourceValue,Converter={x:Static convos:RuleSourceValueToStringConverter.Instance}}"/>
+										</Border>
+										<Border Classes="ruleItem_Attribute ruleItem_Regex" IsVisible="{Binding IsRegex}">
+											<TextBlock Text="Regex"/>
+										</Border>
+										<Image Classes="ruleItem_Status" Source="{Binding Active, Converter={x:Static convos:RuleStatusToImageConverter.Instance}}"/>
+									</DockPanel>
+								</Border>
+							</DockPanel>
+						</Border>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+			<Border Grid.Row="0"
+					Grid.Column="1"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Padding="10,0,0,0">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="auto"/>
+						<RowDefinition Height="auto"/>
+						<RowDefinition Height="auto"/>
+					</Grid.RowDefinitions>
+					<cmpts:IconButton Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" Icon="/Assets/Misc/add.png" Text="Add"></cmpts:IconButton>
+					<cmpts:IconButton Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Icon="/Assets/Misc/edit.png" Text="Edit"></cmpts:IconButton>
+					<cmpts:IconButton Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Stretch" Icon="/Assets/Misc/remove.png" Text="Remove"></cmpts:IconButton>
+				</Grid>
+			</Border>
+		</Grid>
+	</Border>
 </UserControl>

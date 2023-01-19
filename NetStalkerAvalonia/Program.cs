@@ -19,6 +19,7 @@ using NetStalkerAvalonia.Services.Implementations.DeviceScanning;
 using ReactiveUI;
 using NetStalkerAvalonia.Services.Implementations.AppLocking;
 using Avalonia.Controls.ApplicationLifetimes;
+using NetStalkerAvalonia.Services.Implementations.RulesService;
 
 namespace NetStalkerAvalonia
 {
@@ -101,6 +102,10 @@ namespace NetStalkerAvalonia
 			Locator.CurrentMutable.RegisterLazySingleton(() =>
 					new AppLockManager(),
 				typeof(IAppLockService));
+
+			Locator.CurrentMutable.RegisterLazySingleton(() =>
+					new RuleService(),
+				typeof(IRuleService));
 		}
 
 		private static void RegisterOptionalServices()
