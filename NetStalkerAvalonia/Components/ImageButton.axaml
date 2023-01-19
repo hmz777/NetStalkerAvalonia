@@ -1,11 +1,11 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:convs="using:NetStalkerAvalonia.Converters"
 			 xmlns:attProp="using:NetStalkerAvalonia.Helpers"
-             mc:Ignorable="d"
-             x:Class="NetStalkerAvalonia.Components.ImageButton">
+			 mc:Ignorable="d"
+			 x:Class="NetStalkerAvalonia.Components.ImageButton">
 	
 	<UserControl.Resources>
 		<convs:StringToImageSourceConverter x:Key="StrToImgSrcConv"/>
@@ -44,7 +44,8 @@
 		</Style>
 	</UserControl.Styles>
 
-	<Button Classes="hoverable"
+	<Button IsEnabled="{Binding $parent.IsEnabled}"
+			Classes="hoverable"
 			attProp:AttachedProperties.Text="{Binding $parent[UserControl].TextContent}"
 			attProp:AttachedProperties.Icon="{Binding $parent[UserControl].IconSource}"
 			Command="{Binding $parent[UserControl].Command}"
