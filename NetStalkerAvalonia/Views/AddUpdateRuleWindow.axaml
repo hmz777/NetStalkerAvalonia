@@ -5,6 +5,7 @@
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		xmlns:components="clr-namespace:NetStalkerAvalonia.Components"
 		xmlns:viewModels="clr-namespace:NetStalkerAvalonia.ViewModels"
+		xmlns:convos="using:NetStalkerAvalonia.Converters"
 		x:Class="NetStalkerAvalonia.Views.AddUpdateRuleWindow"
 		Title="Add/Update Rule">
 
@@ -15,12 +16,10 @@
 	<Window.Styles>
 		<StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
 		<Style Selector="Window">
-			<Setter Property="Width" Value="550" />
-			<Setter Property="Height" Value="350" />
-			<Setter Property="MaxWidth" Value="550" />
-			<Setter Property="MinWidth" Value="550" />
-			<Setter Property="MaxHeight" Value="350" />
-			<Setter Property="MinHeight" Value="350" />
+			<Setter Property="MaxWidth" Value="570" />
+			<Setter Property="MinWidth" Value="570" />
+			<Setter Property="MinHeight" Value="430" />
+			<Setter Property="MaxHeight" Value="430" />
 			<Setter Property="WindowStartupLocation" Value="CenterOwner" />
 		</Style>
 	</Window.Styles>
@@ -28,42 +27,77 @@
 	<Grid RowDefinitions="Auto,*">
 		<components:PageTitle Grid.Row="0" VerticalAlignment="Stretch" Text="{Binding $parent[Window].Title}" />
 		<Border Grid.Row="1" Padding="15">
-			<StackPanel Orientation="Vertical" Spacing="20">
-				<StackPanel Orientation="Vertical">
-					<Label Margin="0,0,0,5">Target</Label>
-					<TextBox Text="{Binding Target, Mode=OneWayToSource}"/>
-				</StackPanel>
-				<StackPanel Orientation="Vertical">
-					<Label Margin="0,0,0,5">Action</Label>
-					<ComboBox Items="{Binding RuleActions}"
-							  SelectedItem="{Binding Action, Mode=OneWayToSource}"/>
-				</StackPanel>
-				<StackPanel Orientation="Vertical">
-					<Label Margin="0,0,0,5">Source</Label>
-					<ComboBox Items="{Binding SourceValue}"
-							  SelectedItem="{Binding SourceValue, Mode=OneWayToSource}"/>
-				</StackPanel>
-				<StackPanel Orientation="Vertical" IsVisible="{Binding IsLimitRule}">
-					<Label Margin="0,0,0,5">Upload</Label>
-					<NumericUpDown Value="{Binding Upload,Mode=OneWayToSource}"/>
-				</StackPanel>
-				<StackPanel Orientation="Vertical" IsVisible="{Binding IsLimitRule}">
-					<Label Margin="0,0,0,5">Download</Label>
-					<NumericUpDown Value="{Binding Download,Mode=OneWayToSource}"/>
-				</StackPanel>
-				<StackPanel Orientation="Vertical">
-					<Label Margin="0,0,0,5">Regex</Label>
-					<CheckBox IsChecked="{Binding IsRegex, Mode=OneWayToSource}"/>
-				</StackPanel>
-				<StackPanel Orientation="Vertical">
-					<Label Margin="0,0,0,5">Active</Label>
-					<CheckBox IsChecked="{Binding Active, Mode=OneWayToSource}"/>
+			<Grid RowDefinitions="*,*" ColumnDefinitions="*">
+				<StackPanel Orientation="Vertical" Spacing="20">
+					<Grid ColumnDefinitions="5*,*">
+						<StackPanel Orientation="Vertical">
+							<Label Margin="0,0,0,5">Target</Label>
+							<TextBox HorizontalAlignment="Stretch"
+									 Watermark="Can be: ip address, mac address, regex pattern, name, vendor"
+									 Text="{Binding AddUpdateRuleModel.Target, Mode=TwoWay}"/>
+						</StackPanel>
+						<CheckBox Grid.Column="1"
+								  HorizontalAlignment="Center"
+								  VerticalAlignment="Bottom"
+								  Content="Regex" 
+								  IsChecked="{Binding AddUpdateRuleModel.IsRegex, Mode=TwoWay}"/>
+					</Grid>
+					<Grid ColumnDefinitions="*,*">
+						<Border Grid.Column="0" Padding="0,0,5,0">
+							<StackPanel Orientation="Vertical">
+								<Label Margin="0,0,0,5">Action</Label>
+								<ComboBox Items="{Binding RuleActions}"
+										  SelectedItem="{Binding AddUpdateRuleModel.Action, Mode=TwoWay, Converter={x:Static convos:EnumToStringConverter.Instance},ConverterParameter=Action}"
+										  HorizontalAlignment="Stretch"
+										  PlaceholderText="Choose an action">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding}"/>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
+							</StackPanel>
+						</Border>
+						<Border Grid.Column="1" Padding="5,0,0,0">
+							<StackPanel Orientation="Vertical">
+								<Label Margin="0,0,0,5">Source</Label>
+								<ComboBox Items="{Binding RuleSourceValues}"
+										  SelectedItem="{Binding AddUpdateRuleModel.SourceValue, Mode=TwoWay, Converter={x:Static convos:EnumToStringConverter.Instance},ConverterParameter=Source}"
+										  HorizontalAlignment="Stretch"
+										  PlaceholderText="Choose a source value">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding}"/>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
+							</StackPanel>
+						</Border>
+					</Grid>
+					<Grid ColumnDefinitions="*,*" IsVisible="{Binding IsLimitRule}">
+						<Border Grid.Column="0" Padding="0,0,5,0">
+							<StackPanel Orientation="Vertical">
+								<Label Margin="0,0,0,5">Upload</Label>
+								<NumericUpDown Value="{Binding AddUpdateRuleModel.Upload, Mode=TwoWay}"/>
+							</StackPanel>
+						</Border>
+						<Border Grid.Column="1" Padding="5,0,0,0">
+							<StackPanel Orientation="Vertical">
+								<Label Margin="0,0,0,5">Download</Label>
+								<NumericUpDown Value="{Binding AddUpdateRuleModel.Download, Mode=TwoWay}"/>
+							</StackPanel>
+						</Border>
+					</Grid>
+					<CheckBox Content="Active" IsChecked="{Binding AddUpdateRuleModel.Active, Mode=TwoWay}"/>
 				</StackPanel>
 				<StackPanel HorizontalAlignment="Center"
-							VerticalAlignment="Bottom">
-					<Button Padding="100,10,100,10" Command="{Binding Accept}">Submit</Button>
+							VerticalAlignment="Bottom"
+							Grid.Row="1">
+					<Button Padding="100,10,100,10"
+							Command="{Binding Accept}"
+							Background="Green">Add</Button>
 				</StackPanel>
-			</StackPanel>
+			</Grid>
 		</Border>
 	</Grid>
 </Window>

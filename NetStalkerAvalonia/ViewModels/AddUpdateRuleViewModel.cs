@@ -1,76 +1,63 @@
 ﻿using NetStalkerAvalonia.Rules;
 using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 using ReactiveUI;
+using System.Collections.Generic;
+using System;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Linq;
 
 namespace NetStalkerAvalonia.ViewModels
 {
 	public class AddUpdateRuleViewModel : ViewModelBase
 	{
-		private string? target;
-		public string? Target
+		private IEnumerable<string>? ruleActions;
+		public IEnumerable<string>? RuleActions
 		{
-			get => target;
-			set => this.RaiseAndSetIfChanged(ref target, value);
+			get => ruleActions;
+			set => this.RaiseAndSetIfChanged(ref ruleActions, value);
 		}
 
-		private RuleAction action;
-		public RuleAction Action
+		private IEnumerable<string>? ruleSourceValues;
+		public IEnumerable<string>? RuleSourceValues
 		{
-			get => action;
-			set => this.RaiseAndSetIfChanged(ref action, value);
+			get => ruleSourceValues;
+			set => this.RaiseAndSetIfChanged(ref ruleSourceValues, value);
 		}
 
-		private RuleSourceValue ruleSourceValue;
-		public RuleSourceValue RuleSourceValue
-		{
-			get => ruleSourceValue;
-			set => this.RaiseAndSetIfChanged(ref ruleSourceValue, value);
-		}
+		private readonly ObservableAsPropertyHelper<bool> isLimitRule;
+		public bool IsLimitRule => isLimitRule.Value;
 
-		private int upload;
-		public int Upload
+		private AddUpdateRuleModel? _addUpdateRuleModel;
+		public AddUpdateRuleModel? AddUpdateRuleModel
 		{
-			get => upload;
-			set => this.RaiseAndSetIfChanged(ref upload, value);
+			get => _addUpdateRuleModel;
+			set => this.RaiseAndSetIfChanged(ref _addUpdateRuleModel, value);
 		}
-
-		private int download;
-		public int Download
-		{
-			get => download;
-			set => this.RaiseAndSetIfChanged(ref download, value);
-		}
-
-		private bool isRegex;
-		public bool IsRegex
-		{
-			get => isRegex;
-			set => this.RaiseAndSetIfChanged(ref isRegex, value);
-		}
-
-		private bool active;
-		public bool Active
-		{
-			get => active;
-			set => this.RaiseAndSetIfChanged(ref active, value);
-		}
-
-		private readonly ObservableAsPropertyHelper<bool> isLimit;
-		public bool IsLimit => isLimit.Value;
 
 		public ReactiveCommand<Unit, AddUpdateRuleModel?> Accept { get; set; }
 
-		public AddUpdateRuleModel? AddUpdateRuleModel { get; set; }
-
 		public AddUpdateRuleViewModel()
 		{
-			Accept = ReactiveCommand.Create(AcceptImpl);
+			AddUpdateRuleModel = new AddUpdateRuleModel();
 
-			isLimit = this.WhenAnyValue(x => x.Action)
+			var canAcceptRule = this.WhenAnyValue(
+				x => x.AddUpdateRuleModel!.Action,
+				x => x.AddUpdateRuleModel!.SourceValue,
+				x => x.AddUpdateRuleModel!.Target,
+				x => x.AddUpdateRuleModel!.Upload,
+				x => x.AddUpdateRuleModel!.Download,
+				(action, source, target, upload, download) =>
+				action != null && source != null && !string.IsNullOrWhiteSpace(target) && upload >= 0 && download >= 0);
+
+			Accept = ReactiveCommand.Create(AcceptImpl, canAcceptRule);
+
+			isLimitRule = this.WhenAnyValue(x => x.AddUpdateRuleModel!.Action)
 					  .Select(x => x == RuleAction.Limit)
-					  .ToProperty(this, x => x.IsLimit);
+					  .ToProperty(this, x => x.IsLimitRule);
+
+			RuleActions = Enum.GetNames(typeof(RuleAction));
+			RuleSourceValues = Enum.GetNames(typeof(RuleSourceValue));
 		}
 
 		public AddUpdateRuleModel? AcceptImpl()

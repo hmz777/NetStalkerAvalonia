@@ -1,9 +1,12 @@
 ﻿using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Rules;
+using NetStalkerAvalonia.Rules.Implementations;
 using NetStalkerAvalonia.Services;
 using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 using ReactiveUI;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -34,6 +37,11 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 		#region Constructors
 
+		public RuleBuilderViewModel()
+		{
+
+		}
+
 		public RuleBuilderViewModel(IScreen screen, IRuleService ruleService = null!)
 		{
 			this.HostScreen = screen;
@@ -47,8 +55,8 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 		public IEnumerable<IRule>? Rules => ruleService?.Rules;
 
-		private AddUpdateRuleModel selectedRule;
-		public AddUpdateRuleModel SelectedRule
+		private RuleBase? selectedRule;
+		public RuleBase? SelectedRule
 		{
 			get => selectedRule;
 			set => this.RaiseAndSetIfChanged(ref selectedRule, value);
@@ -74,7 +82,55 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 		public async Task<Unit> UpdateRuleImpl()
 		{
-			var result = await ShowUpdateRuleDialog.Handle(SelectedRule);
+			switch (SelectedRule)
+			{
+				case BlockRule blockRule:
+					{
+						var result = await ShowUpdateRuleDialog.Handle(new AddUpdateRuleModel
+						{
+							Action = blockRule.Action,
+							Active = blockRule.Active,
+							IsRegex = blockRule.IsRegex,
+							Order = blockRule.Order,
+							SourceValue = blockRule.SourceValue,
+							Target = blockRule.Target,
+						});
+
+						break;
+					}
+				case RedirectRule redirectRule:
+					{
+						var result = await ShowUpdateRuleDialog.Handle(new AddUpdateRuleModel
+						{
+							Action = redirectRule.Action,
+							Active = redirectRule.Active,
+							IsRegex = redirectRule.IsRegex,
+							Order = redirectRule.Order,
+							SourceValue = redirectRule.SourceValue,
+							Target = redirectRule.Target,
+						});
+
+						break;
+					}
+				case LimitRule limitRule:
+					{
+						var result = await ShowUpdateRuleDialog.Handle(new AddUpdateRuleModel
+						{
+							Action = limitRule.Action,
+							Active = limitRule.Active,
+							IsRegex = limitRule.IsRegex,
+							Order = limitRule.Order,
+							SourceValue = limitRule.SourceValue,
+							Target = limitRule.Target,
+							Download = limitRule.Download,
+							Upload = limitRule.Upload
+						});
+
+						break;
+					}
+				default:
+					break;
+			}
 
 			// TODO: Update rule through service
 
