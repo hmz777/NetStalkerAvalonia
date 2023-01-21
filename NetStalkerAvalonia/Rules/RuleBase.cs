@@ -115,7 +115,7 @@ namespace NetStalkerAvalonia.Rules
 
 		public bool Equals(RuleBase? other)
 		{
-			return Equals(other);
+			return this.Equals(obj: other);
 		}
 
 		public override int GetHashCode()
