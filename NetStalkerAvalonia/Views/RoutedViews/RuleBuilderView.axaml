@@ -68,7 +68,10 @@
 				<ColumnDefinition Width="4*"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
-			<ListBox CornerRadius="5" Grid.Row="0" Grid.Column="0" Items="{Binding Rules}">
+			<ListBox CornerRadius="5" Grid.Row="0" Grid.Column="0"
+					 Items="{Binding Rules}"
+					 SelectionMode="Single"
+					 SelectedItem="{Binding SelectedRule, Mode=TwoWay}">
 				<ListBox.Styles>
 					<Style Selector="ListBoxItem">
 						<Setter Property="Padding" Value="0"/>
@@ -121,9 +124,9 @@
 						<RowDefinition Height="auto"/>
 						<RowDefinition Height="auto"/>
 					</Grid.RowDefinitions>
-					<cmpts:IconButton Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" Icon="/Assets/Misc/add.png" Text="Add"></cmpts:IconButton>
-					<cmpts:IconButton Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Icon="/Assets/Misc/edit.png" Text="Edit"></cmpts:IconButton>
-					<cmpts:IconButton Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Stretch" Icon="/Assets/Misc/remove.png" Text="Remove"></cmpts:IconButton>
+					<cmpts:IconButton Command="{Binding AddRule}" Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" Icon="/Assets/Misc/add.png" Text="Add"></cmpts:IconButton>
+					<cmpts:IconButton Command="{Binding UpdateRule}" Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Icon="/Assets/Misc/edit.png" Text="Edit"></cmpts:IconButton>
+					<cmpts:IconButton Command="{Binding RemoveRule}" Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Stretch" Icon="/Assets/Misc/remove.png" Text="Remove"></cmpts:IconButton>
 				</Grid>
 			</Border>
 		</Grid>
