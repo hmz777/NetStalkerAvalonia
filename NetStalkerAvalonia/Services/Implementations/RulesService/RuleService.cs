@@ -13,13 +13,13 @@ namespace NetStalkerAvalonia.Services.Implementations.RulesService
 	{
 		private readonly List<IRule> rules = new()
 		{
-			new BlockRule(RuleSourceValue.IpAddress,false,"192.168.1.144",1,true),
-			new RedirectRule(RuleSourceValue.MacAddress,false,"192.168.1.144",1,true),
-			new BlockRule(RuleSourceValue.IpAddress,true,"192.168.1.144",1,true),
-			new BlockRule(RuleSourceValue.IpAddress,false,"192.168.1.144",1,true),
-			new RedirectRule(RuleSourceValue.IpAddress,false,"192.168.1.144",1,false),
-			new BlockRule(RuleSourceValue.IpAddress,false,"192.168.1.144",1,true),
-			new BlockRule(RuleSourceValue.IpAddress,false,"192.168.1.144",1,true),
+			new BlockRule(RuleSourceValue.IPAddress,false,"192.168.1.144",1,true),
+			new RedirectRule(RuleSourceValue.MacAddress,false,"192.168.1.142",1,true),
+			new BlockRule(RuleSourceValue.IPAddress,true,"192.168.1.141",1,true),
+			new BlockRule(RuleSourceValue.IPAddress,false,"192.168.1.145",1,true),
+			new RedirectRule(RuleSourceValue.IPAddress,false,"192.168.1.146",1,false),
+			new BlockRule(RuleSourceValue.IPAddress,false,"192.168.1.147",1,true),
+			new BlockRule(RuleSourceValue.IPAddress,false,"192.168.1.148",1,true),
 		};
 
 		public IEnumerable<IRule> Rules => rules.AsReadOnly();
