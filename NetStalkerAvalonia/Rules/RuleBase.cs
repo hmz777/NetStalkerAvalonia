@@ -50,7 +50,7 @@ namespace NetStalkerAvalonia.Rules
 			{
 				switch (SourceValue)
 				{
-					case RuleSourceValue.IpAddress:
+					case RuleSourceValue.IPAddress:
 						{
 							if (IsRegex)
 							{

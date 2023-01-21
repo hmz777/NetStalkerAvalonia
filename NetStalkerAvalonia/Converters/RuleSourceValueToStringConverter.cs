@@ -21,7 +21,7 @@ namespace NetStalkerAvalonia.Converters
 
 				switch (source)
 				{
-					case RuleSourceValue.IpAddress:
+					case RuleSourceValue.IPAddress:
 						return "IP Address";
 					case RuleSourceValue.MacAddress:
 						return "MAC Address";

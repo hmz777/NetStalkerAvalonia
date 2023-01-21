@@ -8,7 +8,7 @@ namespace NetStalkerAvalonia.Rules
 {
 	public enum RuleSourceValue
 	{
-		IpAddress,
+		IPAddress,
 		MacAddress,
 		Name,
 		Vendor
