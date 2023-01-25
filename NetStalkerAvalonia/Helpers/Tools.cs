@@ -116,6 +116,11 @@ public class Tools
 		Log.Error("Exception triggered with message:{Message}", statusMessage.Message);
 
 		interaction.Handle(statusMessage);
+	public static void ShowMessage(StatusMessageModel statusMessage)
+	{
+		MessageBus
+			.Current
+			.SendMessage<StatusMessageModel>(statusMessage, ContractKeys.StatusMessage.ToString());
 	}
 
 	public static void ShowApp()
