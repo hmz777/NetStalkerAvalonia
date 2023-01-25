@@ -27,7 +27,7 @@ using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 
 namespace NetStalkerAvalonia.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase, IScreen
+	public class MainWindowViewModel : ViewModelBase, IScreen
 	{
 		#region Members
 
@@ -297,17 +297,17 @@ namespace NetStalkerAvalonia.ViewModels
 			#region Exception Handling
 
 			Scan.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
+				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
 			Refresh.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
+				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
 			BlockUnblock.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
+				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
 			RedirectUnRedirect.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
+				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
 			BlockAll.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
+				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
 			RedirectAll.ThrownExceptions.Subscribe(x =>
-				Tools.HandleError(ShowStatusMessageInteraction, new StatusMessageModel(MessageType.Error, x.Message)));
+				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
 
 			#endregion
 
