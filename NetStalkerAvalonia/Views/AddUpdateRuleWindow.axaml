@@ -39,7 +39,7 @@
 						<CheckBox Grid.Column="1"
 								  HorizontalAlignment="Center"
 								  VerticalAlignment="Bottom"
-								  Content="Regex" 
+								  Content="Regex"
 								  IsChecked="{Binding AddUpdateRuleModel.IsRegex, Mode=TwoWay}"/>
 					</Grid>
 					<Grid ColumnDefinitions="*,*">
@@ -96,7 +96,7 @@
 							Grid.Row="1">
 					<Button Padding="100,10,100,10"
 							Command="{Binding Accept}"
-							Background="Green">Add</Button>
+							Background="Green">Accept</Button>
 				</StackPanel>
 			</Grid>
 		</Border>
