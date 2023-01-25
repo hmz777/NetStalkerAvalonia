@@ -6,6 +6,7 @@ namespace NetStalkerAvalonia.ViewModels.InteractionViewModels
 {
 	public class AddUpdateRuleModel : ReactiveObject
 	{
+		public Guid RuleId { get; set; }
 
 		private RuleAction? action;
 		public RuleAction? Action
