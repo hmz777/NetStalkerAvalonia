@@ -1,26 +1,53 @@
 ﻿using NetStalkerAvalonia.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 using ReactiveUI;
+using System;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
 
 namespace NetStalkerAvalonia.Rules
 {
 	public abstract class RuleBase : ReactiveObject, IRule, IEquatable<RuleBase>
 	{
+		public Guid RuleId { get; protected set; }
 		public abstract RuleAction Action { get; }
-		public RuleSourceValue SourceValue { get; protected set; }
-		public bool IsRegex { get; protected set; }
-		public string Target { get; protected set; }
-		public int Order { get; set; }
-		public bool Active { get; protected set; }
 
-		protected RuleBase(RuleSourceValue sourceValue, bool isRegex, string target, int order, bool active)
+		private RuleSourceValue sourceValue;
+		public RuleSourceValue SourceValue
+		{
+			get => sourceValue;
+			protected set => this.RaiseAndSetIfChanged(ref sourceValue, value);
+		}
+
+		private bool isRegex;
+		public bool IsRegex
+		{
+			get => isRegex;
+			protected set => this.RaiseAndSetIfChanged(ref isRegex, value);
+		}
+
+		private string target;
+		public string Target
+		{
+			get => target;
+			protected set => this.RaiseAndSetIfChanged(ref target, value);
+		}
+
+		private int order;
+		public int Order
+		{
+			get => order;
+			protected set => this.RaiseAndSetIfChanged(ref order, value);
+		}
+
+		private bool active;
+		public bool Active
+		{
+			get => active;
+			protected set => this.RaiseAndSetIfChanged(ref active, value);
+		}
+
+		public RuleBase(RuleSourceValue sourceValue, bool isRegex, string target, int order, bool active)
 		{
 			if (order <= 0)
 			{
@@ -32,6 +59,8 @@ namespace NetStalkerAvalonia.Rules
 			Target = target ?? throw new ArgumentNullException(nameof(target));
 			Order = order;
 			Active = active;
+
+			RuleId = RuleId == Guid.Empty ? Guid.NewGuid() : RuleId;
 		}
 
 		public void Activate() => Active = true;
@@ -110,7 +139,7 @@ namespace NetStalkerAvalonia.Rules
 			if (obj is not RuleBase roleToCompare)
 				return false;
 
-			return this.Target == roleToCompare.Target;
+			return this.RuleId == roleToCompare.RuleId;
 		}
 
 		public bool Equals(RuleBase? other)
@@ -120,7 +149,7 @@ namespace NetStalkerAvalonia.Rules
 
 		public override int GetHashCode()
 		{
-			return this.Target.GetHashCode();
+			return this.RuleId.GetHashCode();
 		}
 
 		public static bool operator ==(RuleBase a, RuleBase b)

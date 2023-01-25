@@ -9,7 +9,9 @@ namespace NetStalkerAvalonia.Rules
 {
 	public interface IRule
 	{
-		public int Order { get; set; }
+		public Guid RuleId { get; }
+		public string Target { get; }
+		public int Order { get; }
 		public void Activate();
 		public void Deactivate();
 		public bool Match(Device device);

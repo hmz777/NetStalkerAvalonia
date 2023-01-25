@@ -20,10 +20,12 @@ namespace NetStalkerAvalonia.Services
 		/// </remarks>
 		/// <param name="device"></param>
 		public void ApplyIfMatch(Device device);
-		public void AddBlockingRule(BlockRule blockRule);
-		public void AddRedirectingRule(RedirectRule redirectRule);
-		public void AddLimitingRule(LimitRule limitRule);
+		public bool TryAddBlockingRule(BlockRule blockRule);
+		public bool TryAddRedirectingRule(RedirectRule redirectRule);
+		public bool TryAddLimitingRule(LimitRule limitRule);
+		public bool TryUpdateRule(RuleBase rule);
+		public bool TryRemoveRule(RuleBase rule);
 
-		public IEnumerable<IRule> Rules { get; }
+		public ReadOnlyObservableCollection<IRule> Rules { get; }
 	}
 }
