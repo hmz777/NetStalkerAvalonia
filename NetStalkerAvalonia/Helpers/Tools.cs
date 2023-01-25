@@ -1,29 +1,25 @@
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using NetStalkerAvalonia.Configuration;
+using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.Services;
+using NetStalkerAvalonia.ViewModels;
+using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+using NetStalkerAvalonia.ViewModels.RoutedViewModels;
+using ReactiveUI;
+using Serilog;
+using SharpPcap;
+using SharpPcap.LibPcap;
+using Splat;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reactive;
-using System.Security;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using Windows.Media.Devices;
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.ViewModels;
-using NetStalkerAvalonia.ViewModels.RoutedViewModels;
-using ReactiveUI;
-using Serilog;
-using Serilog.Core;
-using SharpPcap;
-using SharpPcap.LibPcap;
-using Splat;
-using System.Diagnostics;
-using Windows.UI.ViewManagement;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 
 namespace NetStalkerAvalonia.Helpers;
 
@@ -109,13 +105,15 @@ public class Tools
 		}
 	}
 
-	public static void HandleError(Interaction<StatusMessageModel, Unit> interaction, StatusMessageModel statusMessage)
+	public static void HandleError(StatusMessageModel statusMessage)
 	{
-		ArgumentNullException.ThrowIfNull(interaction, nameof(interaction));
+		ArgumentNullException.ThrowIfNull(statusMessage, nameof(statusMessage));
 
 		Log.Error("Exception triggered with message:{Message}", statusMessage.Message);
 
-		interaction.Handle(statusMessage);
+		ShowMessage(statusMessage);
+	}
+
 	public static void ShowMessage(StatusMessageModel statusMessage)
 	{
 		MessageBus
