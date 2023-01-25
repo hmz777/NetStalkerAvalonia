@@ -35,9 +35,16 @@ namespace NetStalkerAvalonia.ViewModels
 			set => this.RaiseAndSetIfChanged(ref _addUpdateRuleModel, value);
 		}
 
+		private bool isUpdate;
+		public bool IsUpdate
+		{
+			get => isUpdate;
+			set => this.RaiseAndSetIfChanged(ref isUpdate, value);
+		}
+
 		public ReactiveCommand<Unit, AddUpdateRuleModel?> Accept { get; set; }
 
-		public AddUpdateRuleViewModel()
+		public AddUpdateRuleViewModel(bool isUpdate = false)
 		{
 			AddUpdateRuleModel = new AddUpdateRuleModel();
 
@@ -58,6 +65,7 @@ namespace NetStalkerAvalonia.ViewModels
 
 			RuleActions = Enum.GetNames(typeof(RuleAction));
 			RuleSourceValues = Enum.GetNames(typeof(RuleSourceValue));
+			IsUpdate = isUpdate;
 		}
 
 		public AddUpdateRuleModel? AcceptImpl()
