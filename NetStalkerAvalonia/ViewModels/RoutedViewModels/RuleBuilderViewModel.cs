@@ -1,11 +1,13 @@
-﻿using NetStalkerAvalonia.Helpers;
+﻿using AutoMapper;
+using NetStalkerAvalonia.Helpers;
+using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.Rules;
 using NetStalkerAvalonia.Rules.Implementations;
 using NetStalkerAvalonia.Services;
 using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -18,6 +20,7 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 		#region Services
 
 		private readonly IRuleService? ruleService;
+		private readonly IMapper mapper;
 
 		#endregion
 
@@ -32,6 +35,7 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 		public ReactiveCommand<Unit, Unit> AddRule { get; set; }
 		public ReactiveCommand<Unit, Unit> UpdateRule { get; set; }
+		public ReactiveCommand<Unit, Unit> RemoveRule { get; set; }
 
 		#endregion
 
@@ -42,18 +46,44 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 		}
 
-		public RuleBuilderViewModel(IScreen screen, IRuleService ruleService = null!)
+		public RuleBuilderViewModel(IScreen screen, IRuleService ruleService = null!, IMapper mapper = null!)
 		{
+			#region Services
+
 			this.HostScreen = screen;
-			this.ruleService = Tools.ResolveIfNull<IRuleService>(ruleService);
+			this.ruleService = Tools.ResolveIfNull(ruleService);
+			this.mapper = Tools.ResolveIfNull(mapper);
+
+			#endregion
+
+			#region Commands
+
+			var canUpdateOrRemove = this.WhenAnyValue(x => x.SelectedRule)
+				.Select(x => x! != null!);
 
 			AddRule = ReactiveCommand.CreateFromTask(AddRuleImpl);
-			UpdateRule = ReactiveCommand.CreateFromTask(UpdateRuleImpl);
+			UpdateRule = ReactiveCommand.CreateFromTask(UpdateRuleImpl, canUpdateOrRemove);
+			RemoveRule = ReactiveCommand.Create(RemoveRuleImpl, canUpdateOrRemove);
+
+			#endregion
+
+			#region Exceptions
+
+			AddRule.ThrownExceptions.Subscribe(x =>
+				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
+			UpdateRule.ThrownExceptions.Subscribe(x =>
+				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
+			RemoveRule.ThrownExceptions.Subscribe(x =>
+				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
+
+			#endregion
 		}
 
 		#endregion
 
-		public IEnumerable<IRule>? Rules => ruleService?.Rules;
+		#region UI Properties
+
+		public ReadOnlyObservableCollection<IRule>? Rules => ruleService?.Rules;
 
 		private RuleBase? selectedRule;
 		public RuleBase? SelectedRule
@@ -61,6 +91,8 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 			get => selectedRule;
 			set => this.RaiseAndSetIfChanged(ref selectedRule, value);
 		}
+
+		#endregion
 
 		#region Interactions
 
@@ -75,56 +107,33 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 		{
 			var result = await ShowAddRuleDialog.Handle(Unit.Default);
 
-			// TODO: Add rule through service
+			if (result == null)
+				return Unit.Default;
 
-			return Unit.Default;
-		}
+			result.Order = Rules!.OrderBy(x => x.Order).Select(x => x.Order).LastOrDefault() + 1;
 
-		public async Task<Unit> UpdateRuleImpl()
-		{
-			switch (SelectedRule)
+			bool opResult = true;
+
+			switch (result.Action)
 			{
-				case BlockRule blockRule:
+				case RuleAction.Block:
 					{
-						var result = await ShowUpdateRuleDialog.Handle(new AddUpdateRuleModel
-						{
-							Action = blockRule.Action,
-							Active = blockRule.Active,
-							IsRegex = blockRule.IsRegex,
-							Order = blockRule.Order,
-							SourceValue = blockRule.SourceValue,
-							Target = blockRule.Target,
-						});
+						opResult = ruleService!
+						  .TryAddBlockingRule(new BlockRule((RuleSourceValue)result.SourceValue!, result.IsRegex, result.Target!, result.Order, result.Active));
 
 						break;
 					}
-				case RedirectRule redirectRule:
+				case RuleAction.Redirect:
 					{
-						var result = await ShowUpdateRuleDialog.Handle(new AddUpdateRuleModel
-						{
-							Action = redirectRule.Action,
-							Active = redirectRule.Active,
-							IsRegex = redirectRule.IsRegex,
-							Order = redirectRule.Order,
-							SourceValue = redirectRule.SourceValue,
-							Target = redirectRule.Target,
-						});
+						opResult = ruleService!
+						  .TryAddRedirectingRule(new RedirectRule((RuleSourceValue)result.SourceValue!, result.IsRegex, result.Target!, result.Order, result.Active));
 
 						break;
 					}
-				case LimitRule limitRule:
+				case RuleAction.Limit:
 					{
-						var result = await ShowUpdateRuleDialog.Handle(new AddUpdateRuleModel
-						{
-							Action = limitRule.Action,
-							Active = limitRule.Active,
-							IsRegex = limitRule.IsRegex,
-							Order = limitRule.Order,
-							SourceValue = limitRule.SourceValue,
-							Target = limitRule.Target,
-							Download = limitRule.Download,
-							Upload = limitRule.Upload
-						});
+						opResult = ruleService!
+						  .TryAddLimitingRule(new LimitRule((RuleSourceValue)result.SourceValue!, result.IsRegex, result.Target!, result.Upload, result.Download, result.Order, result.Active));
 
 						break;
 					}
@@ -132,9 +141,62 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 					break;
 			}
 
-			// TODO: Update rule through service
+
+			if (opResult == false)
+			{
+				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, $"Rule for target: {result.Target} already exists"));
+			}
 
 			return Unit.Default;
+		}
+
+		public async Task<Unit> UpdateRuleImpl()
+		{
+			var addUpdateModel = mapper.Map<AddUpdateRuleModel>(SelectedRule);
+			var result = await ShowUpdateRuleDialog.Handle(addUpdateModel);
+
+			if (result == null)
+				return Unit.Default;
+
+			var opResult = false;
+
+			switch (SelectedRule)
+			{
+				case BlockRule:
+					{
+						opResult = ruleService!.TryUpdateRule(mapper.Map<BlockRule>(result));
+						break;
+					}
+				case RedirectRule:
+					{
+						opResult = ruleService!.TryUpdateRule(mapper.Map<RedirectRule>(result));
+						break;
+					}
+				case LimitRule:
+					{
+						opResult = ruleService.TryUpdateRule(mapper.Map<LimitRule>(result));
+						break;
+					}
+				default:
+					break;
+			}
+
+			if (opResult == false)
+			{
+				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, $"Rule for target: {result.Target} doesn't exists"));
+			}
+
+			return Unit.Default;
+		}
+
+		public void RemoveRuleImpl()
+		{
+			var opResult = ruleService!.TryRemoveRule(SelectedRule!);
+
+			if (opResult == false)
+			{
+				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, $"Rule for target: {SelectedRule!.Target} doesn't exists"));
+			}
 		}
 
 		#endregion

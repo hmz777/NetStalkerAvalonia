@@ -2,6 +2,8 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+		     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
 			 xmlns:vm="using:NetStalkerAvalonia.ViewModels.RoutedViewModels"
 			 xmlns:ru="using:NetStalkerAvalonia.Rules"
 			 xmlns:convos="using:NetStalkerAvalonia.Converters"
@@ -54,8 +56,17 @@
 			<Setter Property="Height" Value="30"/>
 			<Setter Property="HorizontalAlignment" Value="Right"/>
 		</Style>
-		<Style Selector="cmpts|IconButton.ruleBuilder_Control">
+		<Style Selector="cmpts|GenericIconButton.ruleBuilder_Control">
 			<Setter Property="Margin" Value="0,0,0,5"/>
+		</Style>
+		<Style Selector="cmpts|GenericIconButton.control_Add:pointerover">
+			<Setter Property="Background" Value="Green"/>
+		</Style>
+		<Style Selector="cmpts|GenericIconButton.control_Edit:pointerover">
+			<Setter Property="Background" Value="OrangeRed"/>
+		</Style>
+		<Style Selector="cmpts|GenericIconButton.control_Remove:pointerover">
+			<Setter Property="Background" Value="Red"/>
 		</Style>
 	</UserControl.Styles>
 
@@ -68,7 +79,8 @@
 				<ColumnDefinition Width="4*"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
-			<ListBox CornerRadius="5" Grid.Row="0" Grid.Column="0"
+			<ListBox Name="RuleList"
+					 CornerRadius="5" Grid.Row="0" Grid.Column="0"
 					 Items="{Binding Rules}"
 					 SelectionMode="Single"
 					 SelectedItem="{Binding SelectedRule, Mode=TwoWay}">
@@ -92,7 +104,12 @@
 								<Border Classes="ruleItem_Inner">
 									<DockPanel HorizontalAlignment="Stretch"
 											   VerticalAlignment="Stretch">
-										<TextBlock Classes="ruleItem_Target" Text="{Binding Target}"/>
+										<TextBlock MaxWidth="250"
+												   Classes="ruleItem_Target"
+												   Text="{Binding Target}"
+												   TextTrimming="CharacterEllipsis"
+												   ToolTip.Tip="{Binding Target}">
+										</TextBlock>
 										<Border Classes="ruleItem_Attribute ruleItem_Order">
 											<TextBlock Text="{Binding Order}"/>
 										</Border>
@@ -123,10 +140,20 @@
 						<RowDefinition Height="auto"/>
 						<RowDefinition Height="auto"/>
 						<RowDefinition Height="auto"/>
+						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
-					<cmpts:IconButton Command="{Binding AddRule}" Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" Icon="/Assets/Misc/add.png" Text="Add"></cmpts:IconButton>
-					<cmpts:IconButton Command="{Binding UpdateRule}" Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Icon="/Assets/Misc/edit.png" Text="Edit"></cmpts:IconButton>
-					<cmpts:IconButton Command="{Binding RemoveRule}" Classes="ruleBuilder_Control" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Stretch" Icon="/Assets/Misc/remove.png" Text="Remove"></cmpts:IconButton>
+					<cmpts:GenericIconButton Command="{Binding AddRule}" Classes="ruleBuilder_Control control_Add" Grid.Column="0" Grid.Row="0" Text="Add" Icon="/Assets/Misc/add.png"/>
+					<cmpts:GenericIconButton Command="{Binding UpdateRule}" Classes="ruleBuilder_Control control_Edit" Grid.Column="0" Grid.Row="1" Text="Edit" Icon="/Assets/Misc/edit.png"/>
+					<cmpts:GenericIconButton Command="{Binding RemoveRule}" Classes="ruleBuilder_Control control_Remove" Grid.Column="0" Grid.Row="2" Text="Remove" Icon="/Assets/Misc/remove.png"/>
+					<Border Grid.Column="0" Grid.Row="3"
+							CornerRadius="5"
+							Padding="5"
+							BorderBrush="{Binding Theme.AccentColor}"
+							BorderThickness="2"
+							VerticalAlignment="Bottom">
+						<TextBlock Text="Rules are applied based on order. I.e. Last rule to be applied, takes precedence over the others that match the same criteria"
+								   TextWrapping="WrapWithOverflow"/>
+					</Border>
 				</Grid>
 			</Border>
 		</Grid>
