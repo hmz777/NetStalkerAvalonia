@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Avalonia.Controls.Mixins;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
@@ -18,6 +19,16 @@ namespace NetStalkerAvalonia.Views.RoutedViews
 			{
 				ViewModel!.ShowAddRuleDialog.RegisterHandler(DoShowAddDialogAsync).DisposeWith(d);
 				ViewModel!.ShowUpdateRuleDialog.RegisterHandler(DoShowUpdateDialogAsync).DisposeWith(d);
+
+				// Temporary fix
+				// TODO: Find a better way to disable right click selection
+				var listBox = this.FindControl<ListBox>("RuleList");
+
+				listBox.ContextRequested += (sender, args) =>
+				{
+					listBox.SelectedItem = null;
+					args.Handled = true;
+				};
 			});
 
 			InitializeComponent();
