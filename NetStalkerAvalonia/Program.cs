@@ -20,6 +20,10 @@ using ReactiveUI;
 using NetStalkerAvalonia.Services.Implementations.AppLocking;
 using Avalonia.Controls.ApplicationLifetimes;
 using NetStalkerAvalonia.Services.Implementations.RulesService;
+using AutoMapper;
+using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+using NetStalkerAvalonia.Rules;
+using NetStalkerAvalonia.Rules.Implementations;
 
 namespace NetStalkerAvalonia
 {
@@ -106,6 +110,8 @@ namespace NetStalkerAvalonia
 			Locator.CurrentMutable.RegisterLazySingleton(() =>
 					new RuleService(),
 				typeof(IRuleService));
+
+			ConfigureAndRegisterAutoMapper();
 		}
 
 		private static void RegisterOptionalServices()
@@ -129,6 +135,30 @@ namespace NetStalkerAvalonia
 
 				OptionalFeatures.AvailableFeatures.Add(typeof(IDeviceTypeIdentifier));
 			}
+		}
+
+		private static void ConfigureAndRegisterAutoMapper()
+		{
+			var mapperConfig = new MapperConfiguration(cfg =>
+			{
+				cfg.CreateMap<RuleBase, AddUpdateRuleModel>().ReverseMap();
+
+				cfg.CreateMap<BlockRule, AddUpdateRuleModel>().ReverseMap();
+
+				cfg.CreateMap<RedirectRule, AddUpdateRuleModel>().ReverseMap();
+
+				cfg.CreateMap<LimitRule, AddUpdateRuleModel>().ReverseMap();
+
+				cfg.CreateMap<BlockRule, RuleBase>().ReverseMap();
+
+				cfg.CreateMap<RedirectRule, RuleBase>().ReverseMap();
+
+				cfg.CreateMap<LimitRule, RuleBase>().ReverseMap();
+			});
+
+			Mapper mapper = new(mapperConfig);
+
+			Locator.CurrentMutable.RegisterConstant(mapper,typeof(IMapper));
 		}
 
 		private static void ReadConfiguration()
