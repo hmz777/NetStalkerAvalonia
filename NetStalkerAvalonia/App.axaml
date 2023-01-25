@@ -9,6 +9,7 @@
 	<Application.Styles>
 		<FluentTheme Mode="Dark"/>
 		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+		<StyleInclude Source="/Components/GenericIconButton.axaml"/>
 	</Application.Styles>
 
 	<TrayIcon.Icons>
