@@ -10,7 +10,7 @@
 	<Design.DataContext>
 		<vm:SnifferViewModel />
 	</Design.DataContext>
-
+	
 	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />

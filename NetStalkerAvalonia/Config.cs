@@ -1,14 +1,11 @@
 ﻿using NetStalkerAvalonia.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace NetStalkerAvalonia
 {
 	public class Config
 	{
 		public static AppSettings? AppSettings { get; set; }
+		public static JsonSerializerOptions JsonSerializerOptions = new();
 	}
 }
