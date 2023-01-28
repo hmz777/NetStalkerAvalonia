@@ -154,11 +154,13 @@ namespace NetStalkerAvalonia
 				cfg.CreateMap<RedirectRule, RuleBase>().ReverseMap();
 
 				cfg.CreateMap<LimitRule, RuleBase>().ReverseMap();
+
+				cfg.CreateMap<LimitRule, LimitRule>().ReverseMap();
 			});
 
 			Mapper mapper = new(mapperConfig);
 
-			Locator.CurrentMutable.RegisterConstant(mapper,typeof(IMapper));
+			Locator.CurrentMutable.RegisterConstant(mapper, typeof(IMapper));
 		}
 
 		private static void ReadConfiguration()
