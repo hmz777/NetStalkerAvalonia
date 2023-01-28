@@ -48,7 +48,7 @@
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Center"
                             VerticalAlignment="Bottom">
-                    <Button Padding="100,10,100,10" Command="{Binding Apply }">Set</Button>
+                    <Button Padding="100,10,100,10" Background="Green" Command="{Binding Apply}">Set</Button>
                 </StackPanel>
             </StackPanel>
         </Border>
