@@ -28,7 +28,7 @@
 								   Height="25"
 								   Margin="0,0,10,0"
 								   VerticalAlignment="Center"
-								   Source="{TemplateBinding Icon, Converter={x:Static convos:ImagePathToImageConverter.Instance}}"/>
+								   Source="{TemplateBinding Icon, Converter={x:Static convos:ImageConverters.FromPath}}"/>
 							<TextBlock Classes="text"
 									   VerticalAlignment="Center"
 									   Text="{TemplateBinding Text}"/>
