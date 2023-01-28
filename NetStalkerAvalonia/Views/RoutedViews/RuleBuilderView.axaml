@@ -38,11 +38,14 @@
 			<Setter Property="Background" Value="{Binding $parent[UserControl].DataContext.Theme.AccentColor}"/>
 			<Setter Property="HorizontalAlignment" Value="Left"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
-			<Setter Property="Margin" Value="10,0,0,0"/>
+			<Setter Property="Margin" Value="0,0,10,0"/>
 			<Setter Property="BorderBrush" Value="White"/>
 			<Setter Property="BorderThickness" Value="0.5"/>
 		</Style>
 		<Style Selector="Border.ruleItem_Attribute > TextBlock">
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<Style Selector="Border.ruleItem_Attribute_Multiple > TextBlock:nth-child(2)">
 			<Setter Property="Foreground" Value="White"/>
 		</Style>
 		<Style Selector="TextBlock.ruleItem_Target">
@@ -50,14 +53,12 @@
 			<Setter Property="FontWeight" Value="Bold"/>
 			<Setter Property="Foreground" Value="White"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Margin" Value="0,0,10,0"/>
 		</Style>
 		<Style Selector="Image.ruleItem_Status">
 			<Setter Property="Width" Value="30"/>
 			<Setter Property="Height" Value="30"/>
 			<Setter Property="HorizontalAlignment" Value="Right"/>
-		</Style>
-		<Style Selector="cmpts|GenericIconButton.ruleBuilder_Control">
-			<Setter Property="Margin" Value="0,0,0,5"/>
 		</Style>
 		<Style Selector="cmpts|GenericIconButton.control_Add:pointerover">
 			<Setter Property="Background" Value="Green"/>
@@ -67,6 +68,9 @@
 		</Style>
 		<Style Selector="cmpts|GenericIconButton.control_Remove:pointerover">
 			<Setter Property="Background" Value="Red"/>
+		</Style>
+		<Style Selector="cmpts|GenericIconButton.control_Move:pointerover">
+			<Setter Property="Background" Value="#1C89F2"/>
 		</Style>
 	</UserControl.Styles>
 
@@ -104,20 +108,32 @@
 								<Border Classes="ruleItem_Inner">
 									<DockPanel HorizontalAlignment="Stretch"
 											   VerticalAlignment="Stretch">
+										<Border Classes="ruleItem_Attribute">
+											<TextBlock Text="{Binding Order}"/>
+										</Border>
 										<TextBlock MaxWidth="250"
 												   Classes="ruleItem_Target"
 												   Text="{Binding Target}"
 												   TextTrimming="CharacterEllipsis"
 												   ToolTip.Tip="{Binding Target}">
 										</TextBlock>
-										<Border Classes="ruleItem_Attribute ruleItem_Order">
-											<TextBlock Text="{Binding Order}"/>
-										</Border>
-										<Border Classes="ruleItem_Attribute ruleItem_Source">
+										<Border Classes="ruleItem_Attribute">
 											<TextBlock Text="{Binding SourceValue,Converter={x:Static convos:RuleSourceValueToStringConverter.Instance}}"/>
 										</Border>
-										<Border Classes="ruleItem_Attribute ruleItem_Regex" IsVisible="{Binding IsRegex}">
+										<Border Classes="ruleItem_Attribute" IsVisible="{Binding IsRegex}">
 											<TextBlock Text="Regex"/>
+										</Border>
+										<Border Classes="ruleItem_Attribute" IsVisible="{Binding Upload, FallbackValue=false, Converter={x:Static convos:NumberConverters.Comparison}, ConverterParameter='> 0'}">
+											<StackPanel Orientation="Horizontal" Spacing="5">
+												<TextBlock Text="{Binding Upload}"/>
+												<TextBlock Text="Kb/s"/>
+											</StackPanel>
+										</Border>
+										<Border Classes="ruleItem_Attribute" IsVisible="{Binding Download, FallbackValue=false, Converter={x:Static convos:NumberConverters.Comparison}, ConverterParameter='> 0'}">
+											<StackPanel Orientation="Horizontal" Spacing="5">
+												<TextBlock Text="{Binding Download}"/>
+												<TextBlock Text="Kb/s"/>
+											</StackPanel>
 										</Border>
 										<Image Classes="ruleItem_Status" Source="{Binding Active, Converter={x:Static convos:RuleStatusToImageConverter.Instance}}"/>
 									</DockPanel>
@@ -140,18 +156,35 @@
 						<RowDefinition Height="auto"/>
 						<RowDefinition Height="auto"/>
 						<RowDefinition Height="auto"/>
+						<RowDefinition Height="auto"/>
+						<RowDefinition Height="auto"/>
+						<RowDefinition Height="auto"/>
 						<RowDefinition Height="*"/>
+						<RowDefinition Height="auto"/>
 					</Grid.RowDefinitions>
-					<cmpts:GenericIconButton Command="{Binding AddRule}" Classes="ruleBuilder_Control control_Add" Grid.Column="0" Grid.Row="0" Text="Add" Icon="/Assets/Misc/add.png"/>
-					<cmpts:GenericIconButton Command="{Binding UpdateRule}" Classes="ruleBuilder_Control control_Edit" Grid.Column="0" Grid.Row="1" Text="Edit" Icon="/Assets/Misc/edit.png"/>
-					<cmpts:GenericIconButton Command="{Binding RemoveRule}" Classes="ruleBuilder_Control control_Remove" Grid.Column="0" Grid.Row="2" Text="Remove" Icon="/Assets/Misc/remove.png"/>
-					<Border Grid.Column="0" Grid.Row="3"
+					<cmpts:GenericIconButton Command="{Binding AddRule}" Classes="ruleBuilder_Control control_Add" Grid.Column="0" Grid.Row="0" Text="Add" Icon="Assets/Misc/add.png"/>
+					<cmpts:GenericIconButton Command="{Binding UpdateRule}" Classes="ruleBuilder_Control control_Edit" Grid.Column="0" Grid.Row="1" Text="Edit" Icon="Assets/Misc/edit.png"/>
+					<cmpts:GenericIconButton Command="{Binding RemoveRule}" Classes="ruleBuilder_Control control_Remove" Grid.Column="0" Grid.Row="2" Text="Remove" Icon="Assets/Misc/remove.png"/>
+					<Separator Grid.Column="0" Grid.Row="3" Background="Gray" Height="2" Width="90" Margin="0,5,0,5" CornerRadius="5" HorizontalAlignment="Stretch"/>
+					<cmpts:GenericIconButton Classes="ruleBuilder_Control control_Move" Grid.Column="0" Grid.Row="4" Text="Move Up" Icon="Assets/Misc/up.png"/>
+					<cmpts:GenericIconButton Classes="ruleBuilder_Control control_Move" Grid.Column="0" Grid.Row="5" Text="Move Down" Icon="Assets/Misc/down.png"/>
+					<Border Grid.Column="0" Grid.Row="6"
 							CornerRadius="5"
 							Padding="5"
 							BorderBrush="{Binding Theme.AccentColor}"
 							BorderThickness="2"
 							VerticalAlignment="Bottom">
-						<TextBlock Text="Rules are applied based on order. I.e. Last rule to be applied, takes precedence over the others that match the same criteria"
+						<TextBlock Text="Rules are applied based on order. I.e. Last rule to be applied, takes precedence over the others that match the same criteria."
+								   TextWrapping="WrapWithOverflow"/>
+					</Border>
+					<Border Grid.Column="0" Grid.Row="7"
+							CornerRadius="5"
+							Padding="5"
+							Margin="0,5,0,0"
+							BorderBrush="Red"
+							BorderThickness="2"
+							VerticalAlignment="Bottom">
+						<TextBlock Text="You can't apply rules to your own device or the gateway."
 								   TextWrapping="WrapWithOverflow"/>
 					</Border>
 				</Grid>
