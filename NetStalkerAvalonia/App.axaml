@@ -14,7 +14,7 @@
 
 	<TrayIcon.Icons>
 		<TrayIcons>
-			<TrayIcon Icon="/Assets/avalonia-logo.ico" ToolTipText="NetStalker" IsVisible="{Binding TrayIconVisible}">
+			<TrayIcon Icon="/Assets/netstalker-logo.ico" ToolTipText="NetStalker" IsVisible="{Binding TrayIconVisible}">
 				<TrayIcon.Menu>
 					<NativeMenu>
 						<NativeMenuItem Header="Show" Command="{Binding ShowApp}" />
