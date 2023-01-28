@@ -46,6 +46,10 @@ namespace NetStalkerAvalonia
 
 						// Save app settings to disk
 						Config.AppSettings?.SaveChanges();
+
+						// Save rules before exiting
+						var rulesService = Tools.ResolveIfNull<IRuleService>(null!);
+						rulesService.SaveRules();
 					};
 
 					StaticData.MainWindow = desktop.MainWindow;
