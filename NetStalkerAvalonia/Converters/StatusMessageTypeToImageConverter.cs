@@ -1,10 +1,7 @@
-using Avalonia;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using NetStalkerAvalonia.Models;
 using System;
 using System.Globalization;
-using System.Reflection;
 using IValueConverter = Avalonia.Data.Converters.IValueConverter;
 
 namespace NetStalkerAvalonia.Converters;
@@ -19,17 +16,13 @@ public class StatusMessageTypeToImageConverter : IValueConverter
 		}
 
 		var source = MessageTypeToImageName(messageType);
-		var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
 
-		return new Bitmap(assets.Open(
-			new Uri(
-				string.Format("avares://{0}/{1}/{2}.png",
-					Assembly.GetExecutingAssembly().GetName().Name,
-					"Assets/StatusMessageIcons",
-					source))));
+		var imageConverter = ImagePathToImageConverter.Instance;
+
+		return imageConverter.Convert($"Assets/StatusMessageIcons/{source}.png", typeof(Bitmap), parameter, culture);
 	}
 
-	public object? ConvertBack(object value, Type targetType, object? parameter, CultureInfo culture)
+	public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
 	{
 		throw new NotImplementedException();
 	}

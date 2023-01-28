@@ -4,12 +4,8 @@ using Avalonia.Data.Converters;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia.Converters
 {
@@ -18,24 +14,15 @@ namespace NetStalkerAvalonia.Converters
 		public static readonly RuleStatusToImageConverter Instance = new();
 		public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
 		{
-			if (value is not null)
-			{
-				var status = (bool)value;
+			if (value is null)
+				return null;
 
-				var iconName = status ? "ok" : "error";
+			var status = (bool)value;
+			var iconName = status ? "ok" : "error";
 
-				var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+			var imageConverter = ImagePathToImageConverter.Instance;
 
-				return new Bitmap(assets.Open(
-					new Uri(
-						string.Format("avares://{0}/{1}/{2}.png",
-							Assembly.GetExecutingAssembly().GetName().Name,
-							"Assets/StatusMessageIcons",
-							iconName))));
-
-			}
-
-			return new BindingNotification(new InvalidCastException(), BindingErrorType.Error);
+			return imageConverter.Convert($"Assets/StatusMessageIcons/{iconName}.png", typeof(Bitmap), parameter, culture);
 		}
 
 		public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
