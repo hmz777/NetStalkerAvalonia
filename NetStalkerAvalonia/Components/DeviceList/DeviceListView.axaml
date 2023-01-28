@@ -127,24 +127,44 @@
 										<MenuItem Header="Block/Unblock"
 												  Command="{Binding $parent[Window].DataContext.BlockUnblock}"
 												  CommandParameter="{Binding Mac}"
-												  IsEnabled="True" />
+												  IsEnabled="True">
+											<MenuItem.Icon>
+												<Image Source="/Assets/Misc/block.png"/>
+											</MenuItem.Icon>
+										</MenuItem>
 										<MenuItem Header="Redirect/Undo Redirection"
 												  Command="{Binding $parent[Window].DataContext.RedirectUnRedirect}"
 												  CommandParameter="{Binding Mac}"
-												  IsEnabled="True" />
+												  IsEnabled="True">
+											<MenuItem.Icon>
+												<Image Source="/Assets/Misc/redirect.png"/>
+											</MenuItem.Icon>
+										</MenuItem>
 										<MenuItem Header="Limit Speed"
 												  Command="{Binding $parent[Window].DataContext.Limit}"
 												  CommandParameter="{Binding Mac}"
-												  IsEnabled="True" />
+												  IsEnabled="True">
+											<MenuItem.Icon>
+												<Image Source="/Assets/Misc/limit.png"/>
+											</MenuItem.Icon>
+										</MenuItem>
 										<Separator />
 										<MenuItem Header="Set friendly name"
 												  Command="{Binding $parent[Window].DataContext.SetFriendlyName}"
 												  CommandParameter="{Binding Mac}"
-												  IsEnabled="True" />
+												  IsEnabled="True">
+											<MenuItem.Icon>
+												<Image Source="/Assets/Misc/name.png"/>
+											</MenuItem.Icon>
+										</MenuItem>
 										<MenuItem Header="Clear name"
 												  Command="{Binding $parent[Window].DataContext.ClearFriendlyName}"
 												  CommandParameter="{Binding Mac}"
-												  IsEnabled="True" />
+												  IsEnabled="True">
+											<MenuItem.Icon>
+												<Image Source="/Assets/Misc/remove.png"/>
+											</MenuItem.Icon>
+										</MenuItem>
 									</ContextMenu>
 								</Button.ContextMenu>
 							</Button>
