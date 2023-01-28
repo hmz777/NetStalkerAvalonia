@@ -44,6 +44,17 @@ namespace NetStalkerAvalonia.ViewModels
 
 		public ReactiveCommand<Unit, AddUpdateRuleModel?> Accept { get; set; }
 
+
+#if DEBUG
+
+		// For the Avalonia designer
+		public AddUpdateRuleViewModel()
+		{
+
+		}
+
+#endif
+
 		public AddUpdateRuleViewModel(bool isUpdate = false)
 		{
 			AddUpdateRuleModel = new AddUpdateRuleModel();
