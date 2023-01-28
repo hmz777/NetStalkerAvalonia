@@ -2,15 +2,18 @@
 using System;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Text.Json.Serialization;
 
 namespace NetStalkerAvalonia.Rules.Implementations
 {
 	public class BlockRule : RuleBase
 	{
+		[JsonIgnore]
 		public override RuleAction Action => RuleAction.Block;
 
-		public BlockRule(RuleSourceValue sourceValue, bool isRegex, string target, int order, bool active)
-			: base(sourceValue, isRegex, target, order, active)
+		[JsonConstructor]
+		public BlockRule(RuleSourceValue sourceValue, bool isRegex, string target, int order, bool active, Guid ruleId = default)
+			: base(sourceValue, isRegex, target, order, active, ruleId)
 		{
 		}
 

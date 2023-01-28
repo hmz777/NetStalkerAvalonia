@@ -3,30 +3,68 @@ using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.Rules;
 using NetStalkerAvalonia.Rules.Implementations;
+using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 
 namespace NetStalkerAvalonia.Services.Implementations.RulesService
 {
 	public class RuleService : ReactiveObject, IRuleService
 	{
+		private const string RulesFileName = "Rules.json";
+
 		private readonly IMapper mapper;
 
-		private readonly ObservableCollection<IRule> rules = new();
+		private readonly ObservableCollection<RuleBase> rules;
 
 		public RuleService(IMapper mapper = null!)
 		{
 			this.mapper = Tools.ResolveIfNull(mapper);
 
-			Rules = new ReadOnlyObservableCollection<IRule>(rules);
+			rules = new ObservableCollection<RuleBase>(LoadRules());
+
+			Rules = new ReadOnlyObservableCollection<RuleBase>(rules);
 		}
 
-		public ReadOnlyObservableCollection<IRule> Rules { get; private set; }
+		public ReadOnlyObservableCollection<RuleBase> Rules { get; private set; }
 
 		public bool Status => throw new NotImplementedException();
+
+		private IEnumerable<RuleBase> LoadRules()
+		{
+			if (File.Exists(RulesFileName) == false)
+				return Enumerable.Empty<RuleBase>();
+
+			var json = File.ReadAllText(RulesFileName);
+
+			if (json.Length == 0)
+			{
+				return Enumerable.Empty<RuleBase>();
+			}
+
+			try
+			{
+				return JsonSerializer.Deserialize<IEnumerable<RuleBase>>(json, Config.JsonSerializerOptions) ?? Enumerable.Empty<RuleBase>();
+			}
+			catch
+			{
+				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, "Rules file is corrupted. It will be skipped."));
+			}
+
+			return Enumerable.Empty<RuleBase>();
+		}
+
+		public void SaveRules()
+		{
+			File.WriteAllText(RulesFileName, JsonSerializer.Serialize(rules, typeof(ObservableCollection<RuleBase>), Config.JsonSerializerOptions));
+		}
 
 		private bool RuleExists(RuleBase rule) => rules.Contains(rule);
 
@@ -78,6 +116,7 @@ namespace NetStalkerAvalonia.Services.Implementations.RulesService
 				return false;
 
 			var ruleToUpdate = rules.First(r => r.RuleId == rule.RuleId);
+
 			mapper.Map(rule, ruleToUpdate);
 
 			return true;

@@ -1,20 +1,32 @@
 ﻿using NetStalkerAvalonia.Models;
+using ReactiveUI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace NetStalkerAvalonia.Rules.Implementations
 {
 	public class LimitRule : RuleBase
 	{
+		[JsonIgnore]
 		public override RuleAction Action => RuleAction.Limit;
-		public int Upload { get; private set; }
-		public int Download { get; private set; }
 
-		public LimitRule(RuleSourceValue sourceValue, bool isRegex, string target, int upload, int download, int order, bool active)
-			: base(sourceValue, isRegex, target, order, active)
+		private int upload;
+		public int Upload
+		{
+			get => upload;
+			protected set => this.RaiseAndSetIfChanged(ref upload, value);
+		}
+
+		private int download;
+		public int Download
+		{
+			get => download;
+			protected set => this.RaiseAndSetIfChanged(ref download, value);
+		}
+
+		[JsonConstructor]
+		public LimitRule(int upload, int download, RuleSourceValue sourceValue, bool isRegex, string target, int order, bool active, Guid ruleId = default)
+			: base(sourceValue, isRegex, target, order, active, ruleId)
 		{
 
 			Upload = upload;

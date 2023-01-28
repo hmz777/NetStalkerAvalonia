@@ -83,7 +83,7 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 		#region UI Properties
 
-		public ReadOnlyObservableCollection<IRule>? Rules => ruleService?.Rules;
+		public ReadOnlyObservableCollection<RuleBase>? Rules => ruleService?.Rules;
 
 		private RuleBase? selectedRule;
 		public RuleBase? SelectedRule
@@ -103,7 +103,7 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 		#region Handlers
 
-		public async Task<Unit> AddRuleImpl()
+		private async Task<Unit> AddRuleImpl()
 		{
 			var result = await ShowAddRuleDialog.Handle(Unit.Default);
 
@@ -133,7 +133,7 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 				case RuleAction.Limit:
 					{
 						opResult = ruleService!
-						  .TryAddLimitingRule(new LimitRule((RuleSourceValue)result.SourceValue!, result.IsRegex, result.Target!, result.Upload, result.Download, result.Order, result.Active));
+						  .TryAddLimitingRule(new LimitRule(result.Upload, result.Download, (RuleSourceValue)result.SourceValue!, result.IsRegex, result.Target!, result.Order, result.Active));
 
 						break;
 					}
@@ -150,7 +150,7 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 			return Unit.Default;
 		}
 
-		public async Task<Unit> UpdateRuleImpl()
+		private async Task<Unit> UpdateRuleImpl()
 		{
 			var addUpdateModel = mapper.Map<AddUpdateRuleModel>(SelectedRule);
 			var result = await ShowUpdateRuleDialog.Handle(addUpdateModel);
@@ -189,7 +189,7 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 			return Unit.Default;
 		}
 
-		public void RemoveRuleImpl()
+		private void RemoveRuleImpl()
 		{
 			var opResult = ruleService!.TryRemoveRule(SelectedRule!);
 

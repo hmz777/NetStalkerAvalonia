@@ -1,15 +1,22 @@
 ﻿using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.Rules.Implementations;
 using ReactiveUI;
 using System;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace NetStalkerAvalonia.Rules
 {
-	public abstract class RuleBase : ReactiveObject, IRule, IEquatable<RuleBase>
+	[JsonDerivedType(typeof(BlockRule), typeDiscriminator: "block")]
+	[JsonDerivedType(typeof(RedirectRule), typeDiscriminator: "redirect")]
+	[JsonDerivedType(typeof(LimitRule), typeDiscriminator: "limit")]
+	public abstract class RuleBase : ReactiveObject, IEquatable<RuleBase>
 	{
 		public Guid RuleId { get; protected set; }
+
+		[JsonIgnore]
 		public abstract RuleAction Action { get; }
 
 		private RuleSourceValue sourceValue;
@@ -20,6 +27,7 @@ namespace NetStalkerAvalonia.Rules
 		}
 
 		private bool isRegex;
+
 		public bool IsRegex
 		{
 			get => isRegex;
@@ -47,7 +55,9 @@ namespace NetStalkerAvalonia.Rules
 			protected set => this.RaiseAndSetIfChanged(ref active, value);
 		}
 
-		public RuleBase(RuleSourceValue sourceValue, bool isRegex, string target, int order, bool active)
+		[JsonConstructor]
+
+		public RuleBase(RuleSourceValue sourceValue, bool isRegex, string target, int order, bool active, Guid ruleId = default)
 		{
 			if (order <= 0)
 			{
@@ -60,7 +70,7 @@ namespace NetStalkerAvalonia.Rules
 			Order = order;
 			Active = active;
 
-			RuleId = RuleId == Guid.Empty ? Guid.NewGuid() : RuleId;
+			RuleId = ruleId == default ? Guid.NewGuid() : ruleId;
 		}
 
 		public void Activate() => Active = true;

@@ -25,7 +25,8 @@ namespace NetStalkerAvalonia.Services
 		public bool TryAddLimitingRule(LimitRule limitRule);
 		public bool TryUpdateRule(RuleBase rule);
 		public bool TryRemoveRule(RuleBase rule);
+		public void SaveRules();
 
-		public ReadOnlyObservableCollection<IRule> Rules { get; }
+		public ReadOnlyObservableCollection<RuleBase> Rules { get; }
 	}
 }

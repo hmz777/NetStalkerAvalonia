@@ -3,16 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia.Rules.Implementations
 {
 	public class RedirectRule : RuleBase
 	{
+		[JsonIgnore]
 		public override RuleAction Action => RuleAction.Redirect;
 
-		public RedirectRule(RuleSourceValue sourceValue, bool isRegex, string target, int order, bool active)
-			: base(sourceValue, isRegex, target, order, active)
+		[JsonConstructor]
+		public RedirectRule(RuleSourceValue sourceValue, bool isRegex, string target, int order, bool active, Guid ruleId = default)
+			: base(sourceValue, isRegex, target, order, active, ruleId)
 		{
 		}
 
