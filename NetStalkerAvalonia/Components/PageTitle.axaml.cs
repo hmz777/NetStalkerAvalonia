@@ -13,7 +13,7 @@ namespace NetStalkerAvalonia.Components
         }
 
         public static readonly AttachedProperty<string> TextProperty =
-                      AttachedProperty<string>.RegisterAttached<ImageButton, string>(nameof(Text), typeof(ImageButton));
+                      AttachedProperty<string>.RegisterAttached<NavButton, string>(nameof(Text), typeof(NavButton));
 
         public PageTitle()
         {

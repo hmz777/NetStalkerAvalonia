@@ -12,7 +12,7 @@
 					HorizontalAlignment="Left"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal">
-			<cmpts:ImageButton IconSource="/Assets/NavIcons/scan.png"
+			<cmpts:NavButton IconSource="Assets/NavIcons/scan.png"
 							   TextContent="Scan"
 							   Command="{Binding Scan}"
 							   IsEnabled="{Binding ScanEnabled}">
@@ -24,8 +24,8 @@
 						</TextBlock>
 					</StackPanel>
 				</ToolTip.Tip>
-			</cmpts:ImageButton>
-			<cmpts:ImageButton IconSource="/Assets/NavIcons/refresh.png"
+			</cmpts:NavButton>
+			<cmpts:NavButton IconSource="Assets/NavIcons/refresh.png"
 							   TextContent="Refresh"
 							   Command="{Binding Refresh}">
 				<ToolTip.Tip>
@@ -36,8 +36,8 @@
 						</TextBlock>
 					</StackPanel>
 				</ToolTip.Tip>
-			</cmpts:ImageButton>
-			<cmpts:ImageButton IconSource="/Assets/NavIcons/rules.png"
+			</cmpts:NavButton>
+			<cmpts:NavButton IconSource="Assets/NavIcons/rules.png"
 							   TextContent="Rules"
 							   Command="{Binding GoToRules}">
 				<ToolTip.Tip>
@@ -48,8 +48,8 @@
 						</TextBlock>
 					</StackPanel>
 				</ToolTip.Tip>
-			</cmpts:ImageButton>
-			<cmpts:ImageButton IconSource="/Assets/NavIcons/sniffer.png"
+			</cmpts:NavButton>
+			<cmpts:NavButton IconSource="Assets/NavIcons/sniffer.png"
 							   TextContent="Sniffer"
 							   Command="{Binding GoToSniffer}">
 				<ToolTip.Tip>
@@ -60,8 +60,8 @@
 						</TextBlock>
 					</StackPanel>
 				</ToolTip.Tip>
-			</cmpts:ImageButton>
-			<cmpts:ImageButton IconSource="/Assets/NavIcons/options.png"
+			</cmpts:NavButton>
+			<cmpts:NavButton IconSource="Assets/NavIcons/options.png"
 							   TextContent="Options"
 							   Command="{Binding GoToOptions}">
 				<ToolTip.Tip>
@@ -72,8 +72,8 @@
 						</TextBlock>
 					</StackPanel>
 				</ToolTip.Tip>
-			</cmpts:ImageButton>
-			<cmpts:ImageButton IconSource="/Assets/NavIcons/help.png"
+			</cmpts:NavButton>
+			<cmpts:NavButton IconSource="Assets/NavIcons/help.png"
 							   TextContent="Help"
 							   Command="{Binding GoToHelp}">
 				<ToolTip.Tip>
@@ -84,8 +84,8 @@
 						</TextBlock>
 					</StackPanel>
 				</ToolTip.Tip>
-			</cmpts:ImageButton>
-			<cmpts:ImageButton IconSource="/Assets/NavIcons/about.png"
+			</cmpts:NavButton>
+			<cmpts:NavButton IconSource="Assets/NavIcons/about.png"
 							   TextContent="About"
 							   Command="{Binding GoToAbout}">
 				<ToolTip.Tip>
@@ -96,7 +96,7 @@
 						</TextBlock>
 					</StackPanel>
 				</ToolTip.Tip>
-			</cmpts:ImageButton>
+			</cmpts:NavButton>
 		</StackPanel>
 	</Border>
 </UserControl>

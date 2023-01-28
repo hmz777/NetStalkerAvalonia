@@ -5,9 +5,9 @@ using System.Windows.Input;
 
 namespace NetStalkerAvalonia.Components
 {
-	public partial class ImageButton : UserControl
+	public partial class NavButton : UserControl
 	{
-		public ImageButton()
+		public NavButton()
 		{
 			InitializeComponent();
 		}
@@ -24,7 +24,7 @@ namespace NetStalkerAvalonia.Components
 		}
 
 		public static readonly AttachedProperty<string> TextContentProperty =
-					  AttachedProperty<string>.RegisterAttached<ImageButton, string>(nameof(TextContent), typeof(ImageButton));
+					  AttachedProperty<string>.RegisterAttached<NavButton, string>(nameof(TextContent), typeof(NavButton));
 
 		public string IconSource
 		{
@@ -33,7 +33,7 @@ namespace NetStalkerAvalonia.Components
 		}
 
 		public static readonly AttachedProperty<string> IconSourceProperty =
-					  AttachedProperty<string>.RegisterAttached<ImageButton, string>(nameof(IconSource), typeof(ImageButton));
+					  AttachedProperty<string>.RegisterAttached<NavButton, string>(nameof(IconSource), typeof(NavButton));
 
 		public ICommand Command
 		{
@@ -42,7 +42,7 @@ namespace NetStalkerAvalonia.Components
 		}
 
 		public static readonly AttachedProperty<ICommand> CommandProperty =
-					  AttachedProperty<ICommand>.RegisterAttached<ImageButton, ICommand>(nameof(Command), typeof(ImageButton));
+					  AttachedProperty<ICommand>.RegisterAttached<NavButton, ICommand>(nameof(Command), typeof(NavButton));
 
 		public object CommandParameter
 		{
@@ -51,6 +51,6 @@ namespace NetStalkerAvalonia.Components
 		}
 
 		public static readonly AttachedProperty<object> CommandParameterProperty =
-					  AttachedProperty<object>.RegisterAttached<ImageButton, object>(nameof(CommandParameter), typeof(ImageButton));
-	}
+					  AttachedProperty<object>.RegisterAttached<NavButton, object>(nameof(CommandParameter), typeof(NavButton));
+	}	
 }

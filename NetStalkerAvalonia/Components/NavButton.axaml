@@ -2,13 +2,12 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:convs="using:NetStalkerAvalonia.Converters"
+			 xmlns:convos="using:NetStalkerAvalonia.Converters"
 			 xmlns:attProp="using:NetStalkerAvalonia.Helpers"
 			 mc:Ignorable="d"
-			 x:Class="NetStalkerAvalonia.Components.ImageButton">
+			 x:Class="NetStalkerAvalonia.Components.NavButton">
 	
 	<UserControl.Resources>
-		<convs:StringToImageSourceConverter x:Key="StrToImgSrcConv"/>
 		<ControlTemplate x:Key="NavBtn" TargetType="Button">
 			<Border
 				Padding="1"
@@ -18,7 +17,7 @@
 				Height="55"
 				BorderBrush="{Binding Theme.NavElementBorder}">
 				<StackPanel>
-					<Image Source="{TemplateBinding attProp:AttachedProperties.Icon, Converter={StaticResource StrToImgSrcConv}}"
+					<Image Source="{TemplateBinding attProp:AttachedProperties.Icon, Converter={x:Static convos:ImageConverters.FromPath}}"
 						   Width="35"
 						   Height="35"
 						   HorizontalAlignment="Center"
