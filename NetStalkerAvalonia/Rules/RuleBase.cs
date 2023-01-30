@@ -45,7 +45,7 @@ namespace NetStalkerAvalonia.Rules
 		public int Order
 		{
 			get => order;
-			protected set => this.RaiseAndSetIfChanged(ref order, value);
+			set => this.RaiseAndSetIfChanged(ref order, value);
 		}
 
 		private bool active;
