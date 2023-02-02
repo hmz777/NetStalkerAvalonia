@@ -42,6 +42,9 @@ namespace NetStalkerAvalonia.ViewModels
 			set => this.RaiseAndSetIfChanged(ref isUpdate, value);
 		}
 
+		private ObservableAsPropertyHelper<string> windowTitle;
+		public string WindowTitle => windowTitle.Value;
+
 		public ReactiveCommand<Unit, AddUpdateRuleModel?> Accept { get; set; }
 
 
@@ -58,6 +61,10 @@ namespace NetStalkerAvalonia.ViewModels
 		public AddUpdateRuleViewModel(bool isUpdate = false)
 		{
 			AddUpdateRuleModel = new AddUpdateRuleModel();
+
+			windowTitle = this.WhenAnyValue(x => x.IsUpdate)
+				.Select(x => x == false ? "Add Rule" : "Update Rule")
+				.ToProperty(this, x => x.WindowTitle);
 
 			var canAcceptRule = this.WhenAnyValue(
 				x => x.AddUpdateRuleModel!.Action,
