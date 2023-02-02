@@ -1,8 +1,14 @@
+using Avalonia;
+using Avalonia.Controls;
 using DynamicData;
+using DynamicData.Binding;
 using NetStalkerAvalonia.Compairers;
 using NetStalkerAvalonia.Components.DeviceList;
+using NetStalkerAvalonia.Configuration;
+using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.ViewModels.RoutedViewModels;
+using NetStalkerAvalonia.Services;
+using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -13,28 +19,24 @@ using System.Net.NetworkInformation;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Windows.Devices.Display;
-using Avalonia.Controls;
-using DynamicData.Binding;
-using Microsoft.Toolkit.Uwp.Notifications;
-using NetStalkerAvalonia.Configuration;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Services;
-using Serilog;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 
 namespace NetStalkerAvalonia.ViewModels
 {
-	public class MainWindowViewModel : ViewModelBase, IScreen
+	public class MainWindowViewModel : ViewModelBase, IScreen, IDisposable
 	{
+		#region Subscriptions
+
+		private IDisposable? _deviceListener;
+		private IDisposable? _statusMessagesListener;
+		private IDisposable? _blockAllFutureHandlerSubscription;
+		private IDisposable? _redirectAllFutureHandlerSubscription;
+
+		#endregion
+
 		#region Members
 
 		private bool _blockAllHandlerAttached;
-		private IDisposable? _blockAllFutureHandlerSubscription = null;
 		private bool _redirectAllHandlerAttached;
-		private IDisposable? _redirectAllFutureHandlerSubscription = null;
 
 		#endregion
 
@@ -235,13 +237,13 @@ namespace NetStalkerAvalonia.ViewModels
 
 			// Subscribe to the scanner device stream
 			// to update the UI list
-			MessageBus
-				.Current
-				.Listen<IChangeSet<Device, string>>(ContractKeys.ScannerStream.ToString())
-				.ObserveOn(RxApp.MainThreadScheduler)
-				.Bind(out _devicesReadOnly)
-				.DisposeMany()
-				.Subscribe();
+			_deviceListener = MessageBus
+					.Current
+					.Listen<IChangeSet<Device, string>>(ContractKeys.ScannerStream.ToString())
+					.ObserveOn(RxApp.MainThreadScheduler)
+					.Bind(out _devicesReadOnly)
+					.DisposeMany()
+					.Subscribe();
 
 			//MessageBus
 			//    .Current
@@ -285,12 +287,12 @@ namespace NetStalkerAvalonia.ViewModels
 			ShowStatusMessageInteraction = new Interaction<StatusMessageModel, Unit>();
 
 			// This message bus listener is used for displaying status messages by other components in the app
-			MessageBus
-				.Current
-				.Listen<StatusMessageModel>(ContractKeys.StatusMessage.ToString())
-				.ObserveOn(RxApp.MainThreadScheduler)
-				.Select(x => ShowStatusMessage(x))
-				.Subscribe();
+			_statusMessagesListener = MessageBus
+					.Current
+					.Listen<StatusMessageModel>(ContractKeys.StatusMessage.ToString())
+					.ObserveOn(RxApp.MainThreadScheduler)
+					.Select(x => ShowStatusMessage(x))
+					.Subscribe();
 
 			#endregion
 
@@ -358,48 +360,46 @@ namespace NetStalkerAvalonia.ViewModels
 
 		private async Task BlockUnblockImpl(PhysicalAddress? mac)
 		{
-			var validationResult = await CheckIfMacAddressIsValidAsync(mac);
+			(bool isValid, Device device) = await CheckIfMacAddressIsValidAsync(mac);
 
-			if (validationResult.isValid == false)
+			if (isValid == false)
 				return;
 
-			if (validationResult.device.Blocked == false)
+			if (device.Blocked == false)
 			{
 				_blockerRedirector?
-					.Block(mac!);
+					.Block(device);
 			}
 			else
 			{
 				_blockerRedirector?
-					.UnBlock(mac!);
+					.UnBlock(device);
 			}
 		}
 
 		private async Task RedirectUnRedirectImpl(PhysicalAddress? mac)
 		{
-			var validationResult = await CheckIfMacAddressIsValidAsync(mac);
+			(bool isValid, Device device) = await CheckIfMacAddressIsValidAsync(mac);
 
-			if (validationResult.isValid == false)
+			if (isValid == false)
 				return;
 
-			if (validationResult.device.Redirected == false)
+			if (device.Redirected == false)
 			{
-				_blockerRedirector?.Redirect(mac!);
+				_blockerRedirector?.Redirect(device);
 			}
 			else
 			{
-				_blockerRedirector?.UnRedirect(mac!);
+				_blockerRedirector?.UnRedirect(device);
 			}
 		}
 
 		private async Task LimitImpl(PhysicalAddress? mac)
 		{
-			var validationResult = await CheckIfMacAddressIsValidAsync(mac);
+			(bool isValid, Device device) = await CheckIfMacAddressIsValidAsync(mac);
 
-			if (validationResult.isValid == false)
+			if (isValid == false)
 				return;
-
-			var device = validationResult.device;
 
 			var result =
 				await ShowLimitDialogInteraction!.Handle(new DeviceLimitsModel(device.DownloadCap / 1024,
@@ -407,7 +407,7 @@ namespace NetStalkerAvalonia.ViewModels
 
 			if (result != null)
 			{
-				_blockerRedirector?.Limit(mac!, result.Download, result.Upload);
+				_blockerRedirector?.Limit(device!, result.Download, result.Upload);
 			}
 		}
 
@@ -426,13 +426,13 @@ namespace NetStalkerAvalonia.ViewModels
 
 			if (active)
 			{
-				var devices = _devicesReadOnly
+				var devices = _devicesReadOnly!
 					.Where(d => d.IsGateway() == false && d.IsLocalDevice() == false & d.Blocked == false)
 					.ToList();
 
 				foreach (var device in devices)
 				{
-					_blockerRedirector?.Block(device.Mac);
+					_blockerRedirector?.Block(device);
 				}
 
 				// Attach handler to block all future detections
@@ -444,13 +444,13 @@ namespace NetStalkerAvalonia.ViewModels
 			}
 			else
 			{
-				var devices = _devicesReadOnly
+				var devices = _devicesReadOnly!
 					.Where(d => d.IsGateway() == false && d.IsLocalDevice() == false & d.Blocked == true)
 					.ToList();
 
 				foreach (var device in devices)
 				{
-					_blockerRedirector?.UnBlock(device.Mac);
+					_blockerRedirector?.UnBlock(device);
 				}
 
 				// Remove handler to block all future detections
@@ -479,13 +479,13 @@ namespace NetStalkerAvalonia.ViewModels
 
 			if (active)
 			{
-				var devices = _devicesReadOnly
+				var devices = _devicesReadOnly!
 					.Where(d => d.IsGateway() == false && d.IsLocalDevice() == false && d.Redirected == false)
 					.ToList();
 
 				foreach (var device in devices)
 				{
-					_blockerRedirector?.Redirect(device.Mac);
+					_blockerRedirector?.Redirect(device);
 				}
 
 				// Attach handler to redirect all future detections
@@ -497,13 +497,13 @@ namespace NetStalkerAvalonia.ViewModels
 			}
 			else
 			{
-				var devices = _devicesReadOnly
+				var devices = _devicesReadOnly!
 					.Where(d => d.IsGateway() == false && d.IsLocalDevice() == false && d.Redirected == true)
 					.ToList();
 
 				foreach (var device in devices)
 				{
-					_blockerRedirector?.UnRedirect(device.Mac);
+					_blockerRedirector?.UnRedirect(device);
 				}
 
 				// Remove handler to redirect all future detections
@@ -519,30 +519,30 @@ namespace NetStalkerAvalonia.ViewModels
 
 		private async Task SetFriendlyNameImpl(PhysicalAddress? mac)
 		{
-			var validationResult = await CheckIfMacAddressIsValidAsync(mac, true);
+			(bool isValid, Device device) = await CheckIfMacAddressIsValidAsync(mac, true);
 
-			if (validationResult.isValid == false)
+			if (isValid == false)
 				return;
 
 			var result =
-				await SetFriendlyNameInteraction!.Handle(validationResult.device.Name);
+				await SetFriendlyNameInteraction!.Handle(device.Name);
 
 			if (string.IsNullOrWhiteSpace(result) == false)
 			{
-				validationResult.device.SetFriendlyName(result);
+				device.SetFriendlyName(result);
 				_deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly!.ToList());
 			}
 		}
 
 		private async Task ClearFriendlyNameImpl(PhysicalAddress? mac)
 		{
-			var validationResult = await CheckIfMacAddressIsValidAsync(mac, true);
+			(bool isValid, Device device) = await CheckIfMacAddressIsValidAsync(mac, true);
 
-			if (validationResult.isValid == false)
+			if (isValid == false)
 				return;
 
 			// It doesn't matter if we specify the second optional parameter or not
-			validationResult.device.SetFriendlyName(null!);
+			device.SetFriendlyName(null!);
 
 			_deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly!.ToList());
 		}
@@ -659,5 +659,13 @@ namespace NetStalkerAvalonia.ViewModels
 		}
 
 		#endregion
+
+		public void Dispose()
+		{
+			_deviceListener?.Dispose();
+			_statusMessagesListener?.Dispose();
+			RemoveBlockAllFutureDetectionsHandler();
+			RemoveRedirectAllFutureDetectionsHandler();
+		}
 	}
 }
