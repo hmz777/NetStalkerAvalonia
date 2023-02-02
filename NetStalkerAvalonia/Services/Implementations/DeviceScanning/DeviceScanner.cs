@@ -30,7 +30,6 @@ public class DeviceScanner : IDeviceScanner
 
 	private readonly IDeviceNameResolver? _deviceNameResolver;
 	private readonly IDeviceTypeIdentifier? _deviceTypeIdentifier;
-	private readonly IRuleService? _ruleService;
 
 	// This is the original source of clients and all other collections are projections from this
 	private SourceCache<Device, string> _clients = new(x => x.Mac!.ToString());
@@ -42,15 +41,13 @@ public class DeviceScanner : IDeviceScanner
 	public DeviceScanner(
 		PacketReceiveTechnique packetReceiveTechnique = PacketReceiveTechnique.EventHandler,
 		IDeviceNameResolver? deviceNameResolver = null!,
-		IDeviceTypeIdentifier? deviceTypeIdentifier = null!,
-		IRuleService? ruleService = null!)
+		IDeviceTypeIdentifier? deviceTypeIdentifier = null!)
 	{
 		_packetReceiveTechnique = packetReceiveTechnique;
 
 		try
 		{
 			_deviceNameResolver = Tools.ResolveIfNull(deviceNameResolver);
-			_ruleService = Tools.ResolveIfNull(ruleService);
 
 			if (OptionalFeatures.AvailableFeatures.Contains(typeof(IDeviceTypeIdentifier)))
 			{
@@ -262,9 +259,6 @@ public class DeviceScanner : IDeviceScanner
 			// Get vendor info for current target if the feature is available
 			if (OptionalFeatures.AvailableFeatures.Contains(typeof(IDeviceTypeIdentifier)))
 				_deviceTypeIdentifier?.IdentifyDevice(device);
-
-			// See if there is a rule that matches this device and apply it
-			_ruleService?.ApplyIfMatch(device);
 		}
 		else
 		{
