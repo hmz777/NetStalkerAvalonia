@@ -1,16 +1,14 @@
 ﻿using DynamicData;
-using NetStalkerAvalonia.Configuration;
+using DynamicData.Binding;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.ViewModels;
 using PacketDotNet;
-using ReactiveUI;
 using Serilog;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using System;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reactive.Linq;
@@ -21,6 +19,13 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 {
 	public class BlockerRedirector : IBlockerRedirector
 	{
+		#region Subscriptions
+
+		IDisposable? clientsToRules;
+		IDisposable? ruleUpdates;
+
+		#endregion
+
 		#region Members
 
 		private CancellationTokenSource? _cancellationTokenSource;
@@ -28,16 +33,22 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		private LibPcapLiveDevice? _device;
 		private Timer? _byteCounterTimer;
 
+		private readonly IRuleService ruleService;
+
 		private static readonly ReadOnlyObservableCollection<Device> Clients = MainWindowViewModel.Devices;
 
 		#endregion
 
 		#region Constructor
 
-		public BlockerRedirector()
+		public BlockerRedirector(IRuleService ruleService = null!)
 		{
+			this.ruleService = Tools.ResolveIfNull(ruleService);
+
 			InitDevice();
-			BindClients();
+			BindClientsToRules();
+			SubscribeToRuleUpdates();
+			StartIfNotStarted();
 
 			Log.Information(LogMessageTemplates.ServiceInit,
 				typeof(IBlockerRedirector));
@@ -88,15 +99,40 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 			}
 		}
 
-		private void BindClients()
+		private void SubscribeToRuleUpdates()
 		{
-			//MessageBus
-			//	.Current
-			//	.Listen<IChangeSet<Device>>(ContractKeys.UiStream.ToString())
-			//	.ObserveOn(RxApp.MainThreadScheduler)
-			//	.Bind(out Clients)
-			//	.DisposeMany()
-			//	.Subscribe();
+			ruleUpdates = ruleService.Rules
+					.ToObservableChangeSet()
+					.AutoRefresh()
+					.DisposeMany()
+					.Subscribe(changeSet =>
+					{
+						foreach (var client in Clients)
+						{
+							if (client.IsGateway() == false && client.IsLocalDevice() == false)
+							{
+								ruleService.ApplyIfMatch(client);
+							}
+						}
+					});
+		}
+
+		private void BindClientsToRules()
+		{
+			clientsToRules = Clients
+				   .ToObservableChangeSet()
+				   .DisposeMany()
+				   .Where(x => x.Adds > 0)
+				   .ToCollection()
+				   .Select(client => client.LastOrDefault())
+				   .Where(client => client != null)
+				   .Subscribe(client =>
+				   {
+					   if (client!.IsGateway() == false && client.IsLocalDevice() == false)
+					   {
+						   ruleService.ApplyIfMatch(client);
+					   }
+				   });
 		}
 
 		#endregion
@@ -375,196 +411,136 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		public bool Status => _isStarted;
 
-		public void Block(PhysicalAddress mac)
+		public void Block(Device device)
 		{
-			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
+			ArgumentNullException.ThrowIfNull(device, nameof(device));
 
-			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
+			if (device.Redirected)
+				device.UnRedirect();
 
-			var brDevice = Clients!
-				.Where(d => d.Mac!.Equals(mac))
-				.First();
-
-			if (brDevice.Redirected)
-				brDevice.UnRedirect();
-
-			brDevice.Block();
+			device.Block();
 			StartIfNotStarted();
 
 			Log.Information(LogMessageTemplates.DeviceBlock,
 				typeof(IBlockerRedirector),
-				brDevice.Mac,
-				brDevice.Ip);
+				device.Mac,
+				device.Ip);
 		}
 
-		public void Redirect(PhysicalAddress mac)
+		public void Redirect(Device device)
 		{
-			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
+			ArgumentNullException.ThrowIfNull(device, nameof(device));
 
-			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
+			if (device.Blocked)
+				device.UnBlock();
 
-			var brDevice = Clients!
-				.Where(d => d.Mac!.Equals(mac))
-				.First();
-
-			if (brDevice.Blocked)
-				brDevice.UnBlock();
-
-			brDevice.Redirect();
+			device.Redirect();
 			StartIfNotStarted();
 
 			Log.Information(LogMessageTemplates.DeviceRedirect,
 				typeof(IBlockerRedirector),
-				brDevice.Mac,
-				brDevice.Ip);
+				device.Mac,
+				device.Ip);
 		}
 
-		public void UnBlock(PhysicalAddress mac)
+		public void UnBlock(Device device)
 		{
-			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
+			ArgumentNullException.ThrowIfNull(device, nameof(device));
 
-			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
-
-			var brDevice = Clients!
-				.Where(d => d.Mac!.Equals(mac))
-				.First();
-
-			brDevice.UnBlock();
+			device.UnBlock();
 			TryPauseIfNoDevicesLeft();
 
 			Log.Information(LogMessageTemplates.DeviceUnblock,
 				typeof(IBlockerRedirector),
-				brDevice.Mac,
-				brDevice.Ip);
+				device.Mac,
+				device.Ip);
 		}
 
-		public void UnRedirect(PhysicalAddress mac)
+		public void UnRedirect(Device device)
 		{
-			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
+			ArgumentNullException.ThrowIfNull(device, nameof(device));
 
-			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
-
-			var brDevice = Clients!
-				.Where(d => d.Mac!.Equals(mac))
-				.First();
-
-			brDevice.UnRedirect();
+			device.UnRedirect();
 			TryPauseIfNoDevicesLeft();
 
 			Log.Information(LogMessageTemplates.DeviceUnRedirect,
 				typeof(IBlockerRedirector),
-				brDevice.Mac,
-				brDevice.Ip);
+				device.Mac,
+				device.Ip);
 		}
 
-		public void Limit(PhysicalAddress mac, int download, int upload)
+		public void Limit(Device device, int download, int upload)
 		{
-			Redirect(mac);
+			Redirect(device);
 
-			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
-
-			var brDevice = Clients!
-				.Where(d => d.Mac!.Equals(mac))
-				.First();
-
-			brDevice.SetDownloadCap(download);
-			brDevice.SetUploadCap(upload);
+			device.SetDownloadCap(download);
+			device.SetUploadCap(upload);
 
 			Log.Information(LogMessageTemplates.DeviceLimit,
 				typeof(IBlockerRedirector),
-				brDevice.Mac,
-				brDevice.Ip,
-				brDevice.DownloadCap,
-				brDevice.UploadCap);
+				device.Mac,
+				device.Ip,
+				device.DownloadCap,
+				device.UploadCap);
 		}
 
-		public void LimitDownload(PhysicalAddress mac, int download)
+		public void LimitDownload(Device device, int download)
 		{
-			Redirect(mac);
+			Redirect(device);
 
-			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
-
-			var brDevice = Clients!
-				.Where(d => d.Mac!.Equals(mac))
-				.First();
-
-			brDevice.SetDownloadCap(download);
+			device.SetDownloadCap(download);
 
 			Log.Information(LogMessageTemplates.DeviceLimit,
 				typeof(IBlockerRedirector),
-				brDevice.Mac,
-				brDevice.Ip,
-				brDevice.DownloadCap,
-				brDevice.UploadCap);
+				device.Mac,
+				device.Ip,
+				device.DownloadCap,
+				device.UploadCap);
 		}
 
-		public void LimitUpload(PhysicalAddress mac, int upload)
+		public void LimitUpload(Device device, int upload)
 		{
-			Redirect(mac);
+			Redirect(device);
 
-			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
-
-			var brDevice = Clients!
-				.Where(d => d.Mac!.Equals(mac))
-				.First();
-
-			brDevice.SetUploadCap(upload);
+			device.SetUploadCap(upload);
 
 			Log.Information(LogMessageTemplates.DeviceLimit,
 				typeof(IBlockerRedirector),
-				brDevice.Mac,
-				brDevice.Ip,
-				brDevice.DownloadCap,
-				brDevice.UploadCap);
+				device.Mac,
+				device.Ip,
+				device.DownloadCap,
+				device.UploadCap);
 		}
 
-		public void ClearLimits(PhysicalAddress mac)
+		public void ClearLimits(Device device)
 		{
-			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
+			ArgumentNullException.ThrowIfNull(device, nameof(device));
 
-			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
-
-			var brDevice = Clients!
-				.Where(d => d.Mac!.Equals(mac))
-				.First();
-
-			brDevice.SetDownloadCap(0);
-			brDevice.SetUploadCap(0);
+			device.SetDownloadCap(0);
+			device.SetUploadCap(0);
 
 			Log.Information(LogMessageTemplates.DeviceLimitsClear,
-				typeof(IBlockerRedirector), brDevice.Mac);
+				typeof(IBlockerRedirector), device.Mac);
 		}
 
-		public void ClearDownload(PhysicalAddress mac)
+		public void ClearDownload(Device device)
 		{
-			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
+			ArgumentNullException.ThrowIfNull(device, nameof(device));
 
-			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
-
-			var brDevice = Clients!
-				.Where(d => d.Mac!.Equals(mac))
-				.First();
-
-			brDevice.SetDownloadCap(0);
+			device.SetDownloadCap(0);
 
 			Log.Information(LogMessageTemplates.DeviceDownloadLimitClear,
-				typeof(IBlockerRedirector), brDevice.Mac);
+				typeof(IBlockerRedirector), device.Mac);
 		}
 
-		public void ClearUpload(PhysicalAddress mac)
+		public void ClearUpload(Device device)
 		{
-			ArgumentNullException.ThrowIfNull(mac, nameof(mac));
+			ArgumentNullException.ThrowIfNull(device, nameof(device));
 
-			// TODO: Remove device lookup below, since the BR and the UI are sharing the same collection now
-
-			var brDevice = Clients!
-				.Where(d => d.Mac!.Equals(mac))
-				.First();
-
-			brDevice.SetUploadCap(0);
+			device.SetUploadCap(0);
 
 			Log.Information(LogMessageTemplates.DeviceUploadLimitClear,
-				typeof(IBlockerRedirector), brDevice.Mac);
+				typeof(IBlockerRedirector), device.Mac);
 		}
 
 		public void Dispose()
@@ -581,6 +557,9 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 				_cancellationTokenSource?.Dispose();
 				_cancellationTokenSource = null;
 			}
+
+			clientsToRules?.Dispose();
+			ruleUpdates?.Dispose();
 
 			Log.Information(LogMessageTemplates.ServiceDispose,
 				typeof(IBlockerRedirector));
