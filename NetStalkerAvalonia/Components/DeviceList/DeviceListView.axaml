@@ -32,6 +32,11 @@
 			<Setter Property="Height" Value="5" />
 			<Setter Property="Background" Value="red" />
 		</Style>
+		<Style Selector="Rectangle.statusIndicator">
+			<Setter Property="Width" Value="10"/>
+			<Setter Property="HorizontalAlignment" Value="Left"/>
+			<Setter Property="VerticalAlignment" Value="Stretch"/>
+		</Style>
 	</UserControl.Styles>
 
 	<Grid HorizontalAlignment="Stretch"
@@ -52,12 +57,9 @@
 					<DataGridTemplateColumn.CellTemplate>
 						<DataTemplate DataType="models:Device">
 							<Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-								<Rectangle IsVisible="{Binding Blocked}" HorizontalAlignment="Left"
-										   VerticalAlignment="Stretch" Width="10" Fill="red" />
-								<Rectangle IsVisible="{Binding Redirected}" HorizontalAlignment="Left"
-										   VerticalAlignment="Stretch" Width="10" Fill="yellow" />
-								<Rectangle HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="10"
-										   Fill="blue">
+								<Rectangle Classes="statusIndicator" IsVisible="{Binding Blocked}" Fill="red" />
+								<Rectangle Classes="statusIndicator" IsVisible="{Binding Redirected}" Fill="yellow" />
+								<Rectangle Classes="statusIndicator" Fill="blue">
 									<Rectangle.IsVisible>
 										<MultiBinding Converter="{x:Static BoolConverters.Or}">
 											<Binding Path="!!DownloadCap" />
