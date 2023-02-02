@@ -43,7 +43,7 @@ namespace NetStalkerAvalonia.Views.RoutedViews
 		{
 			var dialog = new AddUpdateRuleWindow
 			{
-				DataContext = new AddUpdateRuleViewModel()
+				DataContext = new AddUpdateRuleViewModel(isUpdate: false)
 			};
 
 			var result = await dialog.ShowDialog<AddUpdateRuleModel?>(StaticData.MainWindow);
