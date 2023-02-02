@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DynamicData;
+using DynamicData.Binding;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.Rules;
@@ -7,6 +9,7 @@ using NetStalkerAvalonia.Services;
 using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
@@ -36,6 +39,8 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 		public ReactiveCommand<Unit, Unit> AddRule { get; set; }
 		public ReactiveCommand<Unit, Unit> UpdateRule { get; set; }
 		public ReactiveCommand<Unit, Unit> RemoveRule { get; set; }
+		public ReactiveCommand<Unit, Unit> MoveUp { get; set; }
+		public ReactiveCommand<Unit, Unit> MoveDown { get; set; }
 
 		#endregion
 
@@ -58,12 +63,14 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 			#region Commands
 
-			var canUpdateOrRemove = this.WhenAnyValue(x => x.SelectedRule)
+			var isAnItemSelected = this.WhenAnyValue(x => x.SelectedRule)
 				.Select(x => x! != null!);
 
 			AddRule = ReactiveCommand.CreateFromTask(AddRuleImpl);
-			UpdateRule = ReactiveCommand.CreateFromTask(UpdateRuleImpl, canUpdateOrRemove);
-			RemoveRule = ReactiveCommand.Create(RemoveRuleImpl, canUpdateOrRemove);
+			UpdateRule = ReactiveCommand.CreateFromTask(UpdateRuleImpl, isAnItemSelected);
+			RemoveRule = ReactiveCommand.Create(RemoveRuleImpl, isAnItemSelected);
+			MoveUp = ReactiveCommand.Create(MoveUpImpl, isAnItemSelected);
+			MoveDown = ReactiveCommand.Create(MoveDownImpl, isAnItemSelected);
 
 			#endregion
 
@@ -75,15 +82,27 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
 			RemoveRule.ThrownExceptions.Subscribe(x =>
 				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
+			MoveUp.ThrownExceptions.Subscribe(x =>
+				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
+			MoveDown.ThrownExceptions.Subscribe(x =>
+				Tools.HandleError(new StatusMessageModel(MessageType.Error, x.Message)));
 
 			#endregion
+
+			rules = this.ruleService.Rules
+				.ToObservableChangeSet()
+				.AutoRefresh()
+				.ToCollection()
+				.Select(x => x.OrderBy(r => r.Order).ToList())
+				.ToProperty(this, x => x.Rules);
 		}
 
 		#endregion
 
 		#region UI Properties
 
-		public ReadOnlyObservableCollection<RuleBase>? Rules => ruleService?.Rules;
+		private readonly ObservableAsPropertyHelper<List<RuleBase>> rules;
+		public List<RuleBase> Rules => rules.Value;
 
 		private RuleBase? selectedRule;
 		public RuleBase? SelectedRule
@@ -196,6 +215,22 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 			if (opResult == false)
 			{
 				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, $"Rule for target: {SelectedRule!.Target} doesn't exists"));
+			}
+		}
+
+		private void MoveUpImpl()
+		{
+			if (SelectedRule is not null)
+			{
+				ruleService!.MoveRuleUp(selectedRule!);
+			}
+		}
+
+		private void MoveDownImpl()
+		{
+			if (SelectedRule is not null)
+			{
+				ruleService!.MoveRuleDown(selectedRule!);
 			}
 		}
 

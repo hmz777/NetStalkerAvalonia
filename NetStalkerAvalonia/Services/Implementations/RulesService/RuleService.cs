@@ -8,11 +8,11 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 
 namespace NetStalkerAvalonia.Services.Implementations.RulesService
 {
@@ -33,9 +33,7 @@ namespace NetStalkerAvalonia.Services.Implementations.RulesService
 			Rules = new ReadOnlyObservableCollection<RuleBase>(rules);
 		}
 
-		public ReadOnlyObservableCollection<RuleBase> Rules { get; private set; }
-
-		public bool Status => throw new NotImplementedException();
+		#region Internal
 
 		private IEnumerable<RuleBase> LoadRules()
 		{
@@ -61,12 +59,28 @@ namespace NetStalkerAvalonia.Services.Implementations.RulesService
 			return Enumerable.Empty<RuleBase>();
 		}
 
+		private bool RuleExists(RuleBase rule) => rules.Contains(rule);
+
+		private void AdjustRuleOrder(int removedRuleOrder)
+		{
+			foreach (var rule in rules.Where(r => r.Order > removedRuleOrder))
+			{
+				rule.Order--;
+			}
+		}
+
+		#endregion
+
+		#region API
+
+		public bool Status => throw new NotImplementedException();
+
+		public ReadOnlyObservableCollection<RuleBase> Rules { get; }
+
 		public void SaveRules()
 		{
 			File.WriteAllText(RulesFileName, JsonSerializer.Serialize(rules, typeof(ObservableCollection<RuleBase>), Config.JsonSerializerOptions));
 		}
-
-		private bool RuleExists(RuleBase rule) => rules.Contains(rule);
 
 		public bool TryAddBlockingRule(BlockRule blockRule)
 		{
@@ -104,12 +118,6 @@ namespace NetStalkerAvalonia.Services.Implementations.RulesService
 			return true;
 		}
 
-		public void ApplyIfMatch(Device device)
-		{
-			var lastRuleThatMatch = rules.Where(r => r.Match(device)).OrderBy(r => r.Order).LastOrDefault();
-			lastRuleThatMatch?.Apply(device);
-		}
-
 		public bool TryUpdateRule(RuleBase rule)
 		{
 			if (RuleExists(rule) == false)
@@ -129,7 +137,45 @@ namespace NetStalkerAvalonia.Services.Implementations.RulesService
 
 			rules.Remove(rule);
 
+			AdjustRuleOrder(rule.Order);
+
 			return true;
 		}
+
+		public void ApplyIfMatch(Device device)
+		{
+			var lastRuleThatMatch = rules.Where(r => r.Match(device)).OrderBy(r => r.Order).LastOrDefault();
+			lastRuleThatMatch?.Apply(device);
+		}
+
+		public void MoveRuleUp(RuleBase rule)
+		{
+			if (rule.Order <= 1)
+				return;
+
+			var oldOrder = rule.Order;
+			var newOrder = rule.Order - 1;
+
+			var prevRule = rules.First(r => r.Order == newOrder);
+
+			prevRule.Order = oldOrder;
+			rule.Order = newOrder;
+		}
+
+		public void MoveRuleDown(RuleBase rule)
+		{
+			if (rule.Order == rules.Count)
+				return;
+
+			var oldOrder = rule.Order;
+			var newOrder = rule.Order + 1;
+
+			var nextRule = rules.First(r => r.Order == newOrder);
+
+			nextRule.Order = oldOrder;
+			rule.Order = newOrder;
+		}
+
+		#endregion
 	}
 }

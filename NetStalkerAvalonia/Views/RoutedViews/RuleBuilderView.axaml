@@ -166,8 +166,8 @@
 					<cmpts:GenericIconButton Command="{Binding UpdateRule}" Classes="ruleBuilder_Control control_Edit" Grid.Column="0" Grid.Row="1" Text="Edit" Icon="Assets/Misc/edit.png"/>
 					<cmpts:GenericIconButton Command="{Binding RemoveRule}" Classes="ruleBuilder_Control control_Remove" Grid.Column="0" Grid.Row="2" Text="Remove" Icon="Assets/Misc/remove.png"/>
 					<Separator Grid.Column="0" Grid.Row="3" Background="Gray" Height="2" Width="90" Margin="0,5,0,5" CornerRadius="5" HorizontalAlignment="Stretch"/>
-					<cmpts:GenericIconButton Classes="ruleBuilder_Control control_Move" Grid.Column="0" Grid.Row="4" Text="Move Up" Icon="Assets/Misc/up.png"/>
-					<cmpts:GenericIconButton Classes="ruleBuilder_Control control_Move" Grid.Column="0" Grid.Row="5" Text="Move Down" Icon="Assets/Misc/down.png"/>
+					<cmpts:GenericIconButton Command="{Binding MoveUp}" Classes="ruleBuilder_Control control_Move" Grid.Column="0" Grid.Row="4" Text="Move Up" Icon="Assets/Misc/up.png"/>
+					<cmpts:GenericIconButton Command="{Binding MoveDown}" Classes="ruleBuilder_Control control_Move" Grid.Column="0" Grid.Row="5" Text="Move Down" Icon="Assets/Misc/down.png"/>
 					<Border Grid.Column="0" Grid.Row="6"
 							CornerRadius="5"
 							Padding="5"

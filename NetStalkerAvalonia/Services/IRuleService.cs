@@ -1,6 +1,7 @@
 ﻿using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.Rules;
 using NetStalkerAvalonia.Rules.Implementations;
+using NetStalkerAvalonia.Services.Implementations.RulesService;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,8 +26,9 @@ namespace NetStalkerAvalonia.Services
 		public bool TryAddLimitingRule(LimitRule limitRule);
 		public bool TryUpdateRule(RuleBase rule);
 		public bool TryRemoveRule(RuleBase rule);
+		public void MoveRuleUp(RuleBase rule);
+		public void MoveRuleDown(RuleBase rule);
 		public void SaveRules();
-
 		public ReadOnlyObservableCollection<RuleBase> Rules { get; }
 	}
 }
