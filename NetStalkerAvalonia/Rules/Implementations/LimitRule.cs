@@ -38,6 +38,8 @@ namespace NetStalkerAvalonia.Rules.Implementations
 			if (Match(device) == false)
 				return;
 
+			device.ResetState();
+			device.Redirect();
 			device.SetUploadCap(Upload);
 			device.SetDownloadCap(Download);
 		}

@@ -175,6 +175,14 @@ namespace NetStalkerAvalonia.Models
 		public bool IsGateway() => Mac!.Equals(HostInfo.GatewayMac);
 		public bool IsLocalDevice() => Mac!.Equals(HostInfo.HostMac);
 
+		public void ResetState()
+		{
+			UnBlock();
+			UnRedirect();
+			SetDownloadCap(0);
+			SetUploadCap(0);
+		}
+
 		#endregion
 	}
 }

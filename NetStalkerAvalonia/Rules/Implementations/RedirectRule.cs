@@ -24,6 +24,7 @@ namespace NetStalkerAvalonia.Rules.Implementations
 			if (Match(device) == false)
 				return;
 
+			device.ResetState();
 			device.Redirect();
 		}
 
