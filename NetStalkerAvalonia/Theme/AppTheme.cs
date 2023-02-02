@@ -18,7 +18,7 @@
 		public string WindowWidth => "1000";
 		public string WindowMinWidth => "850";
 		public string WindowHeight => "600";
-		public string WindowMinHeight => "450";
+		public string WindowMinHeight => "500";
 		public string NavBorderColor => "#2C2C2C";
 		public string NavBackground => "#1E1E1E";
 		public string NavElementBackground => "#2C2C2C";
