@@ -101,8 +101,8 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 		#region UI Properties
 
-		private readonly ObservableAsPropertyHelper<List<RuleBase>> rules;
-		public List<RuleBase> Rules => rules.Value;
+		private readonly ObservableAsPropertyHelper<List<RuleBase>?> rules;
+		public List<RuleBase>? Rules => rules.Value ?? new List<RuleBase>();
 
 		private RuleBase? selectedRule;
 		public RuleBase? SelectedRule
