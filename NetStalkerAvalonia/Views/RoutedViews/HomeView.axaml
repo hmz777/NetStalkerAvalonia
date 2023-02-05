@@ -30,12 +30,12 @@
         </Grid.RowDefinitions>
         <cmptsDev:DeviceListView Grid.Row="0" />
         <Border Grid.Row="1"
-                Background="{Binding Theme.NavBackground}"
+                Background="{Binding Theme.WindowBackground}"
                 Padding="15,0,15,0"
                 BorderBrush="{Binding Theme.NavBorderColor}"
                 BorderThickness="0,3,0,0"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
+                VerticalAlignment="Stretch">    
             <DockPanel HorizontalAlignment="Stretch">
                 <Border DockPanel.Dock="Left" Classes="nav-item">
                     <cmpts:Navbar />

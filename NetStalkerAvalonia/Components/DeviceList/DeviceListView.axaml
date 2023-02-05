@@ -23,7 +23,7 @@
 
 	<UserControl.Styles>
 		<Style Selector="DataGrid#DeviceList DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
-			<Setter Property="Fill" Value="{Binding $parent[Window].DataContext.Theme.ListRowSelectedBackColor}" />
+			<Setter Property="Fill" Value="{Binding $parent[Window].DataContext.Theme.AccentColor}" />
 		</Style>
 		<Style Selector="DataGridColumnHeader">
 			<Setter Property="Background" Value="{Binding Theme.ListColumnHeaderBackColor}" />

@@ -30,7 +30,7 @@
 		public string TitleBarButtonFrontColor => "#FFFFFF";
 		public string TitleBarButtonsHoverColor => "#1F1F1F";
 		public string PageTitleColor => "white";
-		public string AccentColor => "Teal";
+		public string AccentColor => "#449C82";
 		public string PageTitleSize => "25";
 		public string ListRowSelectedBackColor => "Teal";
 		public string ListColumnHeaderBackColor => "#2C2C2C";

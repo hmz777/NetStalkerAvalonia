@@ -1,10 +1,11 @@
 <Styles xmlns="https://github.com/avaloniaui"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Design.PreviewWith>
-		<Border Padding="20">			
+		<Border Padding="20">
+			<CheckBox Content="Box"/>
 		</Border>
 	</Design.PreviewWith>
-	
+
 	<Style Selector="Window">
 		<!--<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>-->
 		<!--<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>-->
@@ -34,8 +35,26 @@
 	<Style Selector="TextBox:focus /template/ Border">
 		<Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
 	</Style>
+	<Style Selector="ComboBox:focus /template/ Border">
+		<Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
+	</Style>
+	<Style Selector="Button:focus">
+		<Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
+	</Style>
 	<Style Selector="CheckBox:checked /template/ Border">
 		<Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
+	</Style>
+	<Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+		<Setter Property="Background" Value="{Binding Theme.AccentColor}" />
+	</Style>
+	<Style Selector="RadioButton:checked /template/ Ellipse#CheckOuterEllipse">
+		<Setter Property="Fill" Value="{Binding Theme.AccentColor}" />
+	</Style>
+	<Style Selector="RadioButton:checked /template/ Border">
+		<Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
+	</Style>
+	<Style Selector="RadioButton:checked /template/ Ellipse">
+		<Setter Property="Stroke" Value="{Binding Theme.AccentColor}" />
 	</Style>
 	<Style Selector="StackPanel.infoPanel">
 		<Setter Property="Orientation" Value="Horizontal"/>
@@ -67,7 +86,7 @@
 	</Style>
 	<Style Selector="TextBlock.p">
 		<Setter Property="TextWrapping" Value="Wrap"/>
-	</Style>
+	</Style>	
 	<Style Selector="Border.wrapper">
 		<Setter Property="Padding" Value="15" />
 	</Style>
