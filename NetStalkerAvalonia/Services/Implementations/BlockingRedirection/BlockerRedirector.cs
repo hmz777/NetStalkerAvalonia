@@ -157,9 +157,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 				return;
 
 			var rawCapture = e.GetPacket();
-			var packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as EthernetPacket;
 
-			if (packet == null)
+			if (Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) is not EthernetPacket packet)
 				return;
 
 			var outTarget = Clients?

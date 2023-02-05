@@ -10,7 +10,6 @@ using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -46,10 +45,14 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 		#region Constructors
 
+#if DEBUG
+
 		public RuleBuilderViewModel()
 		{
 
 		}
+
+#endif
 
 		public RuleBuilderViewModel(IScreen screen, IRuleService ruleService = null!, IMapper mapper = null!)
 		{
