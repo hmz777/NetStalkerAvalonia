@@ -39,10 +39,10 @@ namespace NetStalkerAvalonia.Models
 
 		#region Properties
 
-		public IPAddress Ip { get; set; }
-		public PhysicalAddress Mac { get; private set; }
+		public IPAddress Ip { get; }
+		public PhysicalAddress Mac { get; }
 		public DateTime DateAdded { get; }
-		public bool HasFriendlyName { get; set; }
+		public bool HasFriendlyName { get; private set; }
 
 		#endregion
 
@@ -53,7 +53,7 @@ namespace NetStalkerAvalonia.Models
 		public bool Blocked
 		{
 			get => _blocked;
-			set => this.RaiseAndSetIfChanged(ref _blocked, value);
+			private set => this.RaiseAndSetIfChanged(ref _blocked, value);
 		}
 
 		private bool _redirected;
@@ -61,7 +61,7 @@ namespace NetStalkerAvalonia.Models
 		public bool Redirected
 		{
 			get => _redirected;
-			set => this.RaiseAndSetIfChanged(ref _redirected, value);
+			private set => this.RaiseAndSetIfChanged(ref _redirected, value);
 		}
 
 		private int _downloadCap;
