@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net;
 using System.Net.NetworkInformation;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -26,7 +25,6 @@ namespace NetStalkerAvalonia.ViewModels
 	{
 		#region Subscriptions
 
-		private IDisposable? _deviceListener;
 		private IDisposable? _statusMessagesListener;
 		private IDisposable? _blockAllFutureHandlerSubscription;
 		private IDisposable? _redirectAllFutureHandlerSubscription;
@@ -178,11 +176,8 @@ namespace NetStalkerAvalonia.ViewModels
 
 		#region Devices List
 
-		// Collection projected from source for UI
-		private static ReadOnlyObservableCollection<Device>? _devicesReadOnly;
-
 		// Accessor to expose the UI device list
-		public static ReadOnlyObservableCollection<Device> Devices => _devicesReadOnly;
+		public ReadOnlyObservableCollection<Device>? Devices => _blockerRedirector?.Devices;
 
 		// Configure the device list view
 		public DeviceListViewSettings DeviceListViewSettings { get; set; } = new();
@@ -230,24 +225,6 @@ namespace NetStalkerAvalonia.ViewModels
 
 			GoToAbout = ReactiveCommand.CreateFromObservable(
 				() => Router.Navigate.Execute(StaticData.ViewModels[5] as IRoutableViewModel));
-
-			#endregion
-
-			#region Device collection listener
-
-			// Subscribe to the scanner device stream
-			// to update the UI list
-			_deviceListener = MessageBus
-					.Current
-					.Listen<IChangeSet<Device, string>>(ContractKeys.ScannerStream.ToString())
-					.ObserveOn(RxApp.MainThreadScheduler)
-					.Bind(out _devicesReadOnly)
-					.DisposeMany()
-					.Subscribe();
-
-			//MessageBus
-			//    .Current
-			//    .RegisterMessageSource(_devicesReadOnly.ToObservableChangeSet(), ContractKeys.UiStream.ToString());
 
 			#endregion
 
@@ -426,7 +403,7 @@ namespace NetStalkerAvalonia.ViewModels
 
 			if (active)
 			{
-				var devices = _devicesReadOnly!
+				var devices = Devices!
 					.Where(d => d.IsGateway() == false && d.IsLocalDevice() == false & d.Blocked == false)
 					.ToList();
 
@@ -444,7 +421,7 @@ namespace NetStalkerAvalonia.ViewModels
 			}
 			else
 			{
-				var devices = _devicesReadOnly!
+				var devices = Devices!
 					.Where(d => d.IsGateway() == false && d.IsLocalDevice() == false & d.Blocked == true)
 					.ToList();
 
@@ -479,7 +456,7 @@ namespace NetStalkerAvalonia.ViewModels
 
 			if (active)
 			{
-				var devices = _devicesReadOnly!
+				var devices = Devices!
 					.Where(d => d.IsGateway() == false && d.IsLocalDevice() == false && d.Redirected == false)
 					.ToList();
 
@@ -497,7 +474,7 @@ namespace NetStalkerAvalonia.ViewModels
 			}
 			else
 			{
-				var devices = _devicesReadOnly!
+				var devices = Devices!
 					.Where(d => d.IsGateway() == false && d.IsLocalDevice() == false && d.Redirected == true)
 					.ToList();
 
@@ -530,7 +507,7 @@ namespace NetStalkerAvalonia.ViewModels
 			if (string.IsNullOrWhiteSpace(result) == false)
 			{
 				device.SetFriendlyName(result);
-				_deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly!.ToList());
+				_deviceNameResolver?.SaveDeviceNamesAsync(Devices!.ToList());
 			}
 		}
 
@@ -544,7 +521,7 @@ namespace NetStalkerAvalonia.ViewModels
 			// It doesn't matter if we specify the second optional parameter or not
 			device.SetFriendlyName(null!);
 
-			_deviceNameResolver?.SaveDeviceNamesAsync(_devicesReadOnly!.ToList());
+			_deviceNameResolver?.SaveDeviceNamesAsync(Devices!.ToList());
 		}
 
 		#endregion
@@ -561,7 +538,7 @@ namespace NetStalkerAvalonia.ViewModels
 		private async Task<(bool isValid, Device device)> CheckIfMacAddressIsValidAsync(PhysicalAddress? mac,
 			bool canBeAppliedToGatewayAndLocal = false)
 		{
-			var device = _devicesReadOnly.FirstOrDefault(x => x.Mac!.Equals(mac));
+			var device = Devices.FirstOrDefault(x => x.Mac!.Equals(mac));
 
 			if (device == null)
 			{
@@ -588,12 +565,12 @@ namespace NetStalkerAvalonia.ViewModels
 			return (true, device);
 		}
 
-		public IEnumerable<Device> GetUiDeviceCollection() => _devicesReadOnly;
+		public IEnumerable<Device> GetUiDeviceCollection() => Devices;
 
 		private void AttachBlockAllFutureDetectionsHandler()
 		{
 			_blockAllFutureHandlerSubscription =
-				_devicesReadOnly
+				Devices
 					.ToObservableChangeSet()
 					.Where(change => change.Adds > 0)
 					.ToCollection()
@@ -609,7 +586,7 @@ namespace NetStalkerAvalonia.ViewModels
 		private void AttachRedirectAllFutureDetectionsHandler()
 		{
 			_redirectAllFutureHandlerSubscription =
-				_devicesReadOnly
+				Devices
 					.ToObservableChangeSet()
 					.Where(change => change.Adds > 0)
 					.ToCollection()
@@ -632,16 +609,6 @@ namespace NetStalkerAvalonia.ViewModels
 
 		#region Testing
 
-		private void PopulateDummyData(ISourceCache<Device, string> devices)
-		{
-			for (int i = 0; i < 50; i++)
-			{
-				devices.AddOrUpdate(
-					new Device(IPAddress.Parse($"192.168.1.{i}"),
-						PhysicalAddress.Parse(GetRandomMacAddress())), _deviceEqualityComparer);
-			}
-		}
-
 		// For debugging
 		public void TestMethod(Device? device = null)
 		{
@@ -649,20 +616,10 @@ namespace NetStalkerAvalonia.ViewModels
 			//var decText = Tools.StringDecrypt("This is a secret!");
 		}
 
-		private static string GetRandomMacAddress()
-		{
-			var random = new Random();
-			var buffer = new byte[6];
-			random.NextBytes(buffer);
-			var result = String.Concat(buffer.Select(x => string.Format("{0}:", x.ToString("X2"))).ToArray());
-			return result.TrimEnd(':');
-		}
-
 		#endregion
 
 		public void Dispose()
 		{
-			_deviceListener?.Dispose();
 			_statusMessagesListener?.Dispose();
 			RemoveBlockAllFutureDetectionsHandler();
 			RemoveRedirectAllFutureDetectionsHandler();

@@ -1,13 +1,17 @@
 ﻿using DynamicData;
 using DynamicData.Binding;
+using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.ViewModels;
 using PacketDotNet;
+using ReactiveUI;
 using Serilog;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -21,8 +25,9 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 	{
 		#region Subscriptions
 
-		IDisposable? clientsToRules;
-		IDisposable? ruleUpdates;
+		private IDisposable? _deviceListener;
+		private IDisposable? _clientsToRules;
+		private IDisposable? _ruleUpdates;
 
 		#endregion
 
@@ -35,7 +40,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private readonly IRuleService ruleService;
 
-		private static readonly ReadOnlyObservableCollection<Device> Clients = MainWindowViewModel.Devices;
+		// Collection projected from the scanner via the message bus
+		private ReadOnlyObservableCollection<Device> _clients = new(new ObservableCollection<Device>());
 
 		#endregion
 
@@ -46,6 +52,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 			this.ruleService = Tools.ResolveIfNull(ruleService);
 
 			InitDevice();
+			ListenToTheScanner();
 			BindClientsToRules();
 			SubscribeToRuleUpdates();
 			StartIfNotStarted();
@@ -77,6 +84,18 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 			}
 		}
 
+		private void ListenToTheScanner()
+		{
+			// Subscribe to the scanner device stream
+			_deviceListener = MessageBus
+					.Current
+					.Listen<IChangeSet<Device, string>>(ContractKeys.ScannerStream.ToString())
+					.ObserveOn(RxApp.MainThreadScheduler)
+					.Bind(out _clients)
+					.DisposeMany()
+					.Subscribe();
+		}
+
 		private void InitOrToggleByteCounterTimer(bool state)
 		{
 			if (_byteCounterTimer == null)
@@ -101,13 +120,13 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private void SubscribeToRuleUpdates()
 		{
-			ruleUpdates = ruleService.Rules
+			_ruleUpdates = ruleService.Rules
 					.ToObservableChangeSet()
 					.AutoRefresh()
 					.DisposeMany()
 					.Subscribe(changeSet =>
 					{
-						foreach (var client in Clients)
+						foreach (var client in _clients)
 						{
 							if (client.IsGateway() == false && client.IsLocalDevice() == false)
 							{
@@ -119,20 +138,20 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private void BindClientsToRules()
 		{
-			clientsToRules = Clients
-				   .ToObservableChangeSet()
-				   .DisposeMany()
-				   .Where(x => x.Adds > 0)
-				   .ToCollection()
-				   .Select(client => client.LastOrDefault())
-				   .Where(client => client != null)
-				   .Subscribe(client =>
+			_clientsToRules = _clients
+			   .ToObservableChangeSet()
+			   .DisposeMany()
+			   .Where(x => x.Adds > 0)
+			   .ToCollection()
+			   .Select(client => client.LastOrDefault())
+			   .Where(client => client != null)
+			   .Subscribe(client =>
+			   {
+				   if (client!.IsGateway() == false && client.IsLocalDevice() == false)
 				   {
-					   if (client!.IsGateway() == false && client.IsLocalDevice() == false)
-					   {
-						   ruleService.ApplyIfMatch(client);
-					   }
-				   });
+					   ruleService.ApplyIfMatch(client);
+				   }
+			   });
 		}
 
 		#endregion
@@ -141,13 +160,10 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private void ByteCounterTimerOnElapsed(object? stateInfo)
 		{
-			if (Clients != null)
+			foreach (var client in _clients.Where(c => c.DownloadCap > 0 || c.UploadCap > 0))
 			{
-				foreach (var client in Clients)
-				{
-					client?.ResetSentBytes();
-					client?.ResetReceivedBytes();
-				}
+				client?.ResetSentBytes();
+				client?.ResetReceivedBytes();
 			}
 		}
 
@@ -161,7 +177,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 			if (Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) is not EthernetPacket packet)
 				return;
 
-			var outTarget = Clients?
+			var outTarget = _clients?
 				.FirstOrDefault(x => x.Mac.Equals(packet.SourceHardwareAddress));
 
 			if (outTarget is not null
@@ -178,7 +194,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 			else if (packet.SourceHardwareAddress.Equals(HostInfo.GatewayMac))
 			{
 				var ipv4Packet = packet.Extract<IPv4Packet>();
-				var inTarget = Clients?
+				var inTarget = _clients?
 					.FirstOrDefault(x => x.Ip!.Equals(ipv4Packet.DestinationAddress));
 
 				if (inTarget is not null
@@ -243,16 +259,16 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private void SpoofClients()
 		{
-			foreach (var client in Clients!)
+			foreach (var client in _clients)
 			{
 				if ((client.Blocked || client.Redirected)
 					&& client.IsLocalDevice() == false
 					&& client.IsGateway() == false)
 				{
-					ConstructAndSendArp(client, ArpPacketType.Spoof);
-
 					try
 					{
+						ConstructAndSendArp(client, ArpPacketType.Spoof);
+
 						if (Config.AppSettings!.SpoofProtectionSetting)
 							ConstructAndSendArp(client, ArpPacketType.Protection);
 					}
@@ -382,7 +398,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private void TryPauseIfNoDevicesLeft()
 		{
-			if ((bool)Clients?.Any(client => client.Blocked || client.Redirected) == false)
+			if (_clients is not null && _clients.Any(client => client.Blocked || client.Redirected) == false)
 			{
 				// If no clients have active blocking or redirection we pause the service 
 				// so we don't do extra work on idle
@@ -409,6 +425,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		#region API
 
 		public bool Status => _isStarted;
+
+		public ReadOnlyObservableCollection<Device> Devices => _clients!;
 
 		public void Block(Device device)
 		{
@@ -470,37 +488,14 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		public void Limit(Device device, int download, int upload)
 		{
+			if (download < 0 || upload < 0)
+			{
+				throw new InvalidOperationException("Download and Upload limits can't be negative");
+			}
+
 			Redirect(device);
 
 			device.SetDownloadCap(download);
-			device.SetUploadCap(upload);
-
-			Log.Information(LogMessageTemplates.DeviceLimit,
-				typeof(IBlockerRedirector),
-				device.Mac,
-				device.Ip,
-				device.DownloadCap,
-				device.UploadCap);
-		}
-
-		public void LimitDownload(Device device, int download)
-		{
-			Redirect(device);
-
-			device.SetDownloadCap(download);
-
-			Log.Information(LogMessageTemplates.DeviceLimit,
-				typeof(IBlockerRedirector),
-				device.Mac,
-				device.Ip,
-				device.DownloadCap,
-				device.UploadCap);
-		}
-
-		public void LimitUpload(Device device, int upload)
-		{
-			Redirect(device);
-
 			device.SetUploadCap(upload);
 
 			Log.Information(LogMessageTemplates.DeviceLimit,
@@ -522,26 +517,6 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 				typeof(IBlockerRedirector), device.Mac);
 		}
 
-		public void ClearDownload(Device device)
-		{
-			ArgumentNullException.ThrowIfNull(device, nameof(device));
-
-			device.SetDownloadCap(0);
-
-			Log.Information(LogMessageTemplates.DeviceDownloadLimitClear,
-				typeof(IBlockerRedirector), device.Mac);
-		}
-
-		public void ClearUpload(Device device)
-		{
-			ArgumentNullException.ThrowIfNull(device, nameof(device));
-
-			device.SetUploadCap(0);
-
-			Log.Information(LogMessageTemplates.DeviceUploadLimitClear,
-				typeof(IBlockerRedirector), device.Mac);
-		}
-
 		public void Dispose()
 		{
 			Stop();
@@ -557,8 +532,9 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 				_cancellationTokenSource = null;
 			}
 
-			clientsToRules?.Dispose();
-			ruleUpdates?.Dispose();
+			_deviceListener?.Dispose();
+			_clientsToRules?.Dispose();
+			_ruleUpdates?.Dispose();
 
 			Log.Information(LogMessageTemplates.ServiceDispose,
 				typeof(IBlockerRedirector));
