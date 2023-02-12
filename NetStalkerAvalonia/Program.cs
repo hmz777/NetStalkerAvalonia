@@ -1,29 +1,26 @@
+using AutoMapper;
 using Avalonia;
 using Avalonia.ReactiveUI;
+using NetStalkerAvalonia.Configuration;
+using NetStalkerAvalonia.Helpers;
+using NetStalkerAvalonia.Rules.Implementations;
+using NetStalkerAvalonia.Rules;
 using NetStalkerAvalonia.Services;
+using NetStalkerAvalonia.Services.Implementations.AppLocking;
 using NetStalkerAvalonia.Services.Implementations.BlockingRedirection;
 using NetStalkerAvalonia.Services.Implementations.DeviceNameResolving;
+using NetStalkerAvalonia.Services.Implementations.DeviceScanning;
 using NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification;
 using NetStalkerAvalonia.Services.Implementations.Notifications;
-using NetStalkerAvalonia.Services.Implementations.Packets;
+using NetStalkerAvalonia.Services.Implementations.RulesService;
+using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+using ReactiveUI;
 using Serilog;
 using Splat;
 using System;
-using System.Configuration;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
-using NetStalkerAvalonia.Configuration;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Services.Implementations.DeviceScanning;
-using ReactiveUI;
-using NetStalkerAvalonia.Services.Implementations.AppLocking;
-using Avalonia.Controls.ApplicationLifetimes;
-using NetStalkerAvalonia.Services.Implementations.RulesService;
-using AutoMapper;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
-using NetStalkerAvalonia.Rules;
-using NetStalkerAvalonia.Rules.Implementations;
 
 namespace NetStalkerAvalonia
 {
@@ -139,26 +136,7 @@ namespace NetStalkerAvalonia
 
 		private static void ConfigureAndRegisterAutoMapper()
 		{
-			var mapperConfig = new MapperConfiguration(cfg =>
-			{
-				cfg.CreateMap<RuleBase, AddUpdateRuleModel>().ReverseMap();
-
-				cfg.CreateMap<BlockRule, AddUpdateRuleModel>().ReverseMap();
-
-				cfg.CreateMap<RedirectRule, AddUpdateRuleModel>().ReverseMap();
-
-				cfg.CreateMap<LimitRule, AddUpdateRuleModel>().ReverseMap();
-
-				cfg.CreateMap<BlockRule, RuleBase>().ReverseMap();
-
-				cfg.CreateMap<RedirectRule, RuleBase>().ReverseMap();
-
-				cfg.CreateMap<LimitRule, RuleBase>().ReverseMap();
-
-				cfg.CreateMap<LimitRule, LimitRule>().ReverseMap();
-			});
-
-			Mapper mapper = new(mapperConfig);
+			var mapper = Tools.BuildAutoMapper();
 
 			Locator.CurrentMutable.RegisterConstant(mapper, typeof(IMapper));
 		}
