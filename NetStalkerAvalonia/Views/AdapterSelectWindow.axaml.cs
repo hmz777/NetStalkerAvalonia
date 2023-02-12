@@ -15,13 +15,16 @@ public partial class AdapterSelectWindow : ReactiveWindow<AdapterSelectViewModel
         {
             if (ViewModel!.IsAppLocked)
             {
-                var passwordWindow = new PasswordWindow();
-                passwordWindow.DataContext = new PasswordViewModel(null!);
+				var passwordWindow = new PasswordWindow
+				{
+					DataContext = new PasswordViewModel(null!)
+				};
 
-                passwordWindow.ShowDialog(this).DisposeWith(disposables);
+				passwordWindow.ShowDialog(this).DisposeWith(disposables);
             }
 
         });
+
         AvaloniaXamlLoader.Load(this);
     }
 }
