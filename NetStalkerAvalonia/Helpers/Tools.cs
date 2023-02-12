@@ -1,7 +1,10 @@
+using AutoMapper;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.Rules.Implementations;
+using NetStalkerAvalonia.Rules;
 using NetStalkerAvalonia.Services;
 using NetStalkerAvalonia.ViewModels;
 using NetStalkerAvalonia.ViewModels.InteractionViewModels;
@@ -17,7 +20,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reactive;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -25,22 +27,7 @@ namespace NetStalkerAvalonia.Helpers;
 
 public class Tools
 {
-	public static void InitViewModels()
-	{
-		var mainViewModel = new MainWindowViewModel();
-
-		StaticData.ViewModels = new List<ViewModelBase>
-		{
-			mainViewModel,
-			new SnifferViewModel(mainViewModel),
-			new OptionsViewModel(mainViewModel),
-			new RuleBuilderViewModel(mainViewModel),
-			new HelpViewModel(mainViewModel),
-			new AboutViewModel(mainViewModel)
-		};
-	}
-
-	public static T ResolveIfNull<T>(T dependency, string contract = null)
+	public static T ResolveIfNull<T>(T dependency, string contract = null!)
 	{
 		if (dependency != null)
 			return dependency;
@@ -220,5 +207,43 @@ public class Tools
 		}
 
 		return finalBytes;
+	}
+
+	public static string GetRandomMacAddress()
+	{
+		var buffer = new byte[6];
+		new Random().NextBytes(buffer);
+		var result = string.Concat(buffer.Select(x => string.Format("{0}:", x.ToString("X2"))).ToArray());
+		return result.TrimEnd(':');
+	}
+
+	public static string GetRandomIpAddress()
+	{
+		var buffer = new byte[4];
+		new Random().NextBytes(buffer);
+		var result = string.Concat(buffer.Select(x => string.Format("{0}.", (x | 1).ToString())).ToArray());
+		return result.TrimEnd('.');
+	}
+
+	public static Mapper BuildAutoMapper()
+	{
+		return new Mapper(new MapperConfiguration(cfg =>
+		{
+			cfg.CreateMap<RuleBase, AddUpdateRuleModel>().ReverseMap();
+
+			cfg.CreateMap<BlockRule, AddUpdateRuleModel>().ReverseMap();
+
+			cfg.CreateMap<RedirectRule, AddUpdateRuleModel>().ReverseMap();
+
+			cfg.CreateMap<LimitRule, AddUpdateRuleModel>().ReverseMap();
+
+			cfg.CreateMap<BlockRule, RuleBase>().ReverseMap();
+
+			cfg.CreateMap<RedirectRule, RuleBase>().ReverseMap();
+
+			cfg.CreateMap<LimitRule, RuleBase>().ReverseMap();
+
+			cfg.CreateMap<LimitRule, LimitRule>().ReverseMap();
+		}));
 	}
 }
