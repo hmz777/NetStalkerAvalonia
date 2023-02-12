@@ -1,5 +1,6 @@
 using System.Reactive;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls.Mixins;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
@@ -9,7 +10,7 @@ using ReactiveUI;
 
 namespace NetStalkerAvalonia.Views
 {
-    public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
+	public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 	{
 		public MainWindow()
 		{
@@ -29,16 +30,15 @@ namespace NetStalkerAvalonia.Views
 					.SetFriendlyNameInteraction!
 					.RegisterHandler(DoShowSetFriendlyDeviceNameDialogAsync)
 					.DisposeWith(disposables);
-
-				var adapterSelect = new AdapterSelectWindow
-				{
-					DataContext = new AdapterSelectViewModel(null!)
-				};
-
-				adapterSelect.ShowDialog(this).DisposeWith(disposables);
 			});
 
 			AvaloniaXamlLoader.Load(this);
+
+#if DEBUG
+
+			this.AttachDevTools();
+
+#endif
 		}
 
 		private async Task DoShowLimitDialogAsync(
