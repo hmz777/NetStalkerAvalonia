@@ -194,6 +194,8 @@ namespace NetStalkerAvalonia.ViewModels
 
 		public MainWindowViewModel()
 		{
+			ResolveRequiredServices();
+
 			#region Page info wiring
 
 			// Info wiring
@@ -320,8 +322,6 @@ namespace NetStalkerAvalonia.ViewModels
 
 		private void ScanImpl()
 		{
-			ResolveRequiredServices();
-
 			_scanner?.Scan();
 
 			ScanEnabled = false;
@@ -329,8 +329,6 @@ namespace NetStalkerAvalonia.ViewModels
 
 		private void RefreshImpl()
 		{
-			ResolveRequiredServices();
-
 			// Send a round of ARP packets to discover devices quicker
 			Task.Run(() => _scanner?.Refresh());
 		}

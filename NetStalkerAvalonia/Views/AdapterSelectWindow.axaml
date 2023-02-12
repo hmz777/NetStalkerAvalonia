@@ -101,8 +101,7 @@
                             VerticalContentAlignment="Center"
                             DockPanel.Dock="Right"
                             Margin="15,0,0,0"
-                            Command="{Binding Accept}"
-                            CommandParameter="{Binding $parent[Window]}" />
+                            Command="{Binding Accept}" />
                     <Button HorizontalContentAlignment="Center"
                             VerticalContentAlignment="Center"
                             Width="{Binding Theme.DialogButtonWidth}"

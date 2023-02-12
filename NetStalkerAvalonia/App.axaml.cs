@@ -22,38 +22,52 @@ namespace NetStalkerAvalonia
 		{
 			try
 			{
-				Tools.InitViewModels();
-
-				if (StaticData.ViewModels.First() is not MainWindowViewModel mainViewModel)
-				{
-					throw new Exception("Error initializing view models!");
-				}
-
 				if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
 				{
-					DataContext = mainViewModel;
-
-					desktop.MainWindow = new MainWindow
+					var adapterSelectWindow = new AdapterSelectWindow
 					{
-						DataContext = mainViewModel
+						DataContext = new AdapterSelectViewModel(null!)
 					};
 
-					desktop.ShutdownRequested += (sender, args) =>
+					desktop.MainWindow = adapterSelectWindow;
+
+					adapterSelectWindow.ViewModel!.Accept.Subscribe(x =>
 					{
-						// Save device friendly names before exiting
-						var deviceNameResolver = Tools.ResolveIfNull<IDeviceNameResolver>(null!);
-						deviceNameResolver.SaveDeviceNamesAsync(mainViewModel.GetUiDeviceCollection());
+						StaticData.InitRoutedViewModels();
 
-						// Save app settings to disk
-						Config.AppSettings?.SaveChanges();
+						if (StaticData.ViewModels.First() is not MainWindowViewModel mainViewModel)
+						{
+							throw new Exception("Error initializing view models!");
+						}
 
-						// Save rules before exiting
-						var rulesService = Tools.ResolveIfNull<IRuleService>(null!);
-						rulesService.SaveRules();
-					};
+						desktop.ShutdownRequested += (sender, args) =>
+						{
+							// Save device friendly names before exiting
+							var deviceNameResolver = Tools.ResolveIfNull<IDeviceNameResolver>(null!);
+							deviceNameResolver.SaveDeviceNamesAsync(mainViewModel.GetUiDeviceCollection());
 
-					StaticData.MainWindow = desktop.MainWindow;
-					mainViewModel.InitTrayIcon();
+							// Save app settings to disk
+							Config.AppSettings?.SaveChanges();
+
+							// Save rules before exiting
+							var rulesService = Tools.ResolveIfNull<IRuleService>(null!);
+							rulesService.SaveRules();
+						};
+
+						desktop.MainWindow = new MainWindow
+						{
+							DataContext = mainViewModel
+						};
+
+						DataContext = mainViewModel;
+
+						StaticData.MainWindow = desktop.MainWindow;
+
+						desktop.MainWindow.Show();
+						adapterSelectWindow.Close();
+
+						mainViewModel.InitTrayIcon();
+					});
 				}
 
 				base.OnFrameworkInitializationCompleted();
