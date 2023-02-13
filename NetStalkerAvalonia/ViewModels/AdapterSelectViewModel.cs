@@ -110,6 +110,15 @@ public class AdapterSelectViewModel : ViewModelBase
 
 	#region Constructor
 
+#if DEBUG
+
+	public AdapterSelectViewModel()
+	{
+
+	}
+
+#endif
+
 	public AdapterSelectViewModel(IAppLockService appLockService = null!)
 	{
 		#region Populate network data
