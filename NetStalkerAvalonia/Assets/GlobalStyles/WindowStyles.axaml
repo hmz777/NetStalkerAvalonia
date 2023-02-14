@@ -2,7 +2,10 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<Design.PreviewWith>
 		<Border Padding="20">
-			<CheckBox Content="Box"/>
+			<StackPanel>
+				<CheckBox Content="Box"/>
+				<Button Content="Button Text"></Button>
+			</StackPanel>
 		</Border>
 	</Design.PreviewWith>
 
@@ -40,6 +43,9 @@
 	</Style>
 	<Style Selector="Button:focus">
 		<Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
+	</Style>
+	<Style Selector="Button">
+		<Setter Property="FontWeight" Value="Bold" />
 	</Style>
 	<Style Selector="CheckBox:checked /template/ Border">
 		<Setter Property="BorderBrush" Value="{Binding Theme.AccentColor}" />
@@ -86,7 +92,7 @@
 	</Style>
 	<Style Selector="TextBlock.p">
 		<Setter Property="TextWrapping" Value="Wrap"/>
-	</Style>	
+	</Style>
 	<Style Selector="Border.wrapper">
 		<Setter Property="Padding" Value="15" />
 	</Style>
