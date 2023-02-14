@@ -55,7 +55,7 @@
 	<Grid HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
           RowDefinitions="Auto,*"
-		  ColumnDefinitions="*,*">
+		  ColumnDefinitions="1.5*,*">
 		<cmpts:PageTitle VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Text="{Binding $parent[Window].Title}" />
 		<Border Grid.Row="1" Grid.Column="0" Padding="15">
 			<StackPanel>
@@ -64,7 +64,8 @@
 					<ComboBox
                         PlaceholderText="Select an adapter"
                         SelectedItem="{Binding SelectedItem}"
-                        Items="{Binding ComboBoxInterfaceData}">
+                        Items="{Binding ComboBoxInterfaceData}"
+						Width="250">
 					</ComboBox>
 				</DockPanel>
 				<DockPanel Classes="horizontalPanel">
@@ -116,7 +117,7 @@
 			</StackPanel>
 		</Border>
 		<StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center">
-			<Image Source="/Assets/Images/app_logo.png" Width="150" Height="150"/>
+			<Image Source="/Assets/Images/app_logo.png" Width="100" Height="100"/>
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 				<TextBlock Classes="label" FontSize="40" Text="Net"/>
 				<TextBlock Classes="label" FontSize="40" Foreground="#FBB03B" Text="Stalker"/>
