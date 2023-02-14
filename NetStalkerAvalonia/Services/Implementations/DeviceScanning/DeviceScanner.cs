@@ -20,7 +20,6 @@ public class DeviceScanner : IDeviceScanner
 {
 	#region Members
 
-	private readonly PacketReceiveTechnique _packetReceiveTechnique;
 	private CancellationTokenSource? _cancellationTokenSource;
 	private LibPcapLiveDevice? _device;
 	private Timer? _discoveryTimer;
@@ -28,8 +27,8 @@ public class DeviceScanner : IDeviceScanner
 	private bool _timerRanFirstTime;
 	private bool _isStarted;
 
-	private readonly IDeviceNameResolver? _deviceNameResolver;
-	private readonly IDeviceTypeIdentifier? _deviceTypeIdentifier;
+	private readonly IDeviceNameResolver _deviceNameResolver;
+	private readonly IDeviceTypeIdentifier _deviceTypeIdentifier;
 
 	// This is the original source of clients and all other collections are projections from this
 	private SourceCache<Device, string> _clients = new(x => x.Mac!.ToString());
@@ -39,26 +38,11 @@ public class DeviceScanner : IDeviceScanner
 	#region Constructor
 
 	public DeviceScanner(
-		PacketReceiveTechnique packetReceiveTechnique = PacketReceiveTechnique.EventHandler,
-		IDeviceNameResolver? deviceNameResolver = null!,
-		IDeviceTypeIdentifier? deviceTypeIdentifier = null!)
+		IDeviceNameResolver deviceNameResolver,
+		IDeviceTypeIdentifier deviceTypeIdentifier)
 	{
-		_packetReceiveTechnique = packetReceiveTechnique;
-
-		try
-		{
-			_deviceNameResolver = Tools.ResolveIfNull(deviceNameResolver);
-
-			if (OptionalFeatures.AvailableFeatures.Contains(typeof(IDeviceTypeIdentifier)))
-			{
-				_deviceTypeIdentifier = Tools.ResolveIfNull(deviceTypeIdentifier);
-			}
-		}
-		catch (Exception e)
-		{
-			Log.Error(LogMessageTemplates.ServiceResolveError,
-				e.Message);
-		}
+		_deviceNameResolver = deviceNameResolver;
+		_deviceTypeIdentifier = deviceTypeIdentifier;
 
 		Init();
 		SetupBindings();
@@ -77,6 +61,7 @@ public class DeviceScanner : IDeviceScanner
 
 		if (_device == null)
 		{
+			// TODO: Use the pcap device manager
 			var adapterName = (from deviceX in LibPcapLiveDeviceList.Instance
 							   where deviceX.Interface.FriendlyName == HostInfo.NetworkAdapterName
 							   select deviceX).ToList()[0].Name;
@@ -178,31 +163,13 @@ public class DeviceScanner : IDeviceScanner
 
 	private void ReceivePackets()
 	{
-		if (_packetReceiveTechnique == PacketReceiveTechnique.EventHandler)
+		_device!.OnPacketArrival += (_, e) =>
 		{
-			_device!.OnPacketArrival += (_, e) =>
-			{
-				if (_cancellationTokenSource?.IsCancellationRequested == false)
-					ProcessPacket(e);
-			};
+			if (_cancellationTokenSource?.IsCancellationRequested == false)
+				ProcessPacket(e);
+		};
 
-			_device?.StartCapture();
-		}
-		else
-		{
-			Task.Run(() =>
-			{
-				while (_cancellationTokenSource?.IsCancellationRequested == false)
-				{
-					var packetResult = _device!.GetNextPacket(out var e);
-
-					if (packetResult != GetPacketStatus.PacketRead)
-						continue;
-
-					ProcessPacket(e);
-				}
-			}, _cancellationTokenSource!.Token);
-		}
+		_device?.StartCapture();
 	}
 
 	private void ProbeDevices()
