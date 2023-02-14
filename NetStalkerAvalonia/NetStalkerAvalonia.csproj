@@ -34,10 +34,11 @@
 		<PackageReference Include="SharpPcap" Version="6.2.5" />
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
 		<PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
+		<PackageReference Include="Splat.DependencyInjection.SourceGenerator" Version="1.1.93" PrivateAssets="all" />
 	</ItemGroup>
 	<ItemGroup>
 		<!--This is for NCrunch to work correctly with Avalonia-->
-		<!--<Content Condition="'$(Configuration)' == 'Debug'" Include="Views\*.axaml" CopyToOutputDirectory="Always" />
-		<Content Condition="'$(Configuration)' == 'Debug'" Include="Components\*.axaml" CopyToOutputDirectory="Always" />-->
+		<Content Condition="'$(Configuration)' == 'Debug'" Include="Views\*.axaml" />
+		<Content Condition="'$(Configuration)' == 'Debug'" Include="Components\*.axaml" />
 	</ItemGroup>
 </Project>
