@@ -3,18 +3,14 @@ using DynamicData.Binding;
 using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.ViewModels;
 using PacketDotNet;
 using ReactiveUI;
 using Serilog;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +34,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		private LibPcapLiveDevice? _device;
 		private Timer? _byteCounterTimer;
 
-		private readonly IRuleService ruleService;
+		private readonly IRuleService _ruleService;
+		private readonly IPcapDeviceManager _pcapDeviceManager;
 
 		// Collection projected from the scanner via the message bus
 		private ReadOnlyObservableCollection<Device> _clients = new(new ObservableCollection<Device>());
@@ -47,9 +44,10 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		#region Constructor
 
-		public BlockerRedirector(IRuleService ruleService = null!)
+		public BlockerRedirector(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager)
 		{
-			this.ruleService = Tools.ResolveIfNull(ruleService);
+			_ruleService = ruleService;
+			_pcapDeviceManager = pcapDeviceManager;
 
 			InitDevice();
 			ListenToTheScanner();
@@ -69,14 +67,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		{
 			if (_device == null)
 			{
-				var adapterName = (from devicex in LibPcapLiveDeviceList.Instance
-								   where devicex.Interface.FriendlyName == HostInfo.NetworkAdapterName
-								   select devicex).ToList()[0].Name;
-
-				_device = LibPcapLiveDeviceList.New()[adapterName];
-				_device.Open(DeviceModes.Promiscuous, 1000);
-				_device.Filter = "ip";
-				_device.OnPacketArrival += DeviceOnOnPacketArrival;
+				_device = _pcapDeviceManager.CreateDevice("ip", DeviceOnOnPacketArrival, 1000);
 
 				// The state parameter here doesn't matter since we're initializing the timer
 				// it will be later started when this service is started
@@ -120,7 +111,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		private void SubscribeToRuleUpdates()
 		{
-			_ruleUpdates = ruleService.Rules
+			_ruleUpdates = _ruleService.Rules
 					.ToObservableChangeSet()
 					.AutoRefresh()
 					.DisposeMany()
@@ -130,7 +121,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 						{
 							if (client.IsGateway() == false && client.IsLocalDevice() == false)
 							{
-								ruleService.ApplyIfMatch(client);
+								_ruleService.ApplyIfMatch(client);
 							}
 						}
 					});
@@ -149,7 +140,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 			   {
 				   if (client!.IsGateway() == false && client.IsLocalDevice() == false)
 				   {
-					   ruleService.ApplyIfMatch(client);
+					   _ruleService.ApplyIfMatch(client);
 				   }
 			   });
 		}
@@ -436,7 +427,6 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 				device.UnRedirect();
 
 			device.Block();
-			StartIfNotStarted();
 
 			Log.Information(LogMessageTemplates.DeviceBlock,
 				typeof(IBlockerRedirector),
@@ -452,7 +442,6 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 				device.UnBlock();
 
 			device.Redirect();
-			StartIfNotStarted();
 
 			Log.Information(LogMessageTemplates.DeviceRedirect,
 				typeof(IBlockerRedirector),
@@ -504,17 +493,6 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 				device.Ip,
 				device.DownloadCap,
 				device.UploadCap);
-		}
-
-		public void ClearLimits(Device device)
-		{
-			ArgumentNullException.ThrowIfNull(device, nameof(device));
-
-			device.SetDownloadCap(0);
-			device.SetUploadCap(0);
-
-			Log.Information(LogMessageTemplates.DeviceLimitsClear,
-				typeof(IBlockerRedirector), device.Mac);
 		}
 
 		public void Dispose()
