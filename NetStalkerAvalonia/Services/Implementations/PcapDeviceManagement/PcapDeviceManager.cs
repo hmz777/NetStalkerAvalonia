@@ -20,10 +20,10 @@ namespace NetStalkerAvalonia.Services.Implementations.PcapDeviceManagement
 							select devicex).ToList()[0].Name;
 		}
 
-		public LibPcapLiveDevice CreateDevice(string filter, PacketArrivalEventHandler packetArrivalHandler)
+		public LibPcapLiveDevice CreateDevice(string filter, PacketArrivalEventHandler packetArrivalHandler, int readTimeout)
 		{
 			var device = LibPcapLiveDeviceList.New()[_adapterName];
-			device.Open(DeviceModes.Promiscuous, 1000);
+			device.Open(DeviceModes.Promiscuous, readTimeout);
 			device.Filter = filter;
 			device.OnPacketArrival += packetArrivalHandler;
 
