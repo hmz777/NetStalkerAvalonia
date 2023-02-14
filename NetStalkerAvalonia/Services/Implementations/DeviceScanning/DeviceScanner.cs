@@ -27,6 +27,8 @@ public class DeviceScanner : IDeviceScanner
 	private bool _timerRanFirstTime;
 	private bool _isStarted;
 
+	// Services
+	private readonly IPcapDeviceManager _pcapDeviceManager;
 	private readonly IDeviceNameResolver _deviceNameResolver;
 	private readonly IDeviceTypeIdentifier _deviceTypeIdentifier;
 
@@ -38,9 +40,11 @@ public class DeviceScanner : IDeviceScanner
 	#region Constructor
 
 	public DeviceScanner(
+		IPcapDeviceManager pcapDeviceManager,
 		IDeviceNameResolver deviceNameResolver,
 		IDeviceTypeIdentifier deviceTypeIdentifier)
 	{
+		_pcapDeviceManager = pcapDeviceManager;
 		_deviceNameResolver = deviceNameResolver;
 		_deviceTypeIdentifier = deviceTypeIdentifier;
 
@@ -61,14 +65,7 @@ public class DeviceScanner : IDeviceScanner
 
 		if (_device == null)
 		{
-			// TODO: Use the pcap device manager
-			var adapterName = (from deviceX in LibPcapLiveDeviceList.Instance
-							   where deviceX.Interface.FriendlyName == HostInfo.NetworkAdapterName
-							   select deviceX).ToList()[0].Name;
-
-			_device = LibPcapLiveDeviceList.New()[adapterName];
-			_device.Open(DeviceModes.Promiscuous, 20);
-			_device.Filter = "arp";
+			_device = _pcapDeviceManager.CreateDevice("arp", OnPacketArrival, 20);
 
 			// The state parameter here doesn't matter since we're initializing the timer
 			// it will be later started when the scan functionality is started
@@ -161,14 +158,14 @@ public class DeviceScanner : IDeviceScanner
 		InitOrToggleAliveTimer(true);
 	}
 
+	private void OnPacketArrival(object sender, PacketCapture packetCapture)
+	{
+		if (_cancellationTokenSource?.IsCancellationRequested == false)
+			ProcessPacket(packetCapture);
+	}
+
 	private void ReceivePackets()
 	{
-		_device!.OnPacketArrival += (_, e) =>
-		{
-			if (_cancellationTokenSource?.IsCancellationRequested == false)
-				ProcessPacket(e);
-		};
-
 		_device?.StartCapture();
 	}
 
