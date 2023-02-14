@@ -21,6 +21,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using NetStalkerAvalonia.Services.Implementations.PcapDeviceManagement;
 
 namespace NetStalkerAvalonia
 {
@@ -84,31 +85,51 @@ namespace NetStalkerAvalonia
 
 		private static void RegisterRequiredServices()
 		{
-			Locator.CurrentMutable.RegisterLazySingleton(() =>
-					new DeviceScanner(),
-				typeof(IDeviceScanner));
+			#region Old way of service registration
 
-			Locator.CurrentMutable.RegisterLazySingleton(() =>
-					new BlockerRedirector(),
-				typeof(IBlockerRedirector));
+			//Locator.CurrentMutable.RegisterLazySingleton(() =>
+			//		new DeviceScanner(),
+			//	typeof(IDeviceScanner));
 
-			Locator.CurrentMutable.RegisterLazySingleton(() =>
-					new DeviceNameResolver(),
-				typeof(IDeviceNameResolver));
+			//Locator.CurrentMutable.RegisterLazySingleton(() =>
+			//		new BlockerRedirector(),
+			//	typeof(IBlockerRedirector));
 
-			Locator.CurrentMutable.RegisterLazySingleton(() =>
-					new NotificationManager(),
-				typeof(INotificationManager));
+			//Locator.CurrentMutable.RegisterLazySingleton(() =>
+			//		new DeviceNameResolver(),
+			//	typeof(IDeviceNameResolver));
 
-			Locator.CurrentMutable.RegisterLazySingleton(() =>
-					new AppLockManager(),
-				typeof(IAppLockService));
+			//Locator.CurrentMutable.RegisterLazySingleton(() =>
+			//		new NotificationManager(),
+			//	typeof(INotificationManager));
 
-			Locator.CurrentMutable.RegisterLazySingleton(() =>
-					new RuleService(),
-				typeof(IRuleService));
+			//Locator.CurrentMutable.RegisterLazySingleton(() =>
+			//		new AppLockManager(),
+			//	typeof(IAppLockService));
+
+			//Locator.CurrentMutable.RegisterLazySingleton(() =>
+			//		new RuleService(),
+			//	typeof(IRuleService));
+
+			#endregion
+
+			SplatRegistrations.SetupIOC(Locator.GetLocator());
+
+			SplatRegistrations.RegisterLazySingleton<IDeviceTypeIdentifier, DeviceTypeIdentifier>();
+			SplatRegistrations.RegisterLazySingleton<IDeviceNameResolver, DeviceNameResolver>();
+			SplatRegistrations.RegisterLazySingleton<IPcapDeviceManager, PcapDeviceManager>();
+			SplatRegistrations.RegisterLazySingleton<IDeviceScanner, DeviceScanner>();
+			SplatRegistrations.RegisterLazySingleton<IBlockerRedirector, BlockerRedirector>();
+			SplatRegistrations.RegisterLazySingleton<INotificationManager, NotificationManager>();
+			SplatRegistrations.RegisterLazySingleton<IAppLockService, AppLockManager>();
+			SplatRegistrations.RegisterLazySingleton<IRuleService, RuleService>();
 
 			ConfigureAndRegisterAutoMapper();
+		}
+
+		private static void RegisterRoutedViewModels()
+		{
+			//StaticData.InitRoutedViewModels();
 		}
 
 		private static void RegisterOptionalServices()
@@ -125,10 +146,6 @@ namespace NetStalkerAvalonia
 
 					return client;
 				}, contract: nameof(ContractKeys.MacLookupClient));
-
-				Locator.CurrentMutable.RegisterLazySingleton(() =>
-						new DeviceTypeIdentifier(),
-					typeof(IDeviceTypeIdentifier));
 
 				OptionalFeatures.AvailableFeatures.Add(typeof(IDeviceTypeIdentifier));
 			}
