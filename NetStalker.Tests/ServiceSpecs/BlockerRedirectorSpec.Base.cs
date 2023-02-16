@@ -4,7 +4,7 @@ using NetStalkerAvalonia.Services.Implementations.BlockingRedirection;
 
 namespace NetStalker.Tests.ServiceSpecs
 {
-	public class BlockerRedirectorSpecBase
+	public class BlockerRedirectorSpecBase : IDisposable
 	{
 		public IBlockerRedirector BlockerRedirectorService { get; }
 
@@ -14,6 +14,11 @@ namespace NetStalker.Tests.ServiceSpecs
 			fixture.Customize(new ServicesCustomization());
 
 			BlockerRedirectorService = fixture.Create<BlockerRedirector>();
+		}
+
+		public void Dispose()
+		{
+			BlockerRedirectorService.Dispose();
 		}
 	}
 }
