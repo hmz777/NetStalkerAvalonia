@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using NetStalkerAvalonia.Models;
+using System;
 using System.Collections.ObjectModel;
-using System.Net.NetworkInformation;
-using NetStalkerAvalonia.Models;
 
 namespace NetStalkerAvalonia.Services
 {
