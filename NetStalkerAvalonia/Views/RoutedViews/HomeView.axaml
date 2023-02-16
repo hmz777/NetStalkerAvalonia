@@ -9,41 +9,42 @@
              x:Class="NetStalkerAvalonia.Views.RoutedViews.HomeView"
              Background="Transparent">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
+	<Design.DataContext>
+		<vm:MainWindowViewModel />
+	</Design.DataContext>
 
-    <UserControl.Styles>
-        <Style Selector="Border.nav-item">
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-        <Style Selector="Border.nav-item:nth-child(1)">
-            <Setter Property="Margin" Value="0,0,0,0" />
-            <Setter Property="Padding" Value="0,0,0,0" />
-        </Style>
-    </UserControl.Styles>
+	<UserControl.Styles>
+		<Style Selector="Border.nav-item">
+			<Setter Property="VerticalAlignment" Value="Center" />
+		</Style>
+		<Style Selector="Border.nav-item:nth-child(1)">
+			<Setter Property="Margin" Value="0,0,0,0" />
+			<Setter Property="Padding" Value="0,0,0,0" />
+		</Style>
+	</UserControl.Styles>
 
-    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
-        <cmptsDev:DeviceListView Grid.Row="0" />
-        <Border Grid.Row="1"
+	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="auto" />
+		</Grid.RowDefinitions>
+		<cmptsDev:DeviceListView Grid.Row="0" />
+		<Border Grid.Row="1"
                 Background="{Binding Theme.WindowBackground}"
                 Padding="15,0,15,0"
                 BorderBrush="{Binding Theme.NavBorderColor}"
                 BorderThickness="0,3,0,0"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">    
-            <DockPanel HorizontalAlignment="Stretch">
-                <Border DockPanel.Dock="Left" Classes="nav-item">
-                    <cmpts:Navbar />
-                </Border>
-                <Border DockPanel.Dock="Right" HorizontalAlignment="Right" Classes="nav-item">
-                    <cmpts:ListControls />
-                </Border>
-            </DockPanel>
-        </Border>
-    </Grid>
+                VerticalAlignment="Stretch">
+			<DockPanel HorizontalAlignment="Stretch">
+				<Border DockPanel.Dock="Left" Classes="nav-item">
+					<cmpts:Navbar />
+				</Border>
+				<Border DockPanel.Dock="Right" HorizontalAlignment="Right" Classes="nav-item">
+					<cmpts:ListControls />
+				</Border>
+				<Button Width="0" Height="0" Opacity="0" Command="{Binding ShowAppLog}" HotKey="F11"/>
+			</DockPanel>
+		</Border>
+	</Grid>
 </UserControl>

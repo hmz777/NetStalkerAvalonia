@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia;
@@ -30,6 +31,11 @@ namespace NetStalkerAvalonia.Views
 					.SetFriendlyNameInteraction!
 					.RegisterHandler(DoShowSetFriendlyDeviceNameDialogAsync)
 					.DisposeWith(disposables);
+
+				ViewModel!
+					.ShowAppLogInteraction!
+					.RegisterHandler(DoShowAppLogDialog)
+					.DisposeWith(disposables);
 			});
 
 			AvaloniaXamlLoader.Load(this);
@@ -39,6 +45,18 @@ namespace NetStalkerAvalonia.Views
 			this.AttachDevTools();
 
 #endif
+		}
+
+		private void DoShowAppLogDialog(
+			InteractionContext<Unit, Unit> interaction)
+		{
+			var dialog = new AppLogWindow
+			{
+				DataContext = StaticData.ViewModels.Last()
+			};
+
+			dialog.Show(this);
+			interaction.SetOutput(Unit.Default);
 		}
 
 		private async Task DoShowLimitDialogAsync(

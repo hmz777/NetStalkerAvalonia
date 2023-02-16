@@ -22,7 +22,8 @@ namespace NetStalkerAvalonia
 			new OptionsViewModel(mainViewModel),
 			new RuleBuilderViewModel(mainViewModel),
 			new HelpViewModel(mainViewModel),
-			new AboutViewModel(mainViewModel)
+			new AboutViewModel(mainViewModel),
+			new AppLogViewModel()
 		};
 		}
 	}

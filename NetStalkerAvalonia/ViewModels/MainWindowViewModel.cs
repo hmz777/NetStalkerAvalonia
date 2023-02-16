@@ -77,6 +77,7 @@ namespace NetStalkerAvalonia.ViewModels
 		public ReactiveCommand<Unit, Unit>? Refresh { get; }
 		public ReactiveCommand<bool, Unit>? BlockAll { get; }
 		public ReactiveCommand<bool, Unit>? RedirectAll { get; }
+		public ReactiveCommand<Unit, Unit>? ShowAppLog { get; }
 
 		#endregion
 
@@ -132,6 +133,7 @@ namespace NetStalkerAvalonia.ViewModels
 		public Interaction<DeviceLimitsModel?, DeviceLimitsModel?> ShowLimitDialogInteraction { get; set; }
 		public Interaction<StatusMessageModel, Unit> ShowStatusMessageInteraction { get; set; }
 		public Interaction<string?, string?> SetFriendlyNameInteraction { get; set; }
+		public Interaction<Unit, Unit> ShowAppLogInteraction { get; set; }
 
 		#endregion
 
@@ -236,6 +238,7 @@ namespace NetStalkerAvalonia.ViewModels
 			Refresh = ReactiveCommand.Create(RefreshImpl);
 			BlockAll = ReactiveCommand.CreateFromTask<bool>(BlockAllImpl);
 			RedirectAll = ReactiveCommand.CreateFromTask<bool>(RedirectAllImpl);
+			ShowAppLog = ReactiveCommand.CreateFromTask(ShowAppLogImpl);
 
 			#endregion
 
@@ -296,6 +299,12 @@ namespace NetStalkerAvalonia.ViewModels
 
 			ShowApp = ReactiveCommand.Create(Tools.ShowApp);
 			ExitApp = ReactiveCommand.Create(Tools.ExitApp);
+
+			#endregion
+
+			#region App Log
+
+			ShowAppLogInteraction = new Interaction<Unit, Unit>();
 
 			#endregion
 		}
@@ -520,6 +529,11 @@ namespace NetStalkerAvalonia.ViewModels
 			device.SetFriendlyName(null!);
 
 			_deviceNameResolver?.SaveDeviceNamesAsync(Devices!.ToList());
+		}
+
+		private async Task ShowAppLogImpl()
+		{
+			await ShowAppLogInteraction.Handle(Unit.Default);
 		}
 
 		#endregion
