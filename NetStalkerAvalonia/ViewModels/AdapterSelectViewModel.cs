@@ -1,4 +1,3 @@
-using Avalonia.Controls;
 using Microsoft.Win32;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
@@ -31,7 +30,7 @@ public class AdapterSelectViewModel : ViewModelBase
 
 	#region Members
 
-	private List<NetworkInterface> networkInterfaces = new();
+	private readonly List<NetworkInterface> networkInterfaces = new();
 
 	private string? _selectedItem;
 	private string? _nicType;
@@ -180,7 +179,7 @@ public class AdapterSelectViewModel : ViewModelBase
 			if (SelectedInterface == null)
 				return Unit.Default;
 		}
-		catch (Exception e)
+		catch
 		{
 			return Unit.Default;
 		}
@@ -278,20 +277,23 @@ public class AdapterSelectViewModel : ViewModelBase
 	{
 		try
 		{
-			if (await WiFiAdapter.RequestAccessAsync() == WiFiAccessStatus.Allowed)
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
-				if (SelectedInterface!.NetworkInterfaceType == NetworkInterfaceType.Wireless80211)
+				if (await WiFiAdapter.RequestAccessAsync() == WiFiAccessStatus.Allowed)
 				{
-					var wifiDevices = await DeviceInformation
-						.FindAllAsync(WiFiAdapter.GetDeviceSelector());
+					if (SelectedInterface!.NetworkInterfaceType == NetworkInterfaceType.Wireless80211)
+					{
+						var wifiDevices = await DeviceInformation
+							.FindAllAsync(WiFiAdapter.GetDeviceSelector());
 
-					if (wifiDevices.Count == 0)
-						return;
+						if (wifiDevices.Count == 0)
+							return;
 
-					var wifi = await WiFiAdapter.FromIdAsync(wifiDevices[0].Id);
-					var profile = await wifi.NetworkAdapter.GetConnectedProfileAsync();
+						var wifi = await WiFiAdapter.FromIdAsync(wifiDevices[0].Id);
+						var profile = await wifi.NetworkAdapter.GetConnectedProfileAsync();
 
-					NetworkSsid = profile.GetNetworkNames().FirstOrDefault() ?? "NAN";
+						NetworkSsid = profile.GetNetworkNames().FirstOrDefault() ?? "NAN";
+					}
 				}
 			}
 
