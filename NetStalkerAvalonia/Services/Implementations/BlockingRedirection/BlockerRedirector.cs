@@ -236,6 +236,9 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 						_isStarted = true;
 					}
+
+					Log.Information(LogMessageTemplates.ServiceStart,
+									typeof(IBlockerRedirector));
 				}
 			}
 			catch (Exception e)
@@ -243,9 +246,6 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 				Log.Error(LogMessageTemplates.ExceptionTemplate,
 					e.GetType(), this.GetType(), e.Message);
 			}
-
-			Log.Information(LogMessageTemplates.ServiceStart,
-				typeof(IBlockerRedirector));
 		}
 
 		private void SpoofClients()
@@ -394,21 +394,21 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 				// If no clients have active blocking or redirection we pause the service 
 				// so we don't do extra work on idle
 				Stop();
-
-				Log.Information(LogMessageTemplates.ServiceStop,
-					typeof(IBlockerRedirector));
 			}
 		}
 
 		private void Stop()
 		{
-			_cancellationTokenSource?.Cancel();
-			InitOrToggleByteCounterTimer(false);
-			_isStarted = false;
-			_device?.StopCapture();
+			if (_isStarted)
+			{
+				_cancellationTokenSource?.Cancel();
+				InitOrToggleByteCounterTimer(false);
+				_device?.StopCapture();
+				_isStarted = false;
 
-			Log.Information(LogMessageTemplates.ServiceStop,
-				typeof(IBlockerRedirector));
+				Log.Information(LogMessageTemplates.ServiceStop,
+					typeof(IBlockerRedirector));
+			}
 		}
 
 		#endregion
