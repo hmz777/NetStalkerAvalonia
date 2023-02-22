@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls.Mixins;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.ViewModels;
 using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 using ReactiveUI;
@@ -52,7 +53,7 @@ namespace NetStalkerAvalonia.Views
 		{
 			var dialog = new AppLogWindow
 			{
-				DataContext = StaticData.ViewModels.Last()
+				DataContext = Tools.ResolveIfNull<AppLogViewModel>(null!)
 			};
 
 			dialog.Show(this);
