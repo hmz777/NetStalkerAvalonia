@@ -1,31 +1,16 @@
-using AutoMapper;
 using Avalonia;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Rules.Implementations;
-using NetStalkerAvalonia.Rules;
 using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.AppLocking;
-using NetStalkerAvalonia.Services.Implementations.BlockingRedirection;
-using NetStalkerAvalonia.Services.Implementations.DeviceNameResolving;
-using NetStalkerAvalonia.Services.Implementations.DeviceScanning;
-using NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification;
-using NetStalkerAvalonia.Services.Implementations.Notifications;
-using NetStalkerAvalonia.Services.Implementations.RulesService;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using Serilog;
 using Splat;
 using System;
-using System.IO;
-using System.Net.Http;
 using System.Reflection;
-using NetStalkerAvalonia.Services.Implementations.PcapDeviceManagement;
 
 namespace NetStalkerAvalonia
 {
-	internal class Program
+	public class Program
 	{
 		// Initialization code. Don't use any Avalonia, third-party APIs or any
 		// SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -50,7 +35,7 @@ namespace NetStalkerAvalonia
 		}
 
 		// Avalonia configuration, don't remove; also used by visual designer.
-		private static AppBuilder BuildAvaloniaApp()
+		public static AppBuilder BuildAvaloniaApp()
 		{
 			// Router uses Splat.Locator to resolve views for
 			// view models, so we need to register our views.
@@ -59,103 +44,12 @@ namespace NetStalkerAvalonia
 			// Read app config
 			ReadConfiguration();
 
-			// Configure logging
-			ConfigureAndRegisterLogging();
-
-			// Register required app services
-			RegisterRequiredServices();
-
-			// Register optional services
-			RegisterOptionalServices();
+			DependencyInjection.RegisterAppDependencies();
 
 			return AppBuilder.Configure<App>()
 				.UsePlatformDetect()
 				.LogToTrace()
 				.UseReactiveUI();
-		}
-
-		private static void ConfigureAndRegisterLogging()
-		{
-			Log.Logger = new LoggerConfiguration()
-				.WriteTo.Console()
-				.WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "logs/log.txt"),
-					rollingInterval: RollingInterval.Day)
-				.CreateLogger();
-		}
-
-		private static void RegisterRequiredServices()
-		{
-			#region Old way of service registration
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new DeviceScanner(),
-			//	typeof(IDeviceScanner));
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new BlockerRedirector(),
-			//	typeof(IBlockerRedirector));
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new DeviceNameResolver(),
-			//	typeof(IDeviceNameResolver));
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new NotificationManager(),
-			//	typeof(INotificationManager));
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new AppLockManager(),
-			//	typeof(IAppLockService));
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new RuleService(),
-			//	typeof(IRuleService));
-
-			#endregion
-
-			SplatRegistrations.SetupIOC(Locator.GetLocator());
-
-			SplatRegistrations.RegisterLazySingleton<IDeviceTypeIdentifier, DeviceTypeIdentifier>();
-			SplatRegistrations.RegisterLazySingleton<IDeviceNameResolver, DeviceNameResolver>();
-			SplatRegistrations.RegisterLazySingleton<IPcapDeviceManager, PcapDeviceManager>();
-			SplatRegistrations.RegisterLazySingleton<IDeviceScanner, DeviceScanner>();
-			SplatRegistrations.RegisterLazySingleton<IBlockerRedirector, BlockerRedirector>();
-			SplatRegistrations.RegisterLazySingleton<INotificationManager, NotificationManager>();
-			SplatRegistrations.RegisterLazySingleton<IAppLockService, AppLockManager>();
-			SplatRegistrations.RegisterLazySingleton<IRuleService, RuleService>();
-
-			ConfigureAndRegisterAutoMapper();
-		}
-
-		private static void RegisterRoutedViewModels()
-		{
-			//StaticData.InitRoutedViewModels();
-		}
-
-		private static void RegisterOptionalServices()
-		{
-			var apiToken = Config.AppSettings?.VendorApiTokenSetting;
-
-			if (string.IsNullOrWhiteSpace(apiToken) == false)
-			{
-				Locator.CurrentMutable.RegisterLazySingleton(() =>
-				{
-					var client = new HttpClient();
-					client.DefaultRequestHeaders.Add("Authorization",
-						"Bearer " + apiToken);
-
-					return client;
-				}, contract: nameof(ContractKeys.MacLookupClient));
-
-				OptionalFeatures.AvailableFeatures.Add(typeof(IDeviceTypeIdentifier));
-			}
-		}
-
-		private static void ConfigureAndRegisterAutoMapper()
-		{
-			var mapper = Tools.BuildAutoMapper();
-
-			Locator.CurrentMutable.RegisterConstant(mapper, typeof(IMapper));
 		}
 
 		private static void ReadConfiguration()
