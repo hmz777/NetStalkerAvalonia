@@ -14,21 +14,21 @@ public class LogMessageTemplates
     public const string ServiceDispose = "Service of type: {Type}, disposed";
 
     // Ops:Blocking / Redirection
-    public const string DeviceBlock = "Service of type: {Type}, Block device with MAC:{Mac} - IP:{Ip}";
-    public const string DeviceRedirect = "Service of type: {Type}, Redirect device with MAC:{Mac} - IP:{Ip}";
-    public const string DeviceUnblock = "Service of type: {Type}, Unblock device with MAC:{Mac} - IP:{Ip}";
-    public const string DeviceUnRedirect = "Service of type: {Type}, UnRedirect device with MAC:{Mac} - IP:{Ip}";
+    public const string DeviceBlock = "Service of type: {Type}, Block device with MAC: {Mac} - IP: {Ip}";
+    public const string DeviceRedirect = "Service of type: {Type}, Redirect device with MAC: {Mac} - IP: {Ip}";
+    public const string DeviceUnblock = "Service of type: {Type}, Unblock device with MAC: {Mac} - IP: {Ip}";
+    public const string DeviceUnRedirect = "Service of type: {Type}, UnRedirect device with MAC: {Mac} - IP: {Ip}";
 
     public const string DeviceLimit =
-        "Service of type: {Type}, Limit device with MAC:{Mac} - IP:{Ip} - Download: {Download} - Upload: {Upload}";
+        "Service of type: {Type}, Limit device with MAC: {Mac} - IP: {Ip} - Download: {Download} - Upload: {Upload}";
 
-    public const string DeviceLimitsClear = "Service of type: {Type}, Limits cleared for device with MAC:{Mac}";
+    public const string DeviceLimitsClear = "Service of type: {Type}, Limits cleared for device with MAC: {Mac}";
 
     public const string DeviceDownloadLimitClear =
-        "Service of type: {Type}, Clear download limit for device with MAC:{Mac}";
+        "Service of type: {Type}, Clear download limit for device with MAC: {Mac}";
 
     public const string DeviceUploadLimitClear =
-        "Service of type: {Type}, Clear upload limit for device with MAC:{Mac}";
+        "Service of type: {Type}, Clear upload limit for device with MAC: {Mac}";
 
     // Ops:Name Resolving
 }
