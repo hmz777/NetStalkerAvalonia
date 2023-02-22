@@ -7,7 +7,6 @@ using NetStalkerAvalonia.ViewModels;
 using NetStalkerAvalonia.Views;
 using Serilog;
 using System;
-using System.Linq;
 
 namespace NetStalkerAvalonia
 {
@@ -21,24 +20,19 @@ namespace NetStalkerAvalonia
 		public override void OnFrameworkInitializationCompleted()
 		{
 			try
-			{
+			{				
 				if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
 				{
 					var adapterSelectWindow = new AdapterSelectWindow
 					{
-						DataContext = new AdapterSelectViewModel(null!)
+						DataContext = Tools.ResolveIfNull<AdapterSelectViewModel>(null!)
 					};
 
 					desktop.MainWindow = adapterSelectWindow;
 
 					adapterSelectWindow.ViewModel!.Accept.Subscribe(x =>
 					{
-						StaticData.InitRoutedViewModels();
-
-						if (StaticData.ViewModels.First() is not MainWindowViewModel mainViewModel)
-						{
-							throw new Exception("Error initializing view models!");
-						}
+						var mainViewModel = Tools.ResolveIfNull<MainWindowViewModel>(null!);
 
 						desktop.ShutdownRequested += (sender, args) =>
 						{
@@ -53,6 +47,8 @@ namespace NetStalkerAvalonia
 							var rulesService = Tools.ResolveIfNull<IRuleService>(null!);
 							rulesService.SaveRules();
 						};
+
+						// Switch the main viewmodel after the initial adapter setup
 
 						desktop.MainWindow = new MainWindow
 						{
@@ -76,6 +72,7 @@ namespace NetStalkerAvalonia
 			{
 				Log.Error(LogMessageTemplates.ExceptionTemplate,
 					e.GetType(), this.GetType(), e.Message);
+
 				throw;
 			}
 		}
