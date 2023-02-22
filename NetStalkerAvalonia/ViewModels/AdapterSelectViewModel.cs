@@ -118,8 +118,11 @@ public class AdapterSelectViewModel : ViewModelBase
 
 #endif
 
+	[Splat.DependencyInjectionConstructor]
 	public AdapterSelectViewModel(IAppLockService appLockService = null!)
 	{
+		_appLockService = appLockService;
+
 		#region Populate network data
 
 		GetNics();
@@ -153,8 +156,6 @@ public class AdapterSelectViewModel : ViewModelBase
 		CheckDriverAndGetVersion();
 
 		#region App Lock
-
-		_appLockService = Tools.ResolveIfNull<IAppLockService>(null!);
 
 		_isAppLocked = this.WhenAnyValue(x => x._appLockService!.IsLocked)
 					  .ToProperty(this, x => x.IsAppLocked);

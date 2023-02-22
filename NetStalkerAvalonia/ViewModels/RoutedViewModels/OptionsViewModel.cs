@@ -24,10 +24,16 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 		#region Constructors
 
+#if DEBUG
+
 		public OptionsViewModel()
 		{
+
 		}
 
+#endif
+
+		[Splat.DependencyInjectionConstructor]
 		public OptionsViewModel(IScreen screen)
 		{
 			HostScreen = screen;

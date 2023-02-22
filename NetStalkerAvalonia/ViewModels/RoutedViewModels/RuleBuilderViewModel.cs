@@ -54,6 +54,7 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
 #endif
 
+		[Splat.DependencyInjectionConstructor]
 		public RuleBuilderViewModel(IScreen screen, IRuleService ruleService = null!, IMapper mapper = null!)
 		{
 			#region Services

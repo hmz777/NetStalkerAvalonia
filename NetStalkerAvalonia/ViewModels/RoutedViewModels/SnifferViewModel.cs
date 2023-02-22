@@ -9,8 +9,17 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 
         #region Constructors
 
-        public SnifferViewModel(){}
-        public SnifferViewModel(IScreen screen) => this.HostScreen = screen;
+#if DEBUG
+
+        public SnifferViewModel()
+        {
+
+        }
+
+#endif
+
+		[Splat.DependencyInjectionConstructor]
+		public SnifferViewModel(IScreen screen) => this.HostScreen = screen;
 
         #endregion
     }

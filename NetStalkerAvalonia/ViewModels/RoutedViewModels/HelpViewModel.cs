@@ -6,14 +6,20 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
     {
         public string? UrlPathSegment { get; } = "Help";
         public IScreen? HostScreen { get; }
-        
+
         #region Constructors
+
+#if DEBUG
 
         public HelpViewModel()
         {
+
         }
 
-        public HelpViewModel(IScreen screen) => this.HostScreen = screen;
+#endif
+
+		[Splat.DependencyInjectionConstructor]
+		public HelpViewModel(IScreen screen) => this.HostScreen = screen;
 
         #endregion
     }
