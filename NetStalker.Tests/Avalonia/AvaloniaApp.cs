@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Headless;
 using Avalonia.ReactiveUI;
@@ -21,7 +22,7 @@ namespace NetStalker.Tests.Avalonia
 			Dispatcher.UIThread.Post(() => app?.Shutdown());
 		}
 
-		public static MainWindow? GetMainWindow() => GetApp()?.MainWindow as MainWindow;
+		public static Window? GetMainWindow() => GetApp()?.MainWindow;
 
 		public static IClassicDesktopStyleApplicationLifetime? GetApp() =>
 			Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
