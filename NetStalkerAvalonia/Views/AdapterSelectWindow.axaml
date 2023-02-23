@@ -43,15 +43,6 @@
 		</Style>
 	</Window.Styles>
 
-	<Window.Resources>
-		<ControlTemplate x:Key="BigBtn" TargetType="Button">
-			<Border Padding="20,10,20,10"
-                    BorderBrush="White">
-				<TextBlock Text="{TemplateBinding Content}" />
-			</Border>
-		</ControlTemplate>
-	</Window.Resources>
-
 	<Grid HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
           RowDefinitions="Auto,*"
@@ -62,6 +53,7 @@
 				<DockPanel Classes="horizontalPanel">
 					<TextBlock>Network Adapter:</TextBlock>
 					<ComboBox
+						Name="AdapterSelectBox"
                         PlaceholderText="Select an adapter"
                         SelectedItem="{Binding SelectedItem}"
                         Items="{Binding ComboBoxInterfaceData}"
@@ -95,7 +87,8 @@
 				<Grid 		HorizontalAlignment="Stretch"
                             VerticalAlignment="Bottom"
 							ColumnDefinitions="*,*">
-					<Button Grid.Column="0"
+					<Button Name="Exit"
+							Grid.Column="0"
 							Padding="10"
 							HorizontalAlignment="Stretch"
 							HorizontalContentAlignment="Center"
@@ -104,7 +97,8 @@
 							Command="{Binding Exit}"
 							Background="Red"
 							CornerRadius="5,0,0,5"/>
-					<Button Grid.Column="1"
+					<Button Name="Ok"
+							Grid.Column="1"
                             Content="Ok"
 							Padding="10"
 							HorizontalAlignment="Stretch"
