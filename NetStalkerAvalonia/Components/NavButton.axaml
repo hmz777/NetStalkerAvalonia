@@ -1,52 +1,61 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:convos="using:NetStalkerAvalonia.Converters"
-			 xmlns:attProp="using:NetStalkerAvalonia.Helpers"
-			 mc:Ignorable="d"
-			 x:Class="NetStalkerAvalonia.Components.NavButton">
-	
-	<UserControl.Resources>
-		<ControlTemplate x:Key="NavBtn" TargetType="Button">
-			<Border
-				Padding="1"
-				BorderThickness="2"
-				CornerRadius="5"
-				Width="55"
-				Height="55"
-				BorderBrush="{Binding Theme.NavElementBorder}">
-				<StackPanel>
-					<Image Source="{TemplateBinding attProp:AttachedProperties.Icon, Converter={x:Static convos:ImageConverters.FromPath}}"
-						   Width="35"
-						   Height="35"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"/>
-					<TextBlock Text="{TemplateBinding attProp:AttachedProperties.Text}"
-							   FontSize="9"
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:NetStalkerAvalonia.Components"
+		xmlns:convos="using:NetStalkerAvalonia.Converters">
+	<Design.PreviewWith>
+		<StackPanel Orientation="Horizontal" Spacing="5">
+			<controls:NavButton />
+			<controls:NavButton />
+			<controls:NavButton />
+		</StackPanel>
+	</Design.PreviewWith>
+
+	<Style Selector="controls|NavButton Border">
+		<Setter Property="Background" Value="{Binding Theme.NavElementBackground}"/>
+	</Style>
+	<Style Selector="controls|NavButton Border:pointerover">
+		<Setter Property="Background" Value="{Binding Theme.AccentColor}"/>
+	</Style>
+
+	<Style Selector="controls|NavButton">
+		<!-- Set Defaults -->
+
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border
+					CornerRadius="5"
+					Width="60"
+					Height="60"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch">
+					<Button
+						Background="Transparent"
+						Command="{TemplateBinding Command}"
+						CommandParameter="{TemplateBinding CommandParameter}"
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						HorizontalContentAlignment="Stretch"
+						VerticalContentAlignment="Stretch"
+						Padding="3">
+						<StackPanel Spacing="3">
+							<Image
+							   Source="{TemplateBinding Icon, Converter={x:Static convos:ImageConverters.FromPath}}"
+							   Width="35"
+							   Height="35"
+							   HorizontalAlignment="Center"/>
+							<TextBlock
+							   Text="{TemplateBinding Text}"
+							   FontSize="10"
 							   FontWeight="Bold"
 							   Foreground="{Binding Theme.NavElementText}"
 							   HorizontalAlignment="Center"
-							   VerticalAlignment="Bottom"
-							   Margin="0,2,0,0"/>
-				</StackPanel>
-			</Border>
-		</ControlTemplate>
-	</UserControl.Resources>
-
-	<UserControl.Styles>
-		<Style Selector="Button.hoverable /template/ Border">
-			<Setter Property="Background" Value="{Binding Theme.NavElementBackground}"/>
-		</Style>
-		<Style Selector="Button.hoverable /template/ Border:pointerover">
-			<Setter Property="Background" Value="{Binding Theme.AccentColor}"/>
-		</Style>
-	</UserControl.Styles>
-
-	<Button IsEnabled="{Binding $parent.IsEnabled}"
-			Classes="hoverable"
-			attProp:AttachedProperties.Text="{Binding $parent[UserControl].TextContent}"
-			attProp:AttachedProperties.Icon="{Binding $parent[UserControl].IconSource}"
-			Command="{Binding $parent[UserControl].Command}"
-			Template="{StaticResource NavBtn}"/>
-</UserControl>
+							   Margin="0,2,0,0"
+							   TextWrapping="NoWrap"
+							   TextTrimming="CharacterEllipsis"/>
+						</StackPanel>
+					</Button>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+</Styles>

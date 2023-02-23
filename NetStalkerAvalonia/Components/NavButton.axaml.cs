@@ -1,56 +1,46 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+using Avalonia.Controls.Primitives;
 using System.Windows.Input;
 
 namespace NetStalkerAvalonia.Components
 {
-	public partial class NavButton : UserControl
+	public class NavButton : TemplatedControl
 	{
-		public NavButton()
+		public static readonly StyledProperty<string> TextProperty =
+		AvaloniaProperty.Register<NavButton, string>(nameof(Text), defaultValue: "Button Text");
+
+		public string Text
 		{
-			InitializeComponent();
+			get { return GetValue(TextProperty); }
+			set { SetValue(TextProperty, value); }
 		}
 
-		private void InitializeComponent()
+		public static readonly StyledProperty<string> IconProperty =
+				AvaloniaProperty.Register<NavButton, string>(nameof(Icon), defaultValue: "Assets/netstalker-logo.ico");
+
+		public string Icon
 		{
-			AvaloniaXamlLoader.Load(this);
+			get { return GetValue(IconProperty); }
+			set { SetValue(IconProperty, value); }
 		}
 
-		public string TextContent
-		{
-			get { return (string)GetValue(TextContentProperty); }
-			set { SetValue(TextContentProperty, value); }
-		}
-
-		public static readonly AttachedProperty<string> TextContentProperty =
-					  AttachedProperty<string>.RegisterAttached<NavButton, string>(nameof(TextContent), typeof(NavButton));
-
-		public string IconSource
-		{
-			get { return (string)GetValue(IconSourceProperty); }
-			set { SetValue(IconSourceProperty, value); }
-		}
-
-		public static readonly AttachedProperty<string> IconSourceProperty =
-					  AttachedProperty<string>.RegisterAttached<NavButton, string>(nameof(IconSource), typeof(NavButton));
+		public static readonly StyledProperty<ICommand> CommandProperty =
+				AvaloniaProperty.Register<NavButton, ICommand>(nameof(Command));
 
 		public ICommand Command
 		{
-			get { return (ICommand)GetValue(CommandProperty); }
+			get { return GetValue(CommandProperty); }
 			set { SetValue(CommandProperty, value); }
 		}
 
-		public static readonly AttachedProperty<ICommand> CommandProperty =
-					  AttachedProperty<ICommand>.RegisterAttached<NavButton, ICommand>(nameof(Command), typeof(NavButton));
+		public static readonly StyledProperty<object> CommandParameterProperty =
+				AvaloniaProperty.Register<NavButton, object>(nameof(CommandParameter));
 
 		public object CommandParameter
 		{
-			get { return (object)GetValue(CommandParameterProperty); }
+			get { return GetValue(CommandParameterProperty); }
 			set { SetValue(CommandParameterProperty, value); }
 		}
-
-		public static readonly AttachedProperty<object> CommandParameterProperty =
-					  AttachedProperty<object>.RegisterAttached<NavButton, object>(nameof(CommandParameter), typeof(NavButton));
-	}	
+	}
 }
