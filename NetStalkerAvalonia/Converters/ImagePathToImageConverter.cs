@@ -33,7 +33,7 @@ namespace NetStalkerAvalonia.Converters
 				}
 				else
 				{
-					string assemblyName = Assembly.GetEntryAssembly().GetName().Name;
+					string assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
 					uri = new Uri($"avares://{assemblyName}/{rawUri}");
 				}
 
