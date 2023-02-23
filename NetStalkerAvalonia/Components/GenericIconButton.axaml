@@ -3,11 +3,10 @@
 		xmlns:controls="using:NetStalkerAvalonia.Components"
 		xmlns:convos="using:NetStalkerAvalonia.Converters">
 	<Design.PreviewWith>
-		<controls:GenericIconButton />
+		<!--<controls:GenericIconButton />-->
 	</Design.PreviewWith>
 
 	<Style Selector="controls|GenericIconButton">
-		<!-- Set Defaults -->
 
 		<Setter Property="Template">
 			<ControlTemplate>

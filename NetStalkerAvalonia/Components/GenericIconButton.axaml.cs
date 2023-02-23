@@ -17,7 +17,7 @@ namespace NetStalkerAvalonia.Components
 		}
 
 		public static readonly StyledProperty<string> IconProperty =
-				AvaloniaProperty.Register<LinkButton, string>(nameof(Icon), defaultValue: "/Assets/avalonia-logo.ico");
+				AvaloniaProperty.Register<LinkButton, string>(nameof(Icon), defaultValue: "Assets/netstalker-logo.ico");
 
 		public string Icon
 		{
