@@ -1,17 +1,17 @@
+using Avalonia.Controls.Mixins;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using NetStalkerAvalonia.ViewModels;
 using ReactiveUI;
 using System;
-using System.Reactive.Disposables;
 
 namespace NetStalkerAvalonia.Views;
 
-public partial class SetNameWindow : ReactiveWindow<SetNameViewModel>
+public partial class StatusMessageView : ReactiveWindow<StatusMessageViewModel>
 {
-	public SetNameWindow()
+	public StatusMessageView()
 	{
-		this.WhenActivated(disposables => { ViewModel!.Accept.Subscribe(Close).DisposeWith(disposables); });
+		this.WhenActivated(disposables => { ViewModel!.Close.Subscribe(x => Close()).DisposeWith(disposables); });
 
 		InitializeComponent();
 	}

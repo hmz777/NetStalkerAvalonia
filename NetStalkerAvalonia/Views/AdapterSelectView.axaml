@@ -5,7 +5,7 @@
         xmlns:cmpts="using:NetStalkerAvalonia.Components"
         xmlns:vm="using:NetStalkerAvalonia.ViewModels"
         mc:Ignorable="d"
-        x:Class="NetStalkerAvalonia.Views.AdapterSelectWindow"
+        x:Class="NetStalkerAvalonia.Views.AdapterSelectView"
 		d:DesignWidth="1000" d:DesignHeight="1000"
         Title="Adapter Select">
 

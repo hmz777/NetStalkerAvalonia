@@ -8,11 +8,11 @@
         xmlns:rvws="using:NetStalkerAvalonia.Views.RoutedViews"
         mc:Ignorable="d"
         d:DesignWidth="800" d:DesignHeight="100"
-        x:Class="NetStalkerAvalonia.Views.MainWindow"
+        x:Class="NetStalkerAvalonia.Views.MainView"
         Title="NetStalker">
 
 	<Design.DataContext>
-		<vm:MainWindowViewModel />
+		<vm:MainViewModel />
 	</Design.DataContext>
 
 	<Window.KeyBindings>
@@ -43,7 +43,9 @@
           RowDefinitions="Auto,*">
 		<cmpts:PageTitle VerticalAlignment="Stretch" Grid.Row="0" Text="{Binding PageTitle}" />
 		<rxui:RoutedViewHost
+			Name="RoutedViewHost"
             Router="{Binding Router}"
+			ViewLocator="{StaticResource ViewLocator}"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             Grid.Row="1">

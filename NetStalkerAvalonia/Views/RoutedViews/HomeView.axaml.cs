@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace NetStalkerAvalonia.Views.RoutedViews
 {
-    public partial class HomeView : ReactiveUserControl<MainWindowViewModel>
+    public partial class HomeView : ReactiveUserControl<MainViewModel>
     {
         public HomeView()
         {

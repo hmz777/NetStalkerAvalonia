@@ -41,7 +41,7 @@ namespace NetStalkerAvalonia.Views.RoutedViews
 
 		private async Task DoShowAddDialogAsync(InteractionContext<Unit, AddUpdateRuleModel?> interaction)
 		{
-			var dialog = new AddUpdateRuleWindow
+			var dialog = new AddUpdateRuleView
 			{
 				DataContext = new AddUpdateRuleViewModel(isUpdate: false)
 			};
@@ -52,7 +52,7 @@ namespace NetStalkerAvalonia.Views.RoutedViews
 
 		private async Task DoShowUpdateDialogAsync(InteractionContext<AddUpdateRuleModel, AddUpdateRuleModel> interaction)
 		{
-			var dialog = new AddUpdateRuleWindow
+			var dialog = new AddUpdateRuleView
 			{
 				DataContext = new AddUpdateRuleViewModel(isUpdate: true)
 				{

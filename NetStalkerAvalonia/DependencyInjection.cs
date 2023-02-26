@@ -97,8 +97,8 @@ namespace NetStalkerAvalonia
 
 		private static void RegisterViewModels()
 		{
-			SplatRegistrations.RegisterLazySingleton<IScreen, MainWindowViewModel>();
-			SplatRegistrations.RegisterLazySingleton<MainWindowViewModel>();
+			SplatRegistrations.RegisterLazySingleton<IScreen, MainViewModel>();
+			SplatRegistrations.RegisterLazySingleton<MainViewModel>();
 			SplatRegistrations.RegisterLazySingleton<SnifferViewModel>();
 			SplatRegistrations.RegisterLazySingleton<OptionsViewModel>();
 			SplatRegistrations.RegisterLazySingleton<RuleBuilderViewModel>();

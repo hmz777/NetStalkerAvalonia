@@ -4,9 +4,9 @@ using NetStalkerAvalonia.ViewModels;
 
 namespace NetStalkerAvalonia.Views
 {
-	public partial class AppLogWindow : ReactiveWindow<AppLogViewModel>
+	public partial class AppLogView : ReactiveWindow<AppLogViewModel>
 	{
-		public AppLogWindow()
+		public AppLogView()
 		{
 			InitializeComponent();
 		}

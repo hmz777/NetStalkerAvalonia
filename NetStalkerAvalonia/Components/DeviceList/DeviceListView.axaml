@@ -12,7 +12,7 @@
 			 x:Class="NetStalkerAvalonia.Components.DeviceList.DeviceListView">
 
 	<Design.DataContext>
-		<vm:MainWindowViewModel />
+		<vm:MainViewModel />
 	</Design.DataContext>
 
 	<UserControl.Resources>

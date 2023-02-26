@@ -6,9 +6,9 @@ using System;
 
 namespace NetStalkerAvalonia.Views
 {
-	public partial class AddUpdateRuleWindow : ReactiveWindow<AddUpdateRuleViewModel>
+	public partial class AddUpdateRuleView : ReactiveWindow<AddUpdateRuleViewModel>
 	{
-		public AddUpdateRuleWindow()
+		public AddUpdateRuleView()
 		{
 			this.WhenActivated(d => d(ViewModel!.Accept.Subscribe(Close)));
 			InitializeComponent();

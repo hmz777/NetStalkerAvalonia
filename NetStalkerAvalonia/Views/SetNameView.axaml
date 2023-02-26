@@ -5,7 +5,7 @@
         xmlns:components="clr-namespace:NetStalkerAvalonia.Components"
         xmlns:viewModels="clr-namespace:NetStalkerAvalonia.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="NetStalkerAvalonia.Views.SetNameWindow"
+        x:Class="NetStalkerAvalonia.Views.SetNameView"
         Title="Set Friendly Name">
 
     <Design.DataContext>

@@ -7,9 +7,9 @@ using ReactiveUI;
 
 namespace NetStalkerAvalonia.Views;
 
-public partial class LimitWindow : ReactiveWindow<LimitViewModel>
+public partial class LimitView : ReactiveWindow<LimitViewModel>
 {
-    public LimitWindow()
+    public LimitView()
     {
         this.WhenActivated(disposables =>
         {

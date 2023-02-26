@@ -5,7 +5,7 @@
         xmlns:vm="using:NetStalkerAvalonia.ViewModels"
         xmlns:converters="using:NetStalkerAvalonia.Converters"
         mc:Ignorable="d"
-        x:Class="NetStalkerAvalonia.Views.StatusMessageWindow">
+        x:Class="NetStalkerAvalonia.Views.StatusMessageView">
 
     <Design.DataContext>
         <vm:StatusMessageViewModel />

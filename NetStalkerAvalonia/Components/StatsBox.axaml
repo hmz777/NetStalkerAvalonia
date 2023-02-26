@@ -7,7 +7,7 @@
 			 x:Class="NetStalkerAvalonia.Components.StatsBox">
 
 	<Design.DataContext>
-		<viewModels:MainWindowViewModel />
+		<viewModels:MainViewModel />
 	</Design.DataContext>
 
 	<StackPanel Orientation="Horizontal" Spacing="10">

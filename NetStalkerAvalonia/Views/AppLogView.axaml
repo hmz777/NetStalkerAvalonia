@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:components="clr-namespace:NetStalkerAvalonia.Components"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800"
-        x:Class="NetStalkerAvalonia.Views.AppLogWindow"
+        x:Class="NetStalkerAvalonia.Views.AppLogView"
         Title="Application Log">
 
 	<Window.Styles>

@@ -10,7 +10,7 @@
              Background="Transparent">
 
 	<Design.DataContext>
-		<vm:MainWindowViewModel />
+		<vm:MainViewModel />
 	</Design.DataContext>
 
 	<UserControl.Styles>
@@ -38,7 +38,7 @@
                 VerticalAlignment="Stretch">
 			<DockPanel HorizontalAlignment="Stretch">
 				<Border DockPanel.Dock="Left" Classes="nav-item">
-					<cmpts:Navbar />
+					<cmpts:Navbar Name="Navbar" />
 				</Border>
 				<Border DockPanel.Dock="Right" HorizontalAlignment="Right" Classes="nav-item">
 					<cmpts:ListControls />

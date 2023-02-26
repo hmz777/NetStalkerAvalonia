@@ -6,7 +6,7 @@
 		xmlns:components="clr-namespace:NetStalkerAvalonia.Components"
 		xmlns:viewModels="clr-namespace:NetStalkerAvalonia.ViewModels"
 		xmlns:convos="using:NetStalkerAvalonia.Converters"
-		x:Class="NetStalkerAvalonia.Views.AddUpdateRuleWindow"
+		x:Class="NetStalkerAvalonia.Views.AddUpdateRuleView"
 		Title="{Binding WindowTitle}">
 
 	<Design.DataContext>

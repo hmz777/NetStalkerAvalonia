@@ -7,15 +7,15 @@ using System.Reactive.Disposables;
 
 namespace NetStalkerAvalonia.Views;
 
-public partial class AdapterSelectWindow : ReactiveWindow<AdapterSelectViewModel>
+public partial class AdapterSelectView : ReactiveWindow<AdapterSelectViewModel>
 {
-    public AdapterSelectWindow()
+    public AdapterSelectView()
     {
         this.WhenActivated(disposables =>
         {
             if (ViewModel!.IsAppLocked)
             {
-				var passwordWindow = new PasswordWindow
+				var passwordWindow = new PasswordView
 				{
 					DataContext = new PasswordViewModel(null!)
 				};

@@ -1,6 +1,3 @@
-using System.Linq;
-using System.Reactive;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.Mixins;
 using Avalonia.Markup.Xaml;
@@ -9,12 +6,14 @@ using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.ViewModels;
 using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 using ReactiveUI;
+using System.Reactive;
+using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia.Views
 {
-	public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
+	public partial class MainView : ReactiveWindow<MainViewModel>
 	{
-		public MainWindow()
+		public MainView()
 		{
 			this.WhenActivated(disposables =>
 			{
@@ -51,7 +50,7 @@ namespace NetStalkerAvalonia.Views
 		private void DoShowAppLogDialog(
 			InteractionContext<Unit, Unit> interaction)
 		{
-			var dialog = new AppLogWindow
+			var dialog = new AppLogView
 			{
 				DataContext = Tools.ResolveIfNull<AppLogViewModel>(null!)
 			};
@@ -63,7 +62,7 @@ namespace NetStalkerAvalonia.Views
 		private async Task DoShowLimitDialogAsync(
 			InteractionContext<DeviceLimitsModel?, DeviceLimitsModel?> interaction)
 		{
-			var dialog = new LimitWindow
+			var dialog = new LimitView
 			{
 				DataContext = new LimitViewModel() { DeviceLimits = interaction.Input }
 			};
@@ -74,7 +73,7 @@ namespace NetStalkerAvalonia.Views
 
 		private async Task DoShowMessageDialogAsync(InteractionContext<StatusMessageModel, Unit> interaction)
 		{
-			var statusMessageDialog = new StatusMessageWindow();
+			var statusMessageDialog = new StatusMessageView();
 			statusMessageDialog.DataContext = new StatusMessageViewModel() { StatusMessage = interaction.Input };
 
 			var result = await statusMessageDialog.ShowDialog<Unit>(this);
@@ -83,7 +82,7 @@ namespace NetStalkerAvalonia.Views
 
 		private async Task DoShowSetFriendlyDeviceNameDialogAsync(InteractionContext<string?, string?> interaction)
 		{
-			var setNameDialogWindow = new SetNameWindow
+			var setNameDialogWindow = new SetNameView
 			{
 				DataContext = new SetNameViewModel() { Name = interaction.Input }
 			};

@@ -23,7 +23,7 @@ namespace NetStalkerAvalonia
 			{				
 				if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
 				{
-					var adapterSelectWindow = new AdapterSelectWindow
+					var adapterSelectWindow = new AdapterSelectView
 					{
 						DataContext = Tools.ResolveIfNull<AdapterSelectViewModel>(null!)
 					};
@@ -32,7 +32,7 @@ namespace NetStalkerAvalonia
 
 					adapterSelectWindow.ViewModel!.Accept.Subscribe(x =>
 					{
-						var mainViewModel = Tools.ResolveIfNull<MainWindowViewModel>(null!);
+						var mainViewModel = Tools.ResolveIfNull<MainViewModel>(null!);
 
 						desktop.ShutdownRequested += (sender, args) =>
 						{
@@ -50,7 +50,7 @@ namespace NetStalkerAvalonia
 
 						// Switch the main viewmodel after the initial adapter setup
 
-						desktop.MainWindow = new MainWindow
+						desktop.MainWindow = new MainView
 						{
 							DataContext = mainViewModel
 						};

@@ -7,9 +7,9 @@ using ReactiveUI;
 
 namespace NetStalkerAvalonia.Views
 {
-    public partial class PasswordWindow : ReactiveWindow<PasswordViewModel>
+    public partial class PasswordView : ReactiveWindow<PasswordViewModel>
     {
-        public PasswordWindow()
+        public PasswordView()
         {
             this.WhenActivated(disposables =>
             {
