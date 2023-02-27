@@ -15,7 +15,8 @@
                         VerticalAlignment="Center">
                     <Image Source="/Assets/NavIcons/back.png" />
                 </Button>
-                <TextBlock Text="{Binding $parent[UserControl].Text}"
+                <TextBlock Name="PageTitleText"
+					       Text="{Binding $parent[UserControl].Text}"
                            Foreground="{Binding Theme.PageTitleColor}"
                            FontSize="{Binding Theme.PageTitleSize}"
                            VerticalAlignment="Center"
