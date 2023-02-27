@@ -17,6 +17,8 @@ namespace NetStalker.Tests.ServiceSpecs
 
 			device.Blocked.Should().Be(true);
 			device.Redirected.Should().Be(false);
+
+			sut.Dispose();
 		}
 
 		[Theory, AutoServiceData]
@@ -28,6 +30,8 @@ namespace NetStalker.Tests.ServiceSpecs
 
 			device.Blocked.Should().Be(false);
 			device.Redirected.Should().Be(false);
+
+			sut.Dispose();
 		}
 
 		[Theory, AutoServiceData]
@@ -39,6 +43,8 @@ namespace NetStalker.Tests.ServiceSpecs
 
 			device.Redirected.Should().Be(true);
 			device.Blocked.Should().Be(false);
+
+			sut.Dispose();
 		}
 
 		[Theory, AutoServiceData]
@@ -50,6 +56,8 @@ namespace NetStalker.Tests.ServiceSpecs
 
 			device.Redirected.Should().Be(false);
 			device.Blocked.Should().Be(false);
+
+			sut.Dispose();
 		}
 
 		[Theory, AutoServiceData]
@@ -62,6 +70,8 @@ namespace NetStalker.Tests.ServiceSpecs
 			device.Redirected.Should().Be(true);
 			device.DownloadCap.Should().Be(15 * 1024);
 			device.UploadCap.Should().Be(12 * 1024);
+
+			sut.Dispose();
 		}
 	}
 }

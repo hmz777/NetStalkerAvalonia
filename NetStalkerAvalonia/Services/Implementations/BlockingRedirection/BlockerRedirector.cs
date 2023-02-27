@@ -29,6 +29,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 
 		#region Members
 
+		private Task serviceTask;
 		private CancellationTokenSource? _cancellationTokenSource;
 		private bool _isStarted;
 		private LibPcapLiveDevice? _device;
@@ -222,15 +223,15 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 					{
 						_device.StartCapture();
 
-						Task.Run(async () =>
-						{
-							while (_cancellationTokenSource.IsCancellationRequested == false)
+						serviceTask = Task.Run(async () =>
 							{
-								SpoofClients();
+								while (_cancellationTokenSource.IsCancellationRequested == false)
+								{
+									SpoofClients();
 
-								await Task.Delay(1000);
-							}
-						});
+									await Task.Delay(1000);
+								}
+							});
 
 						InitOrToggleByteCounterTimer(true);
 
@@ -402,6 +403,8 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 			if (_isStarted)
 			{
 				_cancellationTokenSource?.Cancel();
+				serviceTask.Wait();
+				serviceTask.Dispose();
 				InitOrToggleByteCounterTimer(false);
 				_device?.StopCapture();
 				_isStarted = false;
