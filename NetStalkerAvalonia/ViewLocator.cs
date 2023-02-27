@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using NetStalkerAvalonia.ViewModels;
+using ReactiveUI;
 using System;
 
 namespace NetStalkerAvalonia
@@ -26,5 +27,5 @@ namespace NetStalkerAvalonia
         {
             return data is ViewModelBase;
         }
-    }
+	}
 }

@@ -20,7 +20,7 @@ namespace NetStalkerAvalonia
 		public override void OnFrameworkInitializationCompleted()
 		{
 			try
-			{				
+			{
 				if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
 				{
 					var adapterSelectWindow = new AdapterSelectView
