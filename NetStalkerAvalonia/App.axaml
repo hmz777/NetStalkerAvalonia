@@ -6,6 +6,10 @@
 		<local:ViewLocator/>
 	</Application.DataTemplates>
 
+	<Application.Resources>
+		<local:ConventionalViewLocator x:Key="ViewLocator"/>
+	</Application.Resources>
+
 	<Application.Styles>
 		<FluentTheme Mode="Dark"/>
 		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
