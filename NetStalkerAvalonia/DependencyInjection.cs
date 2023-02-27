@@ -18,6 +18,7 @@ using Splat;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -83,6 +84,7 @@ namespace NetStalkerAvalonia
 
 			SplatRegistrations.SetupIOC(Locator.GetLocator());
 
+			SplatRegistrations.RegisterLazySingleton<IFileSystem, FileSystem>();
 			SplatRegistrations.RegisterLazySingleton<IDeviceTypeIdentifier, DeviceTypeIdentifier>();
 			SplatRegistrations.RegisterLazySingleton<IDeviceNameResolver, DeviceNameResolver>();
 			SplatRegistrations.RegisterLazySingleton<IPcapDeviceManager, PcapDeviceManager>();

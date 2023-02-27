@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text.Json;
@@ -21,26 +22,31 @@ namespace NetStalkerAvalonia.Services.Implementations.RulesService
 		private const string RulesFileName = "Rules.json";
 
 		private readonly IMapper mapper;
+		private readonly IFileSystem fileSystem;
+
+		private bool _status = false;
 
 		private readonly ObservableCollection<RuleBase> rules;
 
-		public RuleService(IMapper mapper = null!)
+		public RuleService(IMapper mapper, IFileSystem fileSystem)
 		{
-			this.mapper = Tools.ResolveIfNull(mapper);
+			this.mapper = mapper;
+			this.fileSystem = fileSystem;
 
 			rules = new ObservableCollection<RuleBase>(LoadRules());
-
 			Rules = new ReadOnlyObservableCollection<RuleBase>(rules);
+
+			_status = true;
 		}
 
 		#region Internal
 
 		private IEnumerable<RuleBase> LoadRules()
 		{
-			if (File.Exists(RulesFileName) == false)
+			if (fileSystem.File.Exists(RulesFileName) == false)
 				return Enumerable.Empty<RuleBase>();
 
-			var json = File.ReadAllText(RulesFileName);
+			var json = fileSystem.File.ReadAllText(RulesFileName);
 
 			if (json.Length == 0)
 			{
@@ -73,13 +79,13 @@ namespace NetStalkerAvalonia.Services.Implementations.RulesService
 
 		#region API
 
-		public bool Status => throw new NotImplementedException();
+		public bool Status => _status;
 
 		public ReadOnlyObservableCollection<RuleBase> Rules { get; }
 
 		public void SaveRules()
 		{
-			File.WriteAllText(RulesFileName, JsonSerializer.Serialize(rules, typeof(ObservableCollection<RuleBase>), Config.JsonSerializerOptions));
+			fileSystem.File.WriteAllText(RulesFileName, JsonSerializer.Serialize(rules, typeof(ObservableCollection<RuleBase>), Config.JsonSerializerOptions));
 		}
 
 		public bool TryAddBlockingRule(BlockRule blockRule)

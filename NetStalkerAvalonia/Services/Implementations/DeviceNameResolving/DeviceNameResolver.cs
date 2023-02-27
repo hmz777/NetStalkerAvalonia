@@ -1,26 +1,29 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Helpers;
+using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
-using NetStalkerAvalonia.Helpers;
-using Serilog;
-using SharpPcap;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
 
 namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
 {
-    public class DeviceNameResolver : IDeviceNameResolver
+	public class DeviceNameResolver : IDeviceNameResolver
 	{
-		private string _deviceNamesResource = "Devices.json";
+		private const string _deviceNamesResource = "Devices.json";
 
-		public DeviceNameResolver()
+		private readonly IFileSystem fileSystem;
+
+		public DeviceNameResolver(IFileSystem fileSystem)
 		{
+			this.fileSystem = fileSystem;
+
 			DevicesNames = new List<DeviceNameModel>();
 			LoadDevicesNames();
 		}
@@ -58,12 +61,12 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
 		{
 			try
 			{
-				using (var stream = new FileStream(_deviceNamesResource, FileMode.OpenOrCreate))
+				using (var stream = fileSystem.FileStream.New(_deviceNamesResource, FileMode.OpenOrCreate))
 				{
 					var deviceNameModels = JsonSerializer
 						.Deserialize<List<DeviceNameModel>>(stream);
 
-					DevicesNames = deviceNameModels == null ? new List<DeviceNameModel>() : deviceNameModels;
+					DevicesNames = deviceNameModels ?? new List<DeviceNameModel>();
 				}
 			}
 			catch (Exception e)
@@ -82,7 +85,7 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
 						.Where(d => d.HasFriendlyName)
 						.Select(device => new DeviceNameModel(device.Mac.ToString(), device.Name)));
 
-				File.WriteAllText(_deviceNamesResource, deviceNamesJson);
+				fileSystem.File.WriteAllText(_deviceNamesResource, deviceNamesJson);
 			}
 			catch (Exception e)
 			{
@@ -93,9 +96,9 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
 
 		public void ClearDeviceNames()
 		{
-			if (File.Exists(_deviceNamesResource))
+			if (fileSystem.File.Exists(_deviceNamesResource))
 			{
-				File.Delete(_deviceNamesResource);
+				fileSystem.File.Delete(_deviceNamesResource);
 			}
 		}
 	}
