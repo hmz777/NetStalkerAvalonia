@@ -9,6 +9,7 @@ namespace NetStalker.Tests.AutoData.Customizations
 		public void Customize(IFixture fixture)
 		{
 			fixture.Customizations.Add(new TypeRelay(typeof(IPcapDeviceManager), typeof(PcapDeviceManager)));
+			fixture.Register(() => new PcapDeviceManager());
 		}
 	}
 }
