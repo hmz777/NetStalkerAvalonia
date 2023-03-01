@@ -58,7 +58,6 @@ jobs:
     env:
       Solution_Name: NetStalkerAvalonia\NetStalkerAvalonia.sln                  # Replace with your solution name, i.e. MyWpfApp.sln.
       Test_Project_Path: NetStalker.Tests\NetStalker.Tests.csproj               # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
-      Configuration: Release
       
     steps:
     - name: Checkout
@@ -76,19 +75,19 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
 
-    # Execute all unit tests in the solution
-    - name: Execute unit tests
-      run: dotnet test
-
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      run: dotnet restore $env.Solution_Name
       env:
         Configuration: ${{ matrix.configuration }}
+
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test $env.Test_Project_Path
     
     # Publish application
     - name: Publish the application
-      run: msbuild $env:Solution_Name /t:Publish /p:Configuration=$env:Configuration
+      run: dotnet publish $env.Solution_Name --configuration $env.Configuration
       env:
         Configuration: $env.Configuration
     
