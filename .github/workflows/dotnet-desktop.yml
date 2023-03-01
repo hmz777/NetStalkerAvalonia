@@ -46,7 +46,7 @@ on:
 
 jobs:
 
-  build:
+  test-build-publish:
 
     strategy:
       matrix:
@@ -83,11 +83,11 @@ jobs:
 
     # Execute all unit tests in the solution
     - name: Execute unit tests
-      run: dotnet test $env.Test_Project_Path
+      run: dotnet test $env.Test_Project_Path --no-restore
     
     # Publish application
     - name: Publish the application
-      run: dotnet publish $env.Solution_Name --configuration $env.Configuration
+      run: dotnet publish $env.Solution_Name --configuration $env.Configuration --no-restore
       env:
         Configuration: $env.Configuration
     
