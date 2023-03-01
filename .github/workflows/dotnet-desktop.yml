@@ -46,7 +46,7 @@ on:
 
 jobs:
 
-  test-build-publish:
+  build-test-publish:
 
     strategy:
       matrix:
