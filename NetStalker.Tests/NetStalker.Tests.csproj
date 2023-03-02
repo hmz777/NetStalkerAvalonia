@@ -36,10 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UITesting\Components\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\NetStalkerAvalonia\NetStalkerAvalonia.csproj" />
   </ItemGroup>
 
