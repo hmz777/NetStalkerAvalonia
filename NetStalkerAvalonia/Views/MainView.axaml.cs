@@ -39,12 +39,6 @@ namespace NetStalkerAvalonia.Views
 			});
 
 			AvaloniaXamlLoader.Load(this);
-
-#if DEBUG
-
-			this.AttachDevTools();
-
-#endif
 		}
 
 		private void DoShowAppLogDialog(
