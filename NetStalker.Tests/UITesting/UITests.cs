@@ -3,7 +3,9 @@ using Avalonia.VisualTree;
 using FluentAssertions;
 using NetStalker.Tests.Avalonia;
 using NetStalkerAvalonia.Components;
+using NetStalkerAvalonia.ViewModels;
 using NetStalkerAvalonia.Views;
+using Splat;
 
 namespace NetStalker.Tests.UITesting
 {
@@ -22,23 +24,31 @@ namespace NetStalker.Tests.UITesting
 		{
 			ChooseAdapter();
 
-			var mainWindow = AvaloniaApp.GetMainWindow();
+			var mainWindow = new MainView()
+			{
+				DataContext = Locator.Current.GetService<MainViewModel>()
+			};
+
 			var navbar = new Navbar()
 			{
-				DataContext = mainWindow.DataContext
+				DataContext = Locator.Current.GetService<MainViewModel>()
 			};
 			var aboutButton = navbar.Find<NavButton>("About");
 
 			aboutButton.Command.Execute(null!);
 
-			mainWindow.FindDescendantOfType<PageTitle>().Find<TextBlock>("PageTitleText").Text.Should().Be("About");
+			mainWindow.ViewModel.PageTitle.Should().Be("About");
 		}
 
 		private void ChooseAdapter()
 		{
-			var mainWindow = AvaloniaApp.GetMainWindow();
-			var adapterSelectBox = mainWindow.Find<ComboBox>("AdapterSelectBox");
-			var okButton = mainWindow.Find<Button>("Ok");
+			var adapterSelectWindow = new AdapterSelectView()
+			{
+				DataContext = Locator.Current.GetService<AdapterSelectViewModel>()
+			};
+
+			var adapterSelectBox = adapterSelectWindow.Find<ComboBox>("AdapterSelectBox");
+			var okButton = adapterSelectWindow.Find<Button>("Ok");
 			var adapterCount = adapterSelectBox.ItemCount;
 
 			for (int i = 0; i < adapterCount; i++)
