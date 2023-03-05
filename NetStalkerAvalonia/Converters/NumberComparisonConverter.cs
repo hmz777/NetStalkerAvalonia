@@ -1,12 +1,16 @@
 ﻿using Avalonia.Data.Converters;
 using System;
 using System.Globalization;
+using System.Linq;
 
 namespace NetStalkerAvalonia.Converters
 {
 	public class NumberComparisonConverter : IValueConverter
 	{
 		public readonly static NumberComparisonConverter Instance = new();
+
+		private string[] operators = new string[] { ">", "<", "=", ">=", "<=" };
+
 		public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
 		{
 			if (value is null || parameter is null || double.TryParse(value.ToString(), out double sourceNumber) == false)
@@ -17,7 +21,7 @@ namespace NetStalkerAvalonia.Converters
 			try
 			{
 				if (parameter.ToString()!.Split(' ') is [var op, var number] &&
-					op is ">" or "<" or "=" or ">=" or "<=" &&
+					operators.Contains(op) &&
 					double.TryParse(number, out double numberToCompare))
 				{
 					switch (op)
