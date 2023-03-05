@@ -73,26 +73,6 @@ public class Tools
 		}
 	}
 
-	public static void ResolveGateway()
-	{
-		var adapterName = (from devicex in LibPcapLiveDeviceList.Instance
-						   where devicex.Interface.FriendlyName == HostInfo.NetworkAdapterName
-						   select devicex).ToList()[0].Name;
-
-		using (var device = LibPcapLiveDeviceList.New()[adapterName])
-		{
-			var gatewayArp = new ARP(device);
-			var gatewayMac = gatewayArp.Resolve(HostInfo.GatewayIp);
-
-			if (gatewayMac == null)
-			{
-				throw new Exception("Couldn't resolve gateway mac address.");
-			}
-
-			HostInfo.GatewayMac = gatewayMac;
-		}
-	}
-
 	public static void HandleError(StatusMessageModel statusMessage)
 	{
 		ArgumentNullException.ThrowIfNull(statusMessage, nameof(statusMessage));

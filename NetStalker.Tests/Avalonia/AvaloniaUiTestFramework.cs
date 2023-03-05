@@ -2,6 +2,8 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Headless;
 using Avalonia.Threading;
+using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.Services;
 using System.Reflection;
 using Xunit.Abstractions;
 using Xunit.Sdk;
@@ -79,8 +81,11 @@ namespace NetStalker.Tests.Avalonia
 
 								lifeTime.Startup += (sender, args) =>
 								{
+									HostInfo.SetHostInfo(null, null, null, null, null, IpType.Ipv4, null, NetworkClass.C);
+
 									// We wait until the framework and app are completely initialized and ready to run
 									tcs.SetResult(SynchronizationContext.Current);
+
 									Dispatcher.UIThread.MainLoop(CancellationToken.None);
 								};
 							})

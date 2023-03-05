@@ -3,11 +3,14 @@ using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.Services;
 using ReactiveUI;
+using SharpPcap;
+using Splat;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reactive;
@@ -24,6 +27,7 @@ public class AdapterSelectViewModel : ViewModelBase
 {
 	#region Services
 
+	private readonly IPcapDeviceManager _pcapDeviceManager;
 	private readonly IAppLockService _appLockService;
 
 	#endregion
@@ -119,13 +123,15 @@ public class AdapterSelectViewModel : ViewModelBase
 #endif
 
 	[Splat.DependencyInjectionConstructor]
-	public AdapterSelectViewModel(IAppLockService appLockService = null!)
+	public AdapterSelectViewModel(IPcapDeviceManager pcapDeviceManager, IAppLockService appLockService)
 	{
+		_pcapDeviceManager = pcapDeviceManager;
 		_appLockService = appLockService;
 
-		#region Populate network data
+		#region Populate data
 
-		GetNics();
+		networkInterfaces = GetNics();
+		DriverVersion = CheckDriverAndGetVersion();
 
 		#endregion
 
@@ -153,8 +159,6 @@ public class AdapterSelectViewModel : ViewModelBase
 
 		#endregion
 
-		CheckDriverAndGetVersion();
-
 		#region App Lock
 
 		_isAppLocked = this.WhenAnyValue(x => x._appLockService!.IsLocked)
@@ -179,32 +183,35 @@ public class AdapterSelectViewModel : ViewModelBase
 
 			if (SelectedInterface == null)
 				return Unit.Default;
+
+			var gatewayIp = GetGatewayIp();
+			var subnetMask = GetIpv4SubnetMask();
+			var ipType = gatewayIp.AddressFamily == AddressFamily.InterNetwork ?
+				IpType.Ipv4 : IpType.Ipv6;
+
+			HostInfo.SetHostInfo(
+				networkAdapterName: GetAdapterName(),
+				gatewayIp: gatewayIp,
+				gatewayMac: GetGatewayMac(gatewayIp),
+				hostIp: GetHostIp(),
+				hostMac: GetHostMac(),
+				ipType: ipType,
+				subnetMask: subnetMask,
+				networkClass: GetNetworkClass(subnetMask));
+
+			NetworkSsid = await GetNetworkWifiSsidAsync();
 		}
 		catch
 		{
 			return Unit.Default;
 		}
 
-		GetAdapterName();
-		GetNicType();
-		GetHostInfo();
-		GetGatewayInfo();
-
-		// Host has an IPV4 ip
-		if (HostInfo.HostIp!.AddressFamily == AddressFamily.InterNetwork)
-		{
-			GetIpv4SubnetMask();
-			GetNetworkClass();
-		}
-
-		await GetNetworkWifiSsidAsync();
-
 		return Unit.Default;
 	}
 
-	private void GetAdapterName()
+	private string? GetAdapterName()
 	{
-		HostInfo.NetworkAdapterName = SelectedInterface?.Name ?? "NAN";
+		return SelectedInterface?.Name;
 	}
 
 	private void GetNicType()
@@ -212,69 +219,68 @@ public class AdapterSelectViewModel : ViewModelBase
 		NicType = SelectedInterface!.NetworkInterfaceType.ToString() ?? "Not selected";
 	}
 
-	private void GetHostInfo()
+	private IPAddress? GetHostIp()
 	{
 		foreach (var address in SelectedInterface!.GetIPProperties().UnicastAddresses)
 		{
 			if (address.Address.AddressFamily == AddressFamily.InterNetwork)
 			{
-				HostInfo.HostIp = address.Address;
-				IpAddress = HostInfo.HostIp.ToString();
-				break;
+				return address.Address;
+
 			}
 		}
 
-		HostInfo.HostMac = SelectedInterface!.GetPhysicalAddress();
-		MacAddress = HostInfo.HostMac.ToString();
+		return default;
 	}
 
-	private void GetGatewayInfo()
+	private PhysicalAddress? GetHostMac()
 	{
-		HostInfo.GatewayIp = SelectedInterface!
+		return SelectedInterface?.GetPhysicalAddress();
+	}
+
+	private IPAddress? GetGatewayIp()
+	{
+		return SelectedInterface?
 			.GetIPProperties()
 			.GatewayAddresses
 			.Where(address => address.Address.AddressFamily == AddressFamily.InterNetwork)
 			.First()
 			.Address;
-
-		GatewayIp = HostInfo.GatewayIp.ToString();
 	}
 
-	private void GetIpv4SubnetMask()
+	public PhysicalAddress? GetGatewayMac(IPAddress gatewayIp)
+	{
+		using var device = _pcapDeviceManager.CreateDevice("arp", (s, m) => { }, 20);
+
+		var gatewayArp = device.CreateArp();
+		var gatewayMac = gatewayArp.Resolve(gatewayIp);
+
+		return gatewayMac;
+	}
+
+	private IPAddress? GetIpv4SubnetMask()
 	{
 		foreach (var address in SelectedInterface!.GetIPProperties().UnicastAddresses)
 		{
 			if (address.Address.AddressFamily == AddressFamily.InterNetwork)
 			{
-				HostInfo.SubnetMask = address.IPv4Mask;
-				return;
+				return address.IPv4Mask;
 			}
 		}
+
+		return default;
 	}
 
-	private void GetNetworkClass()
+	private NetworkClass GetNetworkClass(IPAddress subnetMask)
 	{
 		var classIndicator = Regex
-			.Matches(HostInfo.SubnetMask!.ToString(), "255")
+			.Matches(subnetMask.ToString(), "255")
 			.Count;
 
-		switch (classIndicator)
-		{
-			case 1:
-				HostInfo.NetworkClass = NetworkClass.A;
-				break;
-			case 2:
-				HostInfo.NetworkClass = NetworkClass.B;
-				break;
-			case 3:
-				HostInfo.NetworkClass = NetworkClass.C;
-				break;
-			default:
-				throw new Exception("Invalid or not implemented network size.");
-		}
+		return (NetworkClass)classIndicator;
 	}
 
-	private async Task GetNetworkWifiSsidAsync()
+	private async Task<string?> GetNetworkWifiSsidAsync()
 	{
 		try
 		{
@@ -288,12 +294,12 @@ public class AdapterSelectViewModel : ViewModelBase
 							.FindAllAsync(WiFiAdapter.GetDeviceSelector());
 
 						if (wifiDevices.Count == 0)
-							return;
+							return default;
 
 						var wifi = await WiFiAdapter.FromIdAsync(wifiDevices[0].Id);
 						var profile = await wifi.NetworkAdapter.GetConnectedProfileAsync();
 
-						NetworkSsid = profile.GetNetworkNames().FirstOrDefault() ?? "NAN";
+						return profile.GetNetworkNames().FirstOrDefault();
 					}
 				}
 			}
@@ -304,9 +310,11 @@ public class AdapterSelectViewModel : ViewModelBase
 		{
 			// ignored
 		}
+
+		return default;
 	}
 
-	private void CheckDriverAndGetVersion()
+	private string CheckDriverAndGetVersion()
 	{
 		if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 		{
@@ -327,25 +335,22 @@ public class AdapterSelectViewModel : ViewModelBase
 							.GetVersionInfo(Path.Combine(installationPath, "NPFInstall.exe"))
 							.FileVersion;
 
-						DriverVersion = version ?? "NAN";
+						return version ?? "NAN";
 					}
 				}
 			}
 		}
 
 		// TODO: Implement Linux logic
+
+		return "NAN";
 	}
 
-	private void GetNics()
+	private List<NetworkInterface> GetNics()
 	{
-		foreach (var net in NetworkInterface.GetAllNetworkInterfaces())
-		{
-			if (net.OperationalStatus == OperationalStatus.Up &&
-				net.NetworkInterfaceType != NetworkInterfaceType.Loopback)
-			{
-				networkInterfaces.Add(net);
-			}
-		}
+		return NetworkInterface.GetAllNetworkInterfaces().Where(net =>
+				net.OperationalStatus == OperationalStatus.Up &&
+				net.NetworkInterfaceType != NetworkInterfaceType.Loopback).ToList();
 	}
 
 	private void ClearAll()
