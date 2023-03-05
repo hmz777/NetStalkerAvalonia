@@ -112,7 +112,7 @@ namespace NetStalkerAvalonia
 
 		private static void RegisterOptionalServices()
 		{
-			var apiToken = Config.AppSettings?.VendorApiTokenSetting;
+			var apiToken = Config.AppSettings.VendorApiTokenSetting;
 
 			if (string.IsNullOrWhiteSpace(apiToken) == false)
 			{
@@ -123,9 +123,7 @@ namespace NetStalkerAvalonia
 						"Bearer " + apiToken);
 
 					return client;
-				}, contract: nameof(ContractKeys.MacLookupClient));
-
-				OptionalFeatures.AvailableFeatures.Add(typeof(IDeviceTypeIdentifier));
+				});
 			}
 		}
 
