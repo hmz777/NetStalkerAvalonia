@@ -32,7 +32,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 		private Task serviceTask;
 		private CancellationTokenSource? _cancellationTokenSource;
 		private bool _isStarted;
-		private LibPcapLiveDevice? _device;
+		private IPcapLiveDevice _device;
 		private Timer? _byteCounterTimer;
 
 		private readonly IRuleService _ruleService;
@@ -406,7 +406,6 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 				serviceTask.Wait();
 				serviceTask.Dispose();
 				InitOrToggleByteCounterTimer(false);
-				_device?.StopCapture();
 				_isStarted = false;
 
 				Log.Information(LogMessageTemplates.ServiceStop,
@@ -505,9 +504,7 @@ namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
 			if (_device != null)
 			{
 				_byteCounterTimer?.Dispose();
-				_device.Close();
-				_device.OnPacketArrival -= DeviceOnOnPacketArrival;
-				_device.Dispose();
+				_device.Dispose(DeviceOnOnPacketArrival);
 				_device = null;
 				_cancellationTokenSource?.Dispose();
 				_cancellationTokenSource = null;

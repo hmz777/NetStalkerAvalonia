@@ -1,8 +1,3 @@
-using System;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using DynamicData;
 using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Helpers;
@@ -12,6 +7,9 @@ using ReactiveUI;
 using Serilog;
 using SharpPcap;
 using SharpPcap.LibPcap;
+using System;
+using System.Net;
+using System.Threading;
 using Timer = System.Threading.Timer;
 
 namespace NetStalkerAvalonia.Services.Implementations.DeviceScanning;
@@ -21,7 +19,7 @@ public class DeviceScanner : IDeviceScanner
 	#region Members
 
 	private CancellationTokenSource? _cancellationTokenSource;
-	private LibPcapLiveDevice? _device;
+	private IPcapLiveDevice _device;
 	private Timer? _discoveryTimer;
 	private Timer? _aliveTimer;
 	private bool _timerRanFirstTime;
@@ -61,8 +59,6 @@ public class DeviceScanner : IDeviceScanner
 
 	private void Init()
 	{
-		Tools.ResolveGateway();
-
 		if (_device == null)
 		{
 			_device = _pcapDeviceManager.CreateDevice("arp", OnPacketArrival, 20);
@@ -166,11 +162,13 @@ public class DeviceScanner : IDeviceScanner
 
 	private void ReceivePackets()
 	{
-		_device?.StartCapture();
+		_device.StartCapture();
 	}
 
 	private void ProbeDevices()
 	{
+		// TODO: Remove the network class concept
+
 		switch (HostInfo.NetworkClass)
 		{
 			case NetworkClass.A:
@@ -291,7 +289,6 @@ public class DeviceScanner : IDeviceScanner
 
 		_cancellationTokenSource?.Cancel();
 		_isStarted = false;
-		_device?.StopCapture();
 
 		Log.Information(LogMessageTemplates.ServiceStop,
 			typeof(IDeviceScanner));
@@ -305,9 +302,7 @@ public class DeviceScanner : IDeviceScanner
 		{
 			_discoveryTimer?.Dispose();
 			_aliveTimer?.Dispose();
-
-			_device.Close();
-			_device.Dispose();
+			_device.Dispose(OnPacketArrival);
 			_device = null;
 			_cancellationTokenSource?.Dispose();
 			_cancellationTokenSource = null;
@@ -318,6 +313,4 @@ public class DeviceScanner : IDeviceScanner
 	}
 
 	#endregion
-
-	// TODO: Check why devices freeze on redirection or limitation and why then they disappear from the list.
 }
