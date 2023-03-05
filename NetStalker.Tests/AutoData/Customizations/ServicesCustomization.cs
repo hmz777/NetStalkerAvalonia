@@ -8,6 +8,9 @@
 			fixture.Customize(new FileSystemCustomization());
 			fixture.Customize(new RuleServiceCustomization());
 			fixture.Customize(new PcapManagerCustomization());
+			fixture.Customize(new DeviceNameResolverCustomization());
+			fixture.Customize(new DeviceTypeIdentifierCustomization());
+			fixture.Customize(new DeviceScannerCustomization());
 			fixture.Customize(new BlockerRedirectorCustomization());
 		}
 	}
