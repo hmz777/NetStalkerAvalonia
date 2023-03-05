@@ -1,33 +1,26 @@
-﻿using NetStalkerAvalonia.Models;
-using SharpPcap;
+﻿using SharpPcap;
 using SharpPcap.LibPcap;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia.Services.Implementations.PcapDeviceManagement
 {
 	public class PcapDeviceManager : IPcapDeviceManager
 	{
-		private readonly string _adapterName;
-
-		public PcapDeviceManager()
+		private string GetAdapterName()
 		{
-			_adapterName = (from devicex in LibPcapLiveDeviceList.Instance
-							where devicex.Interface.FriendlyName == HostInfo.NetworkAdapterName
-							select devicex).ToList()[0].Name;
+			return (from devicex in LibPcapLiveDeviceList.Instance
+					where devicex.Interface.FriendlyName == HostInfo.NetworkAdapterName
+					select devicex).ToList()[0].Name;
 		}
 
-		public LibPcapLiveDevice CreateDevice(string filter, PacketArrivalEventHandler packetArrivalHandler, int readTimeout)
+		public IPcapLiveDevice CreateDevice(string filter, PacketArrivalEventHandler? packetArrivalHandler, int readTimeout)
 		{
-			var device = LibPcapLiveDeviceList.New()[_adapterName];
+			var device = LibPcapLiveDeviceList.New()[GetAdapterName()];
 			device.Open(DeviceModes.Promiscuous, readTimeout);
-			device.Filter = filter;
+			device!.Filter = filter;
 			device.OnPacketArrival += packetArrivalHandler;
 
-			return device;
+			return new PcapLiveDevice(device);
 		}
 	}
 }

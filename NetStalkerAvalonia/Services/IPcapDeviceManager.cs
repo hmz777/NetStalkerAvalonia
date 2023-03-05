@@ -12,7 +12,7 @@ namespace NetStalkerAvalonia.Services
 		/// <param name="filter"></param>
 		/// <param name="packetArrivalHandler"></param>
 		/// <returns></returns>
-		public LibPcapLiveDevice CreateDevice(string filter, PacketArrivalEventHandler packetArrivalHandler, int readTimeout);
+		public IPcapLiveDevice CreateDevice(string filter, PacketArrivalEventHandler? packetArrivalHandler, int readTimeout);
 
 	}
 }
