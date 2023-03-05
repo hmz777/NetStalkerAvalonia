@@ -58,4 +58,9 @@
 	<ItemGroup>
 		<Content Condition="'$(Configuration)' == 'Debug'" Include="**\*.axaml" />
 	</ItemGroup>
+	<ItemGroup>
+	  <AvaloniaResource Update="Assets\manuf.txt">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </AvaloniaResource>
+	</ItemGroup>
 </Project>

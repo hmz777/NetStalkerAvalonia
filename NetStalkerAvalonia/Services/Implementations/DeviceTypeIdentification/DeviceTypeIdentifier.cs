@@ -1,14 +1,15 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Helpers;
+using NetStalkerAvalonia.Models;
+using Serilog;
+using Splat;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.IO.Abstractions;
 using System.Net.Http;
-using System.Net.Http.Json;
+using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using NetStalkerAvalonia.Configuration;
-using NetStalkerAvalonia.Helpers;
-using Serilog;
 
 namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 {
@@ -16,11 +17,18 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 	{
 		#region Members
 
-		private CancellationTokenSource _cancellationTokenSource;
-		private bool _isStarted;
-		private string? macLookupServiceUri = "https://api.macvendors.com/{Mac}";
+		private readonly IFileSystem fileSystem;
 
+		private readonly CancellationTokenSource _cancellationTokenSource;
+		private Task? _serviceTask;
+
+		private bool _isStarted;
+
+		private readonly string? macLookupServiceUri = "https://api.macvendors.com/{Mac}";
 		private readonly HttpClient? _client;
+
+		private const string _localVendorDatabase = "manuf.txt";
+		private string _localVendorDb;
 
 		// The queue is to prevent flooding the mac lookup service with requests
 		private Queue<Device> _identificationQueue;
@@ -29,13 +37,16 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 
 		#region Constructor
 
-		public DeviceTypeIdentifier(HttpClient client = null!)
+		public DeviceTypeIdentifier(IFileSystem fileSystem, HttpClient client = null!)
 		{
+			this.fileSystem = fileSystem;
+
 			_cancellationTokenSource = new CancellationTokenSource();
 
 			try
 			{
-				_client = Tools.ResolveIfNull(client, ContractKeys.MacLookupClient.ToString());
+				// Check if HttpClient is registered with the DI container, which indicates that an API token is set
+				_client = Tools.ResolveIfNull(client);
 			}
 			catch (Exception e)
 			{
@@ -52,17 +63,27 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 
 		private async Task StartIdentifierAsync()
 		{
+			// Load the vendor db into memory
+			_localVendorDb = await fileSystem.File.ReadAllTextAsync(_localVendorDatabase, _cancellationTokenSource.Token);
+
 			while (_cancellationTokenSource.IsCancellationRequested == false)
 			{
 				try
-				{					
+				{
 					if (_identificationQueue.TryDequeue(out var deviceToIdentify))
 					{
-						var serviceUri = macLookupServiceUri!
-							.Replace("{Mac}", deviceToIdentify.Mac.ToOuiMac());
+						string data = string.Empty;
 
-						var data = await _client!
-							.GetStringAsync(serviceUri);
+						if (string.IsNullOrWhiteSpace(Config.AppSettings.VendorApiTokenSetting) == false)
+						{
+							data = await ResolveVendorRemotelyAsync(deviceToIdentify.Mac);
+						}
+
+						// If we got an empty string we try to get the vendor from the local db
+						if (string.IsNullOrWhiteSpace(data))
+						{
+							data = ResolveVendorLocally(deviceToIdentify.Mac);
+						}
 
 						deviceToIdentify.SetVendor(string.IsNullOrWhiteSpace(data) ? "Not found" : data);
 					}
@@ -77,6 +98,32 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 			}
 		}
 
+		private string ResolveVendorLocally(PhysicalAddress mac)
+		{
+			var match = Regex.Match(_localVendorDb, @$"({mac.ToOuiMac()})\t(\w+)\t(.*)");
+
+			return match.Value;
+		}
+
+		private async Task<string> ResolveVendorRemotelyAsync(PhysicalAddress mac)
+		{
+			try
+			{
+				var serviceUri = macLookupServiceUri!
+							.Replace("{Mac}", mac.ToOuiMac());
+
+				var data = await _client!
+					.GetStringAsync(serviceUri);
+
+				return data;
+			}
+			catch
+			{
+			}
+
+			return string.Empty;
+		}
+
 		#endregion
 
 		#region API
@@ -85,8 +132,7 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 		{
 			if (_isStarted == false)
 			{
-				StartIdentifierAsync();
-
+				_serviceTask = StartIdentifierAsync();
 				_isStarted = true;
 			}
 
@@ -96,6 +142,8 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 
 		public void Dispose()
 		{
+			_serviceTask?.Wait();
+			_serviceTask?.Dispose();
 			_isStarted = false;
 			_cancellationTokenSource.Cancel();
 			_cancellationTokenSource.Dispose();
