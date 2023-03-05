@@ -5,7 +5,7 @@ namespace NetStalkerAvalonia
 {
 	public class Config
 	{
-		public static AppSettings? AppSettings { get; set; }
+		public static AppSettings AppSettings { get; set; } = new AppSettings();
 		public static JsonSerializerOptions JsonSerializerOptions = new();
 	}
 }

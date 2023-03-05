@@ -54,7 +54,6 @@ namespace NetStalkerAvalonia
 
 		private static void ReadConfiguration()
 		{
-			Config.AppSettings = new AppSettings();
 			Config.AppSettings.ReadConfiguration();
 		}
 	}
