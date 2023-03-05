@@ -22,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Net.NetworkInformation;
 
 namespace NetStalkerAvalonia.Helpers;
 
@@ -209,20 +210,20 @@ public class Tools
 		return finalBytes;
 	}
 
-	public static string GetRandomMacAddress()
+	public static PhysicalAddress GetRandomMacAddress()
 	{
 		var buffer = new byte[6];
 		new Random().NextBytes(buffer);
 		var result = string.Concat(buffer.Select(x => string.Format("{0}:", x.ToString("X2"))).ToArray());
-		return result.TrimEnd(':');
+		return PhysicalAddress.Parse(result.TrimEnd(':'));
 	}
 
-	public static string GetRandomIpAddress()
+	public static IPAddress GetRandomIpAddress()
 	{
 		var buffer = new byte[4];
 		new Random().NextBytes(buffer);
 		var result = string.Concat(buffer.Select(x => string.Format("{0}.", (x | 1).ToString())).ToArray());
-		return result.TrimEnd('.');
+		return IPAddress.Parse(result.TrimEnd('.'));
 	}
 
 	public static Mapper BuildAutoMapper()

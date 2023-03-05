@@ -11,7 +11,7 @@ namespace NetStalker.Tests.AutoData.Specimens
 		{
 			if (request is ParameterInfo parameter && parameter.ParameterType == typeof(IPAddress) && parameter.Name == nameof(Device.Ip).ToLower())
 			{
-				return IPAddress.Parse(Tools.GetRandomIpAddress());
+				return Tools.GetRandomIpAddress();
 			}
 
 			return new NoSpecimen();

@@ -7,16 +7,16 @@ using System.Reflection.Metadata;
 
 namespace NetStalker.Tests.AutoData.Specimens
 {
-    public class MacSpecimen : ISpecimenBuilder
-    {
-        public object Create(object request, ISpecimenContext context)
-        {
-            if (request is ParameterInfo parameter && parameter.ParameterType == typeof(PhysicalAddress) && parameter.Name == nameof(Device.Mac).ToLower())
-            {
-                return PhysicalAddress.Parse(Tools.GetRandomMacAddress());
-            }
+	public class MacSpecimen : ISpecimenBuilder
+	{
+		public object Create(object request, ISpecimenContext context)
+		{
+			if (request is ParameterInfo parameter && parameter.ParameterType == typeof(PhysicalAddress) && parameter.Name == nameof(Device.Mac).ToLower())
+			{
+				return Tools.GetRandomMacAddress();
+			}
 
-            return new NoSpecimen();
-        }
-    }
+			return new NoSpecimen();
+		}
+	}
 }
