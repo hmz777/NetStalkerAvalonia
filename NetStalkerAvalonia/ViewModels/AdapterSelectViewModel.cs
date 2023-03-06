@@ -256,7 +256,7 @@ public class AdapterSelectViewModel : ViewModelBase
 			.GetIPProperties()
 			.GatewayAddresses
 			.Where(address => address.Address.AddressFamily == AddressFamily.InterNetwork)
-			.First()
+			.FirstOrDefault()?
 			.Address;
 	}
 
