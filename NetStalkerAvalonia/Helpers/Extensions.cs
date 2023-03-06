@@ -9,6 +9,6 @@ namespace NetStalkerAvalonia.Helpers
 {
 	public static class Extensions
 	{
-		public static string ToOuiMac(this PhysicalAddress physicalAddress) => physicalAddress.ToString()[..6];
+		public static string ToOuiMac(this PhysicalAddress physicalAddress) => string.Join(':', physicalAddress.ToString().Chunk(2).Select(x => new string(x)))[..8];
 	}
 }
