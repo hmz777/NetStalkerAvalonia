@@ -3,6 +3,7 @@ using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
 using NetStalkerAvalonia.Services;
 using ReactiveUI;
+using Serilog;
 using SharpPcap;
 using Splat;
 using System;
@@ -38,8 +39,8 @@ public class AdapterSelectViewModel : ViewModelBase
 
 	private string? _selectedItem;
 	private string? _nicType;
-	private string? _ipAddress;
-	private string? _macAddress;
+	private string? _hostIp;
+	private string? _hostMac;
 	private string? _gatewayIp;
 	private string? _networkSsid;
 	private string? _driverVersion;
@@ -74,16 +75,16 @@ public class AdapterSelectViewModel : ViewModelBase
 		set => this.RaiseAndSetIfChanged(ref _nicType, value);
 	}
 
-	public string? IpAddress
+	public string? HostIp
 	{
-		get => _ipAddress;
-		set => this.RaiseAndSetIfChanged(ref _ipAddress, value);
+		get => _hostIp;
+		set => this.RaiseAndSetIfChanged(ref _hostIp, value);
 	}
 
-	public string? MacAddress
+	public string? HostMac
 	{
-		get => _macAddress;
-		set => this.RaiseAndSetIfChanged(ref _macAddress, value);
+		get => _hostMac;
+		set => this.RaiseAndSetIfChanged(ref _hostMac, value);
 	}
 
 	public string? GatewayIp
@@ -131,6 +132,7 @@ public class AdapterSelectViewModel : ViewModelBase
 		#region Populate data
 
 		networkInterfaces = GetNics();
+
 		DriverVersion = CheckDriverAndGetVersion();
 
 		#endregion
@@ -184,25 +186,35 @@ public class AdapterSelectViewModel : ViewModelBase
 			if (SelectedInterface == null)
 				return Unit.Default;
 
+			var adapterName = GetAdapterName();
 			var gatewayIp = GetGatewayIp();
+			var gatewayMac = GetGatewayMac(gatewayIp, adapterName);
+			var hostIp = GetHostIp();
+			var hostMac = GetHostMac();
 			var subnetMask = GetIpv4SubnetMask();
 			var ipType = gatewayIp.AddressFamily == AddressFamily.InterNetwork ?
 				IpType.Ipv4 : IpType.Ipv6;
 
 			HostInfo.SetHostInfo(
-				networkAdapterName: GetAdapterName(),
+				networkAdapterName: adapterName,
 				gatewayIp: gatewayIp,
-				gatewayMac: GetGatewayMac(gatewayIp),
-				hostIp: GetHostIp(),
-				hostMac: GetHostMac(),
+				gatewayMac: gatewayMac,
+				hostIp: hostIp,
+				hostMac: hostMac,
 				ipType: ipType,
 				subnetMask: subnetMask,
 				networkClass: GetNetworkClass(subnetMask));
 
+			GatewayIp = gatewayIp.ToString();
+			HostIp = hostIp.ToString();
+			HostMac = hostMac.ToString();
+			NicType = GetNicType();
 			NetworkSsid = await GetNetworkWifiSsidAsync();
 		}
-		catch
+		catch (Exception e)
 		{
+			Log.Error(LogMessageTemplates.ExceptionTemplate, e.GetType(), e.Message);
+
 			return Unit.Default;
 		}
 
@@ -214,9 +226,9 @@ public class AdapterSelectViewModel : ViewModelBase
 		return SelectedInterface?.Name;
 	}
 
-	private void GetNicType()
+	private string GetNicType()
 	{
-		NicType = SelectedInterface!.NetworkInterfaceType.ToString() ?? "Not selected";
+		return SelectedInterface!.NetworkInterfaceType.ToString() ?? "Not selected";
 	}
 
 	private IPAddress? GetHostIp()
@@ -248,9 +260,11 @@ public class AdapterSelectViewModel : ViewModelBase
 			.Address;
 	}
 
-	public PhysicalAddress? GetGatewayMac(IPAddress gatewayIp)
+	public PhysicalAddress? GetGatewayMac(IPAddress gatewayIp, string? adapterName)
 	{
-		using var device = _pcapDeviceManager.CreateDevice("arp", (s, m) => { }, 20);
+		ArgumentNullException.ThrowIfNull(gatewayIp, nameof(gatewayIp));
+
+		using var device = _pcapDeviceManager.CreateDevice("arp", null, 20, adapterName);
 
 		var gatewayArp = device.CreateArp();
 		var gatewayMac = gatewayArp.Resolve(gatewayIp);
@@ -273,11 +287,20 @@ public class AdapterSelectViewModel : ViewModelBase
 
 	private NetworkClass GetNetworkClass(IPAddress subnetMask)
 	{
+		ArgumentNullException.ThrowIfNull(subnetMask, nameof(subnetMask));
+
 		var classIndicator = Regex
 			.Matches(subnetMask.ToString(), "255")
 			.Count;
 
-		return (NetworkClass)classIndicator;
+		switch (classIndicator)
+		{
+			case 1: return NetworkClass.A;
+			case 2: return NetworkClass.B;
+			case 3: return NetworkClass.C;
+			default:
+				throw new Exception("Invalid network class");
+		}
 	}
 
 	private async Task<string?> GetNetworkWifiSsidAsync()
@@ -356,8 +379,8 @@ public class AdapterSelectViewModel : ViewModelBase
 	private void ClearAll()
 	{
 		NicType = default;
-		IpAddress = default;
-		MacAddress = default;
+		HostIp = default;
+		HostMac = default;
 		GatewayIp = default;
 		NetworkSsid = default;
 	}

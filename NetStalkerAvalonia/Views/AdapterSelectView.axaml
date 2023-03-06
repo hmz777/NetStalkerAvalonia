@@ -66,11 +66,11 @@
 				</DockPanel>
 				<DockPanel Classes="horizontalPanel">
 					<TextBlock>IP Address:</TextBlock>
-					<TextBlock Text="{Binding IpAddress}" />
+					<TextBlock Text="{Binding HostIp}" />
 				</DockPanel>
 				<DockPanel Classes="horizontalPanel">
 					<TextBlock>MAC Address:</TextBlock>
-					<TextBlock Text="{Binding MacAddress}" />
+					<TextBlock Text="{Binding HostMac}" />
 				</DockPanel>
 				<DockPanel Classes="horizontalPanel">
 					<TextBlock>Gateway IP:</TextBlock>
