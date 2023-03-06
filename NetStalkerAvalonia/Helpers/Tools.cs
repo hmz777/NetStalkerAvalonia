@@ -35,8 +35,7 @@ public class Tools
 
 		dependency = Locator.Current.GetService<T>(contract)!;
 
-		if (dependency == null &&
-			OptionalFeatures.AvailableFeatures.Contains(typeof(T)) == false)
+		if (dependency == null)
 		{
 			// Only throw on non-optional features
 			throw new Exception(string.Format("The dependency locator returned null of type {0}.", typeof(T)));

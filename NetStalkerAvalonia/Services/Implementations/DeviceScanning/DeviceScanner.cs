@@ -219,8 +219,7 @@ public class DeviceScanner : IDeviceScanner
 			_deviceNameResolver?.ResolveDeviceNameAsync(device);
 
 			// Get vendor info for current target if the feature is available
-			if (OptionalFeatures.AvailableFeatures.Contains(typeof(IDeviceTypeIdentifier)))
-				_deviceTypeIdentifier?.IdentifyDevice(device);
+			_deviceTypeIdentifier?.IdentifyDevice(device);
 		}
 		else
 		{
