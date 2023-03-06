@@ -1,9 +1,7 @@
 ﻿<ProjectConfiguration>
   <Settings>
-    <IgnoredTests>
-      <FixtureTestSelector>
-        <FixtureName>NetStalker.Tests.UITests</FixtureName>
-      </FixtureTestSelector>
-    </IgnoredTests>
+    <HiddenComponentWarnings>
+      <Value>LongTestTimesWithoutParallelExecution</Value>
+    </HiddenComponentWarnings>
   </Settings>
 </ProjectConfiguration>
