@@ -57,7 +57,7 @@ jobs:
 
     env:
       Solution_Name: NetStalkerAvalonia.sln                  # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Path: NetStalker.Tests.csproj               # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      Test_Project_Path: NetStalker.Tests.csproj             # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
       
     steps:
     - name: Checkout
@@ -75,9 +75,6 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: Reveal path
-      run: ls;pwd
-
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
       run: dotnet restore $env.Solution_Name
@@ -92,20 +89,32 @@ jobs:
     
     # Publish application
     - name: Publish the application
-      run: dotnet publish $env.Solution_Name --configuration $env.Configuration --no-restore
+      run: dotnet publish $env.Solution_Name --configuration $env.Configuration --no-restore -o ../output
       working-directory: NetStalkerAvalonia
       env:
-        Configuration: $env.Configuration
+        Configuration: $env.Configuration   
     
-    # Save build output  
-    - name: Save production artifacts
-      uses: actions/upload-artifact@v3
+    - name: Install InnoSetup
+      uses: crazy-max/ghaction-chocolatey@v2
       with:
-        name: production-artifacts
-        path: output
-        
-    # Create docker image  
-    # Run image
-    # Build installer
-    # Get output
- 
+        args: install InnoSetup
+
+    - name: Package application
+      run: iscc ../NetStalkerSetupScript.iss
+      working-directory: NetStalkerAvalonia
+    
+    - name: Create a release with a setup file
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "InstallerOutput/NetStalker Setup.exe"
+
+    #- name: Pull windows nanoserver, tag and run it
+    #  run: docker pull mcr.microsoft.com/windows/nanoserver:20H2
+    #       docker tag mcr.microsoft.com/windows/nanoserver:20H2 windows:20H2
+    #       run windows:20H
+
+    #- name: Copy output files to container
+    #  run: docker exec powershell BuildInstaller.ps1
+
+    #- name: Run the setup build script
+    #  run: docker exec powershell BuildInstaller.ps1       
