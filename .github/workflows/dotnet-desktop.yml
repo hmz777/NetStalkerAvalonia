@@ -94,7 +94,7 @@ jobs:
       run: dotnet publish $env.Solution_Name --configuration $env.Configuration --no-restore -o ../output
       working-directory: NetStalkerAvalonia
       env:
-        Configuration: $env.Configuration   
+        Configuration: ${{ matrix.configuration }} 
     
     - name: Install InnoSetup
       uses: crazy-max/ghaction-chocolatey@v2
