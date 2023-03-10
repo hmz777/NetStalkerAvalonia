@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia.ViewModels
 {
-	public class MainViewModel : ViewModelBase, IScreen, IDisposable
+	public class MainViewModel : ViewModelBase, IDisposable
 	{
 		#region Subscriptions
 
@@ -42,9 +42,22 @@ namespace NetStalkerAvalonia.ViewModels
 		#region Services
 
 		// Required services
-		private IDeviceScanner? _scanner;
-		private IBlockerRedirector? _blockerRedirector;
-		private IDeviceNameResolver? _deviceNameResolver;
+		private readonly IRouter _router;
+		private IDeviceScanner _scanner;
+		private IBlockerRedirector _blockerRedirector;
+		private IDeviceNameResolver _deviceNameResolver;
+
+		#endregion
+
+		#region ViewModels
+
+		private readonly SnifferViewModel _snifferViewModel;
+		private readonly OptionsViewModel _optionsViewModel;
+		private readonly RuleBuilderViewModel _ruleBuilderViewModel;
+		private readonly HelpViewModel _helpViewModel;
+		private readonly AboutViewModel _aboutViewModel;
+
+		public readonly AppLogViewModel _appLogViewModel;
 
 		#endregion
 
@@ -52,14 +65,14 @@ namespace NetStalkerAvalonia.ViewModels
 
 		// The Router associated with this Screen.
 		// Required by the IScreen interface.
-		public RoutingState Router { get; } = new();
+		public RoutingState Router => _router.Router;
 
 		// Commands to navigate the different views
-		public ReactiveCommand<Unit, IRoutableViewModel>? GoToRules { get; }
-		public ReactiveCommand<Unit, IRoutableViewModel>? GoToSniffer { get; }
-		public ReactiveCommand<Unit, IRoutableViewModel>? GoToOptions { get; }
-		public ReactiveCommand<Unit, IRoutableViewModel>? GoToHelp { get; }
-		public ReactiveCommand<Unit, IRoutableViewModel>? GoToAbout { get; }
+		public ReactiveCommand<Unit, IRoutableViewModel> GoToRules { get; }
+		public ReactiveCommand<Unit, IRoutableViewModel> GoToSniffer { get; }
+		public ReactiveCommand<Unit, IRoutableViewModel> GoToOptions { get; }
+		public ReactiveCommand<Unit, IRoutableViewModel> GoToHelp { get; }
+		public ReactiveCommand<Unit, IRoutableViewModel> GoToAbout { get; }
 
 		// The command that navigates a user back.
 		public ReactiveCommand<Unit, Unit> GoBack => Router.NavigateBack;
@@ -204,13 +217,27 @@ namespace NetStalkerAvalonia.ViewModels
 
 		[Splat.DependencyInjectionConstructor]
 		public MainViewModel(
+			IRouter router,
 			IDeviceScanner deviceScanner,
 			IBlockerRedirector blockerRedirector,
-			IDeviceNameResolver deviceNameResolver)
+			IDeviceNameResolver deviceNameResolver,
+			SnifferViewModel snifferViewModel,
+			OptionsViewModel optionsViewModel,
+			RuleBuilderViewModel ruleBuilderViewModel,
+			HelpViewModel helpViewModel,
+			AboutViewModel aboutViewModel,
+			AppLogViewModel appLogViewModel)
 		{
+			_router = router;
 			_scanner = deviceScanner;
 			_blockerRedirector = blockerRedirector;
 			_deviceNameResolver = deviceNameResolver;
+			_snifferViewModel = snifferViewModel;
+			_optionsViewModel = optionsViewModel;
+			_ruleBuilderViewModel = ruleBuilderViewModel;
+			_helpViewModel = helpViewModel;
+			_aboutViewModel = aboutViewModel;
+			_appLogViewModel = appLogViewModel;
 
 			#region Page info wiring
 
@@ -230,19 +257,19 @@ namespace NetStalkerAvalonia.ViewModels
 				.ToProperty(this, x => x.CanGoBack);
 
 			GoToSniffer = ReactiveCommand.CreateFromObservable(
-				() => Router.Navigate.Execute(Tools.ResolveIfNull<SnifferViewModel>(null!)));
+				() => Router.Navigate.Execute(snifferViewModel));
 
 			GoToOptions = ReactiveCommand.CreateFromObservable(
-				() => Router.Navigate.Execute(Tools.ResolveIfNull<OptionsViewModel>(null!)));
+				() => Router.Navigate.Execute(optionsViewModel));
 
 			GoToRules = ReactiveCommand.CreateFromObservable(
-				() => Router.Navigate.Execute(Tools.ResolveIfNull<RuleBuilderViewModel>(null!)));
+				() => Router.Navigate.Execute(ruleBuilderViewModel));
 
 			GoToHelp = ReactiveCommand.CreateFromObservable(
-				() => Router.Navigate.Execute(Tools.ResolveIfNull<HelpViewModel>(null!)));
+				() => Router.Navigate.Execute(helpViewModel));
 
 			GoToAbout = ReactiveCommand.CreateFromObservable(
-				() => Router.Navigate.Execute(Tools.ResolveIfNull<AboutViewModel>(null!)));
+				() => Router.Navigate.Execute(aboutViewModel));
 
 			#endregion
 
@@ -613,17 +640,6 @@ namespace NetStalkerAvalonia.ViewModels
 		{
 			await ShowStatusMessageInteraction.Handle(statusMessage);
 			return Unit.Default;
-		}
-
-		#endregion
-
-		#region Testing
-
-		// For debugging
-		public void TestMethod(Device? device = null)
-		{
-			var encText = Tools.StringEncrypt("This is a secret!");
-			//var decText = Tools.StringDecrypt("This is a secret!");
 		}
 
 		#endregion

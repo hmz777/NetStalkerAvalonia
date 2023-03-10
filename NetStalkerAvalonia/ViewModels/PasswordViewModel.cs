@@ -13,16 +13,16 @@ namespace NetStalkerAvalonia.ViewModels
 {
     public class PasswordViewModel : ViewModelBase
     {
-        private readonly IAppLockService? _appLockService;
+        private readonly IAppLockService _appLockService;
 
         public PasswordViewModel()
         {
 
         }
 
-        public PasswordViewModel(IAppLockService appLockService = null!)
+        public PasswordViewModel(IAppLockService appLockService)
         {
-            this._appLockService = Tools.ResolveIfNull(appLockService);
+            this._appLockService = appLockService;
 
             Submit = ReactiveCommand.Create(() =>
             {
@@ -44,7 +44,7 @@ namespace NetStalkerAvalonia.ViewModels
 
         public ReactiveCommand<Unit, Unit> Submit { get; set; }
         public ReactiveCommand<Unit, Unit> Exit { get; set; }
-        public ReactiveCommand<Unit, Unit>? CloseWindow { get; set; }
+        public ReactiveCommand<Unit, Unit> CloseWindow { get; set; }
 
         private string? _password;
 
