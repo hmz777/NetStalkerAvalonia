@@ -1,9 +1,6 @@
-﻿using Avalonia;
-using Avalonia.Platform;
-using NetStalkerAvalonia.Helpers;
+﻿using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Models;
 using Serilog;
-using Splat;
 using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
@@ -19,8 +16,8 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 	{
 		#region Members
 
-		private readonly IFileSystem fileSystem;
- 
+		private readonly IFileSystem _fileSystem;
+
 		private readonly CancellationTokenSource _cancellationTokenSource;
 		private Task? _serviceTask;
 
@@ -41,23 +38,12 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 
 		public DeviceTypeIdentifier(
 			IFileSystem fileSystem,
- 			HttpClient client = null!)
+ 			HttpClient client)
 		{
-			this.fileSystem = fileSystem;
- 
+			_fileSystem = fileSystem;
+			_client = client;
+
 			_cancellationTokenSource = new CancellationTokenSource();
-
-			try
-			{
-				// Check if HttpClient is registered with the DI container, which indicates that an API token is set
-				_client = Tools.ResolveIfNull(client);
-			}
-			catch (Exception e)
-			{
-				Log.Error(LogMessageTemplates.ServiceResolveError,
-					e.Message);
-			}
-
 			_identificationQueue = new Queue<Device>();
 		}
 
@@ -67,46 +53,38 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 
 		private async Task StartIdentifierAsync()
 		{
-			try
-			{
-				// Load the vendor db into memory
-				_localVendorDb = await fileSystem.File.ReadAllTextAsync(_localVendorDatabase, _cancellationTokenSource.Token);
+			// Load the vendor db into memory
+			_localVendorDb = await _fileSystem.File.ReadAllTextAsync(_localVendorDatabase, _cancellationTokenSource.Token);
 
-				while (_cancellationTokenSource.IsCancellationRequested == false)
+			while (_cancellationTokenSource.IsCancellationRequested == false)
+			{
+				try
 				{
-					try
+					if (_identificationQueue.TryDequeue(out var deviceToIdentify))
 					{
-						if (_identificationQueue.TryDequeue(out var deviceToIdentify))
+						string data = string.Empty;
+
+						if (string.IsNullOrWhiteSpace(Config.AppSettings.VendorApiTokenSetting) == false)
 						{
-							string data = string.Empty;
-
-							if (string.IsNullOrWhiteSpace(Config.AppSettings.VendorApiTokenSetting) == false)
-							{
-								data = await ResolveVendorRemotelyAsync(deviceToIdentify.Mac);
-							}
-
-							// If we got an empty string we try to get the vendor from the local db
-							if (string.IsNullOrWhiteSpace(data))
-							{
-								data = ResolveVendorLocally(deviceToIdentify.Mac);
-							}
-
-							deviceToIdentify.SetVendor(string.IsNullOrWhiteSpace(data) ? "NA" : data);
+							data = await ResolveVendorRemotelyAsync(deviceToIdentify.Mac);
 						}
-					}
-					catch (Exception e)
-					{
-						Log.Error(LogMessageTemplates.ExceptionTemplate,
-							e.GetType(), this.GetType(), e.Message);
-					}
 
-					await Task.Delay(1000);
+						// If we got an empty string we try to get the vendor from the local db
+						if (string.IsNullOrWhiteSpace(data))
+						{
+							data = ResolveVendorLocally(deviceToIdentify.Mac);
+						}
+
+						deviceToIdentify.SetVendor(string.IsNullOrWhiteSpace(data) ? "NA" : data);
+					}
 				}
-			}
-			catch (Exception e)
-			{
+				catch (Exception e)
+				{
+					Log.Error(LogMessageTemplates.ExceptionTemplate,
+						e.GetType(), this.GetType(), e.Message);
+				}
 
-				throw;
+				await Task.Delay(1000);
 			}
 		}
 
@@ -127,7 +105,10 @@ namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
 				var data = await _client!
 					.GetStringAsync(serviceUri);
 
-				return data;
+				if (string.IsNullOrWhiteSpace(data))
+				{
+					return string.Empty;
+				}
 			}
 			catch
 			{
