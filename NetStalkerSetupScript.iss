@@ -6,9 +6,9 @@
 #define MyAppPublisher "Hamzi Alsheikh"
 #define MyAppURL "https://github.com/hmz777/NetStalker.Avalonia"
 #define MyAppExeName "NetStalkerAvalonia.exe"
-#define OutputFiles "..\output\*"
+#define OutputFiles "Output\*"
 #define InstallerOutput "InstallerOutput"
-#define IconFile "Assets\netstalker-logo.ico"
+#define IconFile "netstalker-logo.ico"
 #define SetupName "NetStalker Setup"
 
 [Setup]
