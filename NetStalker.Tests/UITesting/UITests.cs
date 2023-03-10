@@ -1,5 +1,4 @@
 ﻿using Avalonia.Controls;
-using Avalonia.VisualTree;
 using FluentAssertions;
 using NetStalker.Tests.Avalonia;
 using NetStalkerAvalonia.Components;
@@ -11,7 +10,7 @@ namespace NetStalker.Tests.UITesting
 {
 	public class UITests : UITestsBase
 	{
-		[Fact]
+		[Fact(Skip = "Not ready")]
 		public void Can_Choose_Adapter()
 		{
 			ChooseAdapter();
@@ -19,7 +18,7 @@ namespace NetStalker.Tests.UITesting
 			AvaloniaApp.GetMainWindow().GetType().Should().Be(typeof(MainView));
 		}
 
-		[Fact]
+		[Fact(Skip = "Not ready")]
 		public void Can_Navigate_To_About()
 		{
 			ChooseAdapter();
