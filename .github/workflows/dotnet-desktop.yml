@@ -38,14 +38,13 @@
 
 name: .NET Core Desktop
 
-on:
+on: 
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    tags:
+    - '*'
   workflow_dispatch:
     
-
+    
 jobs:
 
   build-test-publish:
@@ -54,8 +53,9 @@ jobs:
       matrix:
         configuration: [Release]
 
-    runs-on: windows-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    runs-on: windows-latest
+    permissions:
+      contents: write
 
     env:
       Solution_Name: NetStalkerAvalonia.sln                  # Replace with your solution name, i.e. MyWpfApp.sln.
@@ -109,6 +109,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         artifacts: "InstallerOutput/NetStalker Setup.exe"
+        skipIfReleaseExists: true
 
     #- name: Pull windows nanoserver, tag and run it
     #  run: docker pull mcr.microsoft.com/windows/nanoserver:20H2
