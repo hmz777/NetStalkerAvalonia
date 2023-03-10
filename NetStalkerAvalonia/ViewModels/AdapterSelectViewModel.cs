@@ -187,6 +187,12 @@ public class AdapterSelectViewModel : ViewModelBase
 				return Unit.Default;
 
 			var adapterName = GetAdapterName();
+
+			if (string.IsNullOrEmpty(adapterName))
+			{
+				return Unit.Default;
+			}
+
 			var gatewayIp = GetGatewayIp();
 			var gatewayMac = GetGatewayMac(gatewayIp, adapterName);
 			var hostIp = GetHostIp();

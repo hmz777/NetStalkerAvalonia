@@ -3,26 +3,20 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.Rules.Implementations;
 using NetStalkerAvalonia.Rules;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.ViewModels;
+using NetStalkerAvalonia.Rules.Implementations;
 using NetStalkerAvalonia.ViewModels.InteractionViewModels;
-using NetStalkerAvalonia.ViewModels.RoutedViewModels;
 using ReactiveUI;
 using Serilog;
-using SharpPcap;
-using SharpPcap.LibPcap;
 using Splat;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
-using System.Net.NetworkInformation;
 
 namespace NetStalkerAvalonia.Helpers;
 
