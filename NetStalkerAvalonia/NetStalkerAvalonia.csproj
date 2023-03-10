@@ -6,18 +6,7 @@
 		<!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
 		<TrimMode>copyused</TrimMode>
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-		<Title>NetStalker</Title>
-		<Description>A network tool to control the bandwidth over your local network, it can block internet access form any selected device, or limit its speed using packet redirection, in addition, it can log web activity for the targeted device using a built in packet sniffer.</Description>
-		<PackageProjectUrl>https://github.com/hmz777/NetStalker.Avalonia</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/hmz777/NetStalker.Avalonia</RepositoryUrl>
-		<Authors>Hamzi Alsheikh</Authors>
-		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-		<Copyright>© Hamzi Alsheikh</Copyright>
-		<PackageIcon>favicon.png</PackageIcon>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageTags>reactive, csharp, wpf, mvvm, desktop, avalonia, reactiveui, trafficshaping, packetsniffer</PackageTags>
-		<NeutralLanguage>en-US</NeutralLanguage>		
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>	
 	</PropertyGroup>
 	<PropertyGroup>
 		<NoWarn>CA1416</NoWarn>
