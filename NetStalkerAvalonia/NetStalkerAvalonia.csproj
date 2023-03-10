@@ -18,6 +18,7 @@
 		<PackageIcon>favicon.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>reactive, csharp, wpf, mvvm, desktop, avalonia, reactiveui, trafficshaping, packetsniffer</PackageTags>
+		<NeutralLanguage>en-US</NeutralLanguage>
 	</PropertyGroup>
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
