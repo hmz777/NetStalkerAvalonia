@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using NetStalkerAvalonia.Configuration;
 using NetStalkerAvalonia.Helpers;
 using NetStalkerAvalonia.Services;
 using NetStalkerAvalonia.Services.Implementations.AppLocking;
@@ -10,20 +9,15 @@ using NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification;
 using NetStalkerAvalonia.Services.Implementations.Notifications;
 using NetStalkerAvalonia.Services.Implementations.PcapDeviceManagement;
 using NetStalkerAvalonia.Services.Implementations.RulesService;
+using NetStalkerAvalonia.Services.Implementations.ViewRouting;
 using NetStalkerAvalonia.ViewModels;
 using NetStalkerAvalonia.ViewModels.RoutedViewModels;
-using ReactiveUI;
 using Serilog;
 using Splat;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia
 {
@@ -54,34 +48,6 @@ namespace NetStalkerAvalonia
 
 		private static void RegisterRequiredServices()
 		{
-			#region Old way of service registration
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new DeviceScanner(),
-			//	typeof(IDeviceScanner));
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new BlockerRedirector(),
-			//	typeof(IBlockerRedirector));
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new DeviceNameResolver(),
-			//	typeof(IDeviceNameResolver));
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new NotificationManager(),
-			//	typeof(INotificationManager));
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new AppLockManager(),
-			//	typeof(IAppLockService));
-
-			//Locator.CurrentMutable.RegisterLazySingleton(() =>
-			//		new RuleService(),
-			//	typeof(IRuleService));
-
-			#endregion
-
 			SplatRegistrations.SetupIOC(Locator.GetLocator());
 
 			SplatRegistrations.RegisterLazySingleton<IFileSystem, FileSystem>();
