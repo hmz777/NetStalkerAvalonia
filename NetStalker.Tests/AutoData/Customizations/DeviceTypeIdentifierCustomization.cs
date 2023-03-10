@@ -9,7 +9,7 @@ namespace NetStalker.Tests.AutoData.Customizations
 		public void Customize(IFixture fixture)
 		{
 			fixture.Customizations.Add(new TypeRelay(typeof(IDeviceTypeIdentifier), typeof(DeviceTypeIdentifier)));
-			fixture.Register(() => new DeviceTypeIdentifier(fixture.Create<IFileSystem>()));
+			fixture.Register(() => new DeviceTypeIdentifier(fixture.Create<IFileSystem>(), null!));
 		}
 	}
 }
