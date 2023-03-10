@@ -91,7 +91,7 @@ jobs:
     
     # Publish application
     - name: Publish the application
-      run: dotnet publish $env.Solution_Name --configuration $env.Configuration --no-restore -o ../output
+      run: dotnet publish $env.Solution_Name --no-restore --output ../output
       working-directory: NetStalkerAvalonia
       env:
         Configuration: ${{ matrix.configuration }} 
