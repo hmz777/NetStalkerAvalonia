@@ -116,7 +116,7 @@ namespace NetStalkerAvalonia
 
 			if (string.IsNullOrWhiteSpace(apiToken) == false)
 			{
-				Locator.CurrentMutable.RegisterLazySingleton(() =>
+				SplatRegistrations.RegisterConstant(() =>
 				{
 					var client = new HttpClient();
 					client.DefaultRequestHeaders.Add("Authorization",
@@ -131,7 +131,7 @@ namespace NetStalkerAvalonia
 		{
 			var mapper = Tools.BuildAutoMapper();
 
-			Locator.CurrentMutable.RegisterConstant(mapper, typeof(IMapper));
+			SplatRegistrations.RegisterConstant<IMapper>(mapper);
 		}
 	}
 }

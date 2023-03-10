@@ -34,11 +34,10 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 #endif
 
 		[Splat.DependencyInjectionConstructor]
-		public OptionsViewModel(IScreen screen)
+		public OptionsViewModel(IRouter screen, IAppLockService appLockService)
 		{
 			HostScreen = screen;
-
-			_appLockService = Tools.ResolveIfNull<IAppLockService>(null!);
+			_appLockService = appLockService;
 
 			SetPassword = ReactiveCommand.Create(SetPasswordImpl);
 			ClearPassword = ReactiveCommand.Create(ClearPasswordImpl);
@@ -52,6 +51,8 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 		#region Password Section
 
 		private readonly ObservableAsPropertyHelper<bool> _isAppLocked;
+		private readonly IAppLockService appLockService;
+
 		public bool IsAppLocked => _isAppLocked.Value;
 
 		public ReactiveCommand<Unit, Unit> SetPassword { get; set; }

@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using NetStalkerAvalonia.Services;
+using ReactiveUI;
 
 namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 {
@@ -19,7 +20,7 @@ namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
 #endif
 
 		[Splat.DependencyInjectionConstructor]
-		public HelpViewModel(IScreen screen) => this.HostScreen = screen;
+		public HelpViewModel(IRouter screen) => this.HostScreen = screen;
 
         #endregion
     }
