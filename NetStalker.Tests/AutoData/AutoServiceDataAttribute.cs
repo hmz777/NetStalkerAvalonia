@@ -11,6 +11,7 @@ namespace NetStalker.Tests.AutoData
 			var fixture = new Fixture();
 			fixture.Customize(new DeviceCustomization());
 			fixture.Customize(new ServicesCustomization());
+			fixture.Customize(new ViewModelsCustomization());
 
 			return fixture;
 		})
