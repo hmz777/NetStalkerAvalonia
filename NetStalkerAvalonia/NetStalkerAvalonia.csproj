@@ -7,7 +7,6 @@
 		<TrimMode>copyused</TrimMode>
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<Title>NetStalker</Title>
 		<Description>A network tool to control the bandwidth over your local network, it can block internet access form any selected device, or limit its speed using packet redirection, in addition, it can log web activity for the targeted device using a built in packet sniffer.</Description>
 		<PackageProjectUrl>https://github.com/hmz777/NetStalker.Avalonia</PackageProjectUrl>
@@ -18,7 +17,11 @@
 		<PackageIcon>favicon.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>reactive, csharp, wpf, mvvm, desktop, avalonia, reactiveui, trafficshaping, packetsniffer</PackageTags>
-		<NeutralLanguage>en-US</NeutralLanguage>
+		<NeutralLanguage>en-US</NeutralLanguage>		
+	</PropertyGroup>
+	<PropertyGroup>
+		<NoWarn>CA1416</NoWarn>
+		<NoWarn>IO0006</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
@@ -66,5 +69,11 @@
 	  <EmbeddedResource Include="Assets\manuf.txt">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="favicon.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 </Project>
