@@ -67,9 +67,4 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </EmbeddedResource>
 	</ItemGroup>
-	<ItemGroup>
-	  <AvaloniaResource Update="Assets\netstalker-logo.ico">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </AvaloniaResource>
-	</ItemGroup>
 </Project>
