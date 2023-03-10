@@ -60,6 +60,7 @@ jobs:
     env:
       Solution_Name: NetStalkerAvalonia.sln                  # Replace with your solution name, i.e. MyWpfApp.sln.
       Test_Project_Path: NetStalker.Tests.csproj             # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      Release_Version: ${{ github.ref_name }}
       
     steps:
     - name: Checkout
@@ -91,7 +92,7 @@ jobs:
     
     # Publish application
     - name: Publish the application
-      run: dotnet publish $env.Solution_Name --no-restore --output ../Output
+      run: dotnet publish $env.Solution_Name --no-restore --output ../Output -p:Version=$env.Release_Version -p:FileVersion=$env.Release_Version
       working-directory: NetStalkerAvalonia
       env:
         Configuration: ${{ matrix.configuration }} 
