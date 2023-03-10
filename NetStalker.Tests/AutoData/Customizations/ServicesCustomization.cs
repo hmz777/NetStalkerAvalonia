@@ -4,6 +4,7 @@
 	{
 		public void Customize(IFixture fixture)
 		{
+			fixture.Customize(new RouterCustomization());
 			fixture.Customize(new AutoMapperCustomization());
 			fixture.Customize(new FileSystemCustomization());
 			fixture.Customize(new RuleServiceCustomization());
