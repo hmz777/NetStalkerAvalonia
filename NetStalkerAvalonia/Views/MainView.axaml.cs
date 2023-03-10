@@ -46,7 +46,7 @@ namespace NetStalkerAvalonia.Views
 		{
 			var dialog = new AppLogView
 			{
-				DataContext = Tools.ResolveIfNull<AppLogViewModel>(null!)
+				DataContext = ViewModel!._appLogViewModel
 			};
 
 			dialog.Show(this);
