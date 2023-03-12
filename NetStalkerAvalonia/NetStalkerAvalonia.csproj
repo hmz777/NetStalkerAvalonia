@@ -6,11 +6,22 @@
 		<!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
 		<TrimMode>copyused</TrimMode>
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>	
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	</PropertyGroup>
 	<PropertyGroup>
 		<NoWarn>CA1416</NoWarn>
 		<NoWarn>IO0006</NoWarn>
+		<Title>NetStalker</Title>
+		<ProductName>NetStalker</ProductName>
+		<Description>A network tool to control the bandwidth over your local network, it can block internet access form any selected device, or limit its speed using packet redirection, in addition, it can log web activity for the targeted device using a built in packet sniffer.</Description>
+		<Authors>Hamzi Alsheikh</Authors>
+		<Copyright>Copyright © Hamzi Alsheikh 2023</Copyright>
+		<PackageProjectUrl>https://github.com/hmz777/NetStalker.Avalonia</PackageProjectUrl>
+		<PackageIcon>netstalker-logo.ico</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/hmz777/NetStalker.Avalonia</RepositoryUrl>
+		<ApplicationIcon>netstalker-logo.ico</ApplicationIcon>
+		<Product>NetStalker</Product>
 	</PropertyGroup>
 	<ItemGroup>
 		<AvaloniaResource Include="Assets\**" />
@@ -40,8 +51,8 @@
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
 		<PackageReference Include="TestableIO.System.IO.Abstractions" Version="19.1.18" />
 		<PackageReference Include="TestableIO.System.IO.Abstractions.Analyzers" Version="2022.0.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="TestableIO.System.IO.Abstractions.Extensions" Version="1.0.39" />
 		<PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="19.1.18" />
@@ -55,14 +66,21 @@
 		<AvaloniaResource Include="Assets\**" />
 	</ItemGroup>
 	<ItemGroup>
-	  <EmbeddedResource Include="Assets\manuf.txt">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </EmbeddedResource>
+	  <Content Include="netstalker-logo.ico" />
 	</ItemGroup>
 	<ItemGroup>
-	  <None Update="favicon.png">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
+		<EmbeddedResource Include="Assets\manuf.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\netstalker-logo.ico">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 </Project>
