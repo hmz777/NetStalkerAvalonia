@@ -92,7 +92,7 @@ jobs:
       working-directory: NetStalker.Tests
       
     - name: Set assembly version
-      if: contains($Release_Version, '-')
+      if: contains(env.Release_Version, '-')
       run: |
         $AssemblyVersion=$env:Release_Version.split('-')[0]
         echo "Assembly_Version=$AssemblyVersion" >> $env:GITHUB_ENV
