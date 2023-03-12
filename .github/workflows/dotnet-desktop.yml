@@ -80,19 +80,19 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
-      run: dotnet restore $env.Solution_Name
+      run: dotnet restore $Solution_Name
       working-directory: NetStalkerAvalonia
       env:
         Configuration: ${{ matrix.configuration }}
 
     # Execute all unit tests in the solution
     - name: Execute unit tests
-      run: dotnet test $env.Test_Project_Path --no-restore
+      run: dotnet test $Test_Project_Path --no-restore
       working-directory: NetStalker.Tests
     
     # Publish application
     - name: Publish the application
-      run: dotnet publish $env.Solution_Name --no-restore --output ../Output /p:AssemblyVersion=$Release_Version /p:Version=$Release_Version
+      run: dotnet publish $Solution_Name --no-restore --output ../Output /p:Version=$Release_Version
       working-directory: NetStalkerAvalonia
       env:
         Configuration: ${{ matrix.configuration }}
