@@ -94,8 +94,8 @@ jobs:
     - name: Set assembly version
       if: contains($Release_Version, '-')
       run: |
-      $AssemblyVersion=$env:Release_Version.split('-')[0]
-      echo "Assembly_Version=$AssemblyVersion" >> $env:GITHUB_ENV
+        $AssemblyVersion=$env:Release_Version.split('-')[0]
+        echo "Assembly_Version=$AssemblyVersion" >> $env:GITHUB_ENV
     
     # Publish application
     - name: Publish the application
