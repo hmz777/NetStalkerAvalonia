@@ -92,7 +92,7 @@ jobs:
     
     # Publish application
     - name: Publish the application
-      run: dotnet publish $Solution_Name --no-restore --output ../Output /p:Version=$Release_Version
+      run: dotnet publish $Solution_Name --no-restore --output ../Output /p:Version=$Release_Version /p:FileVersion=$Release_Version
       working-directory: NetStalkerAvalonia
       env:
         Configuration: ${{ matrix.configuration }}
