@@ -9,7 +9,7 @@
 #define OutputFiles "Output\*"
 #define InstallerOutput "InstallerOutput"
 #define IconFile "netstalker-logo.ico"
-#define SetupName "NetStalker Setup"
+#define SetupName "NetStalkerSetup"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -43,8 +43,8 @@ Source: "{#OutputFiles}"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#IconFile}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#IconFile}"; Tasks: desktopicon
+Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
