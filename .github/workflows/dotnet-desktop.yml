@@ -116,7 +116,7 @@ jobs:
     - name: Create a release with a setup file
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "InstallerOutput/NetStalker Setup.exe"
+        artifacts: "InstallerOutput/NetStalkerSetup.exe"
         skipIfReleaseExists: true
 
     #- name: Pull windows nanoserver, tag and run it
