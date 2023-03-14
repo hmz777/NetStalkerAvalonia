@@ -118,7 +118,6 @@ jobs:
       with:
         artifacts: "InstallerOutput/NetStalker Setup.exe"
         skipIfReleaseExists: true
-        tag: $Release_Version
 
     #- name: Pull windows nanoserver, tag and run it
     #  run: docker pull mcr.microsoft.com/windows/nanoserver:20H2
