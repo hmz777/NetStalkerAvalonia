@@ -57,8 +57,15 @@ namespace NetStalkerAvalonia
 			SplatRegistrations.RegisterLazySingleton<IDeviceScanner, DeviceScanner>();
 			SplatRegistrations.RegisterLazySingleton<IBlockerRedirector, BlockerRedirector>();
 			SplatRegistrations.RegisterLazySingleton<INotificationManager, NotificationManager>();
-			SplatRegistrations.RegisterLazySingleton<IAppLockService, AppLockManager>();
 			SplatRegistrations.RegisterLazySingleton<IRuleService, RuleService>();
+
+
+			// RuntimeInformation.IsOSPlatform is not used here since SplatRegistrations uses source generation
+#if WINDOWS
+			SplatRegistrations.RegisterLazySingleton<IAppLockService, AppLockManagerWindows>();
+#else
+			SplatRegistrations.RegisterLazySingleton<IAppLockService, AppLockManagerLinux>();
+#endif
 
 			ConfigureAndRegisterAutoMapper();
 		}
