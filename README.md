@@ -1,4 +1,4 @@
-# NetStalker Avalonia [![.NET Core Desktop](https://github.com/hmz777/NetStalker.Avalonia/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/hmz777/NetStalker.Avalonia/actions/workflows/dotnet-desktop.yml)
+# NetStalker Avalonia [![.NET Core Desktop](https://github.com/hmz777/NetStalker.Avalonia/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/hmz777/NetStalker.Avalonia/actions/workflows/dotnet-desktop.yml) ![GitHub All Releases](https://img.shields.io/github/downloads/hmz777/NetStalker.Avalonia/total?color=%2332C754&label=downloads&style=flat) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/hmz777/NetStalker.Avalonia?color=%2332C754&include_prereleases&style=flat)
 [NetStalker](https://github.com/hmz777/NetStalker) re-written in MVVM, Avalonia and Reactive UI.
 
 # Downloads
