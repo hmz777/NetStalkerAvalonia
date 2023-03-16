@@ -17,7 +17,7 @@ public partial class AdapterSelectView : ReactiveWindow<AdapterSelectViewModel>
             {
 				var passwordWindow = new PasswordView
 				{
-					DataContext = new PasswordViewModel(null!)
+					DataContext = this.ViewModel._passwordViewModel
 				};
 
 				passwordWindow.ShowDialog(this).DisposeWith(disposables);

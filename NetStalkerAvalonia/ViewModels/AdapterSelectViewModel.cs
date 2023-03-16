@@ -31,6 +31,8 @@ public class AdapterSelectViewModel : ViewModelBase
 	private readonly IPcapDeviceManager _pcapDeviceManager;
 	private readonly IAppLockService _appLockService;
 
+	public readonly PasswordViewModel _passwordViewModel;
+
 	#endregion
 
 	#region Members
@@ -124,10 +126,14 @@ public class AdapterSelectViewModel : ViewModelBase
 #endif
 
 	[Splat.DependencyInjectionConstructor]
-	public AdapterSelectViewModel(IPcapDeviceManager pcapDeviceManager, IAppLockService appLockService)
+	public AdapterSelectViewModel(
+		IPcapDeviceManager pcapDeviceManager,
+		IAppLockService appLockService,
+		PasswordViewModel passwordViewModel)
 	{
 		_pcapDeviceManager = pcapDeviceManager;
 		_appLockService = appLockService;
+		_passwordViewModel = passwordViewModel;
 
 		#region Populate data
 

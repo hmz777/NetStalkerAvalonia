@@ -11,63 +11,66 @@ using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia.ViewModels
 {
-    public class PasswordViewModel : ViewModelBase
-    {
-        private readonly IAppLockService _appLockService;
+	public class PasswordViewModel : ViewModelBase
+	{
+		private readonly IAppLockService _appLockService;
 
-        public PasswordViewModel()
-        {
+#if DEBUG
+		public PasswordViewModel()
+		{
 
-        }
+		}
+#endif
 
-        public PasswordViewModel(IAppLockService appLockService)
-        {
-            this._appLockService = appLockService;
+		[Splat.DependencyInjectionConstructor]
+		public PasswordViewModel(IAppLockService appLockService)
+		{
+			this._appLockService = appLockService;
 
-            Submit = ReactiveCommand.Create(() =>
-            {
-                var result = _appLockService!.Unlock(Password!);
+			Submit = ReactiveCommand.Create(() =>
+			{
+				var result = _appLockService!.Unlock(Password!);
 
-                if (result)
-                {
-                    _ = this.CloseWindow?.Execute().Subscribe();
-                }
-                else
-                {
-                    ErrorMessage = "Invalid password";
-                    ShowError = true;
-                }
-            });
+				if (result)
+				{
+					_ = this.CloseWindow?.Execute().Subscribe();
+				}
+				else
+				{
+					ErrorMessage = "Invalid password";
+					ShowError = true;
+				}
+			});
 
-            Exit = ReactiveCommand.Create(Tools.ExitApp);
-        }
+			Exit = ReactiveCommand.Create(Tools.ExitApp);
+		}
 
-        public ReactiveCommand<Unit, Unit> Submit { get; set; }
-        public ReactiveCommand<Unit, Unit> Exit { get; set; }
-        public ReactiveCommand<Unit, Unit> CloseWindow { get; set; }
+		public ReactiveCommand<Unit, Unit> Submit { get; set; }
+		public ReactiveCommand<Unit, Unit> Exit { get; set; }
+		public ReactiveCommand<Unit, Unit> CloseWindow { get; set; }
 
-        private string? _password;
+		private string? _password;
 
-        public string? Password
-        {
-            get => _password;
-            set => this.RaiseAndSetIfChanged(ref _password, value);
-        }
+		public string? Password
+		{
+			get => _password;
+			set => this.RaiseAndSetIfChanged(ref _password, value);
+		}
 
-        private bool _showError;
+		private bool _showError;
 
-        public bool ShowError
-        {
-            get => _showError;
-            set => this.RaiseAndSetIfChanged(ref _showError, value);
-        }
+		public bool ShowError
+		{
+			get => _showError;
+			set => this.RaiseAndSetIfChanged(ref _showError, value);
+		}
 
-        private string? _errorMessage;
+		private string? _errorMessage;
 
-        public string? ErrorMessage
-        {
-            get => _errorMessage;
-            set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
-        }
-    }
+		public string? ErrorMessage
+		{
+			get => _errorMessage;
+			set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
+		}
+	}
 }

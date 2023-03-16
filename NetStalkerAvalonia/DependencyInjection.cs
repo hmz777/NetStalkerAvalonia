@@ -74,6 +74,7 @@ namespace NetStalkerAvalonia
 			SplatRegistrations.RegisterLazySingleton<AboutViewModel>();
 			SplatRegistrations.RegisterLazySingleton<AppLogViewModel>();
 			SplatRegistrations.RegisterLazySingleton<AdapterSelectViewModel>();
+			SplatRegistrations.RegisterLazySingleton<PasswordViewModel>();
 		}
 
 		private static void RegisterOptionalServices()
