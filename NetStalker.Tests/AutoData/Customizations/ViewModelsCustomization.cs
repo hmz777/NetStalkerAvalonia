@@ -2,11 +2,6 @@
 using NetStalkerAvalonia.Services;
 using NetStalkerAvalonia.ViewModels;
 using NetStalkerAvalonia.ViewModels.RoutedViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetStalker.Tests.AutoData.Customizations
 {
@@ -20,7 +15,8 @@ namespace NetStalker.Tests.AutoData.Customizations
 			fixture.Register(() => new HelpViewModel(fixture.Create<IRouter>()));
 			fixture.Register(() => new AboutViewModel(fixture.Create<IRouter>()));
 			fixture.Register(() => new AppLogViewModel());
-			fixture.Register(() => new AdapterSelectViewModel(fixture.Create<IPcapDeviceManager>(), fixture.Create<IAppLockService>()));
+			fixture.Register(() => new PasswordViewModel(fixture.Create<IAppLockService>()));
+			fixture.Register(() => new AdapterSelectViewModel(fixture.Create<IPcapDeviceManager>(), fixture.Create<IAppLockService>(), fixture.Create<PasswordViewModel>()));
 		}
 	}
 }
