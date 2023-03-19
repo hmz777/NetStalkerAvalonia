@@ -5,6 +5,7 @@ using NetStalkerAvalonia.Core.Models;
 using NetStalkerAvalonia.Core.Services;
 using ReactiveUI;
 using Serilog;
+using Splat;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

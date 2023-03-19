@@ -94,7 +94,7 @@
 						   Height="300"
 						   VerticalAlignment="Center"
 						   HorizontalAlignment="Center"
-						   Source="avares://NetStalkerAvalonia/Assets/Images/app_logo.png"/>
+						   Source="avares://NetStalkerAvalonia.Core/Assets/Images/app_logo.png"/>
 				</StackPanel>
 			</Grid>
 		</Border>

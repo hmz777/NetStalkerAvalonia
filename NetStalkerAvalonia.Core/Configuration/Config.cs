@@ -7,5 +7,10 @@ namespace NetStalkerAvalonia.Core.Configuration
     {
         public static AppSettings AppSettings { get; set; } = new AppSettings();
         public static JsonSerializerOptions JsonSerializerOptions = new();
+
+        public static void ReadConfiguration()
+        {
+			AppSettings.ReadConfiguration();
+		}
     }
 }

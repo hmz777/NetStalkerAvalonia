@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using NetStalkerAvalonia.Core.Configuration;
-using NetStalkerAvalonia.Core.Helpers;
 using NetStalkerAvalonia.Core.Services;
 using NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection;
 using NetStalkerAvalonia.Core.Services.Implementations.DeviceNameResolving;
@@ -12,6 +11,7 @@ using NetStalkerAvalonia.Core.Services.Implementations.RulesService;
 using NetStalkerAvalonia.Core.Services.Implementations.ViewRouting;
 using NetStalkerAvalonia.Core.ViewModels;
 using NetStalkerAvalonia.Core.ViewModels.RoutedViewModels;
+using ReactiveUI;
 using Serilog;
 using Splat;
 using System;
@@ -48,10 +48,12 @@ namespace NetStalkerAvalonia.Core.Helpers
 			// Register required app services
 			RegisterRequiredServices();
 
-			RegisterViewModels();
-
 			// Register optional services
 			RegisterOptionalServices();
+
+			RegisterViewModels();
+
+			RegisterViewsForViewModels();
 		}
 
 		private static void ConfigureAndRegisterLogging()
@@ -76,29 +78,7 @@ namespace NetStalkerAvalonia.Core.Helpers
 			SplatRegistrations.RegisterLazySingleton<INotificationManager, NotificationManager>();
 			SplatRegistrations.RegisterLazySingleton<IRuleService, RuleService>();
 
-
-			// RuntimeInformation.IsOSPlatform is not used here since SplatRegistrations uses source generation
-#if WINDOWS
-			SplatRegistrations.RegisterLazySingleton<IAppLockService, AppLockManagerWindows>();
-#else
-			//SplatRegistrations.RegisterLazySingleton<IAppLockService, AppLockManagerLinux>();
-#endif
-
 			ConfigureAndRegisterAutoMapper();
-		}
-
-		private static void RegisterViewModels()
-		{
-			SplatRegistrations.RegisterLazySingleton<IRouter, ViewRouter>();
-			SplatRegistrations.RegisterLazySingleton<MainViewModel>();
-			SplatRegistrations.RegisterLazySingleton<SnifferViewModel>();
-			SplatRegistrations.RegisterLazySingleton<OptionsViewModel>();
-			SplatRegistrations.RegisterLazySingleton<RuleBuilderViewModel>();
-			SplatRegistrations.RegisterLazySingleton<HelpViewModel>();
-			SplatRegistrations.RegisterLazySingleton<AboutViewModel>();
-			SplatRegistrations.RegisterLazySingleton<AppLogViewModel>();
-			SplatRegistrations.RegisterLazySingleton<AdapterSelectViewModel>();
-			SplatRegistrations.RegisterLazySingleton<PasswordViewModel>();
 		}
 
 		private static void RegisterOptionalServices()
@@ -123,6 +103,25 @@ namespace NetStalkerAvalonia.Core.Helpers
 			var mapper = AutoMapperHelpers.BuildAutoMapper();
 
 			SplatRegistrations.RegisterConstant<IMapper>(mapper);
+		}
+
+		private static void RegisterViewModels()
+		{
+			SplatRegistrations.RegisterLazySingleton<IRouter, ViewRouter>();
+			SplatRegistrations.RegisterLazySingleton<MainViewModel>();
+			SplatRegistrations.RegisterLazySingleton<SnifferViewModel>();
+			SplatRegistrations.RegisterLazySingleton<OptionsViewModel>();
+			SplatRegistrations.RegisterLazySingleton<RuleBuilderViewModel>();
+			SplatRegistrations.RegisterLazySingleton<HelpViewModel>();
+			SplatRegistrations.RegisterLazySingleton<AboutViewModel>();
+			SplatRegistrations.RegisterLazySingleton<AppLogViewModel>();
+			SplatRegistrations.RegisterLazySingleton<AdapterSelectViewModel>();
+			SplatRegistrations.RegisterLazySingleton<PasswordViewModel>();
+		}
+
+		private static void RegisterViewsForViewModels()
+		{
+			Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetExecutingAssembly());
 		}
 	}
 }

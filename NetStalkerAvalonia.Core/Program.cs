@@ -37,12 +37,8 @@ namespace NetStalkerAvalonia.Core
 		// Avalonia configuration, don't remove; also used by visual designer.
 		public static AppBuilder BuildAvaloniaApp()
 		{
-			// Router uses Splat.Locator to resolve views for
-			// view models, so we need to register our views.
-			Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetExecutingAssembly());
-
 			// Read app config
-			ReadConfiguration();
+			Config.ReadConfiguration();
 
 			DependencyInjectionHelpers.RegisterAppDependencies();
 
@@ -50,11 +46,6 @@ namespace NetStalkerAvalonia.Core
 				.UsePlatformDetect()
 				.LogToTrace()
 				.UseReactiveUI();
-		}
-
-		private static void ReadConfiguration()
-		{
-			Config.AppSettings.ReadConfiguration();
 		}
 	}
 }
