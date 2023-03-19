@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace NetStalkerAvalonia.ViewModels
+namespace NetStalkerAvalonia.Core.ViewModels
 {
 	public class AppLogViewModel : ViewModelBase, IDisposable
 	{

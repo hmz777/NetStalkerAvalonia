@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Net;
 
-namespace NetStalkerAvalonia.Converters
+namespace NetStalkerAvalonia.Core.Converters
 {
     public class IpAddressToStringConverter : IValueConverter
     {

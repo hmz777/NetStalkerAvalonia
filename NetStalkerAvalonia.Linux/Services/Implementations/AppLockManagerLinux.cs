@@ -1,5 +1,5 @@
 ﻿using NetStalkerAvalonia.Core.Helpers;
-using NetStalkerAvalonia.Services;
+using NetStalkerAvalonia.Core.Services;
 using ReactiveUI;
 using System.IO.Abstractions;
 using System.Text;

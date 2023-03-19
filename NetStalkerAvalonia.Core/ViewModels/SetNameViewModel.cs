@@ -1,7 +1,7 @@
 using ReactiveUI;
 using System.Reactive;
 
-namespace NetStalkerAvalonia.ViewModels;
+namespace NetStalkerAvalonia.Core.ViewModels;
 
 public class SetNameViewModel : ViewModelBase
 {

@@ -1,10 +1,10 @@
 using Avalonia.Media.Imaging;
-using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.Core.Models;
 using System;
 using System.Globalization;
 using IValueConverter = Avalonia.Data.Converters.IValueConverter;
 
-namespace NetStalkerAvalonia.Converters;
+namespace NetStalkerAvalonia.Core.Converters;
 
 public class StatusMessageTypeToImageConverter : IValueConverter
 {

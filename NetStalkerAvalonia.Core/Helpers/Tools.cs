@@ -1,9 +1,9 @@
-using NetStalkerAvalonia.Configuration;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+using NetStalkerAvalonia.Core.Configuration;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System.Diagnostics;
 
-namespace NetStalkerAvalonia.Helpers;
+namespace NetStalkerAvalonia.Core.Helpers;
 
 public class Tools
 {

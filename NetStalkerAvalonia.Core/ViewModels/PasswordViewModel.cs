@@ -1,7 +1,7 @@
 ﻿using Avalonia.Controls;
 using NetStalkerAvalonia.Core.Helpers;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Services;
+using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Services;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.ViewModels
+namespace NetStalkerAvalonia.Core.ViewModels
 {
 	public class PasswordViewModel : ViewModelBase
 	{

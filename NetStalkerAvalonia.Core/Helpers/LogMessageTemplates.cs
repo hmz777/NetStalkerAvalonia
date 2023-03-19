@@ -1,4 +1,4 @@
-namespace NetStalkerAvalonia.Helpers;
+namespace NetStalkerAvalonia.Core.Helpers;
 
 public class LogMessageTemplates
 {

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+using NetStalkerAvalonia.Core.Models;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 
-namespace NetStalkerAvalonia.Services
+namespace NetStalkerAvalonia.Core.Services
 {
     public interface IDeviceNameResolver
 	{

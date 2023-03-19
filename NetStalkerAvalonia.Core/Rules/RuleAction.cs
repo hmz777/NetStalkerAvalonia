@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Rules
+namespace NetStalkerAvalonia.Core.Rules
 {
 	public enum RuleAction
 	{

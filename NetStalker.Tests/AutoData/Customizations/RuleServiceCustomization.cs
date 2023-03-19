@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.RulesService;
+using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations.RulesService;
 using System.IO.Abstractions;
 
 namespace NetStalker.Tests.AutoData.Customizations

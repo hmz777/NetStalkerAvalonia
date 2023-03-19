@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification;
+namespace NetStalkerAvalonia.Core.Services.Implementations.DeviceTypeIdentification;
 
 public class DeviceIdentificationResponse
 {

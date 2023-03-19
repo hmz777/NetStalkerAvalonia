@@ -2,10 +2,10 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reactive.Linq;
-using NetStalkerAvalonia.Services;
+using NetStalkerAvalonia.Core.Services;
 using ReactiveUI;
 
-namespace NetStalkerAvalonia.Models
+namespace NetStalkerAvalonia.Core.Models
 {
 	public class Device : ReactiveObject
 	{

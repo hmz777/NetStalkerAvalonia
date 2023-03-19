@@ -1,9 +1,9 @@
 ﻿using Avalonia.Controls;
 using FluentAssertions;
 using NetStalker.Tests.Avalonia;
-using NetStalkerAvalonia.Components;
-using NetStalkerAvalonia.ViewModels;
-using NetStalkerAvalonia.Views;
+using NetStalkerAvalonia.Core.ViewModels;
+using NetStalkerAvalonia.Core.Views;
+using NetStalkerAvalonia.Core.Views.Components;
 using Splat;
 
 namespace NetStalker.Tests.UITesting

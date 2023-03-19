@@ -1,4 +1,4 @@
-﻿using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+﻿using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 
 namespace NetStalkerAvalonia.Core.Services
 {

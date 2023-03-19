@@ -1,4 +1,4 @@
-﻿using NetStalkerAvalonia.Services;
+﻿using NetStalkerAvalonia.Core.Services;
 using ReactiveUI;
 using Windows.Security.Credentials;
 

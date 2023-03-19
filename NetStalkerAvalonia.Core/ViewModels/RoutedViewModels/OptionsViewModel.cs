@@ -1,11 +1,11 @@
-﻿using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+﻿using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Models;
+using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System.Reactive;
 
-namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
+namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 {
 	public class OptionsViewModel : ViewModelBase, IRoutableViewModel
 	{

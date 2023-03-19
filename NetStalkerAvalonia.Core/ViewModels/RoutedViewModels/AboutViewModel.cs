@@ -1,8 +1,8 @@
-﻿using NetStalkerAvalonia.Services;
+﻿using NetStalkerAvalonia.Core.Services;
 using ReactiveUI;
 using System.Reflection;
 
-namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
+namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 {
 	public class AboutViewModel : ViewModelBase, IRoutableViewModel
 	{

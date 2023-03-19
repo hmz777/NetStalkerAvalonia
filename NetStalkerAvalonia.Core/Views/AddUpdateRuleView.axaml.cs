@@ -1,10 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels;
 using ReactiveUI;
 using System;
 
-namespace NetStalkerAvalonia.Views
+namespace NetStalkerAvalonia.Core.Views
 {
 	public partial class AddUpdateRuleView : ReactiveWindow<AddUpdateRuleViewModel>
 	{

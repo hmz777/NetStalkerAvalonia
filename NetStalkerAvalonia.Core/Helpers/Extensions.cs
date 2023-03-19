@@ -5,7 +5,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Helpers
+namespace NetStalkerAvalonia.Core.Helpers
 {
 	public static class Extensions
 	{

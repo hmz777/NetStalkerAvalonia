@@ -2,12 +2,12 @@
 using Avalonia.Data.Converters;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.Core.Models;
 using System;
 using System.Globalization;
 using System.Reflection;
 
-namespace NetStalkerAvalonia.Converters
+namespace NetStalkerAvalonia.Core.Converters
 {
     public class ListTypeToIconConverter : IValueConverter
     {

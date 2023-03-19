@@ -5,7 +5,7 @@ using Avalonia.Interactivity;
 using System.Reactive;
 using System.Windows.Input;
 
-namespace NetStalkerAvalonia.Helpers
+namespace NetStalkerAvalonia.Core.Helpers
 {
     public class AttachedProperties : AvaloniaObject
     {

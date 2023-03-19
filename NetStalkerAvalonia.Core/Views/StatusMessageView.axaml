@@ -2,10 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="using:NetStalkerAvalonia.ViewModels"
-        xmlns:converters="using:NetStalkerAvalonia.Converters"
+        xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels"
+        xmlns:converters="using:NetStalkerAvalonia.Core.Converters"
         mc:Ignorable="d"
-        x:Class="NetStalkerAvalonia.Views.StatusMessageView">
+        x:Class="NetStalkerAvalonia.Core.Views.StatusMessageView">
 
     <Design.DataContext>
         <vm:StatusMessageViewModel />

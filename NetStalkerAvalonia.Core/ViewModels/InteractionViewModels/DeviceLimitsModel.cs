@@ -1,4 +1,4 @@
-namespace NetStalkerAvalonia.ViewModels.InteractionViewModels;
+namespace NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 
 public class DeviceLimitsModel
 {

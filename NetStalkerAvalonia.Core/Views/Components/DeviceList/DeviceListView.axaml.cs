@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace NetStalkerAvalonia.Components.DeviceList
+namespace NetStalkerAvalonia.Core.Views.Components.DeviceList
 {
     public partial class DeviceListView : UserControl
     {

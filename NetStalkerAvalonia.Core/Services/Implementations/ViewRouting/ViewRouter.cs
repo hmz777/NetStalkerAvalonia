@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Services.Implementations.ViewRouting
+namespace NetStalkerAvalonia.Core.Services.Implementations.ViewRouting
 {
 	public class ViewRouter : IRouter
 	{

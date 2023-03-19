@@ -1,14 +1,13 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using System.Windows.Input;
 
-namespace NetStalkerAvalonia.Components
+namespace NetStalkerAvalonia.Core.Views.Components
 {
 	public class GenericIconButton : TemplatedControl
 	{
 		public static readonly StyledProperty<string> TextProperty =
-		AvaloniaProperty.Register<LinkButton, string>(nameof(Text), defaultValue: "Button Text");
+		AvaloniaProperty.Register<GenericIconButton, string>(nameof(Text), defaultValue: "Button Text");
 
 		public string Text
 		{
@@ -17,7 +16,7 @@ namespace NetStalkerAvalonia.Components
 		}
 
 		public static readonly StyledProperty<string> IconProperty =
-				AvaloniaProperty.Register<LinkButton, string>(nameof(Icon), defaultValue: "Assets/netstalker-logo.ico");
+				AvaloniaProperty.Register<GenericIconButton, string>(nameof(Icon), defaultValue: "Assets/netstalker-logo.ico");
 
 		public string Icon
 		{
@@ -26,7 +25,7 @@ namespace NetStalkerAvalonia.Components
 		}
 
 		public static readonly StyledProperty<ICommand> CommandProperty =
-				AvaloniaProperty.Register<LinkButton, ICommand>(nameof(Command));
+				AvaloniaProperty.Register<GenericIconButton, ICommand>(nameof(Command));
 
 		public ICommand Command
 		{
@@ -35,7 +34,7 @@ namespace NetStalkerAvalonia.Components
 		}
 
 		public static readonly StyledProperty<object?> CommandParameterProperty =
-				AvaloniaProperty.Register<LinkButton, object?>(nameof(CommandParameter));
+				AvaloniaProperty.Register<GenericIconButton, object?>(nameof(CommandParameter));
 
 		public object? CommandParameter
 		{

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Services
+namespace NetStalkerAvalonia.Core.Services
 {
 	public interface IMessageBusService
 	{

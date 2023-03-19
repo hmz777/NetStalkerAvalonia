@@ -2,15 +2,15 @@ using Avalonia.Controls;
 using Avalonia.Controls.Mixins;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.ViewModels;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
-using NetStalkerAvalonia.ViewModels.RoutedViewModels;
+using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
+using NetStalkerAvalonia.Core.ViewModels.RoutedViewModels;
 using ReactiveUI;
 using System.Reactive;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Views.RoutedViews
+namespace NetStalkerAvalonia.Core.Views.RoutedViews
 {
     public partial class RuleBuilderView : ReactiveUserControl<RuleBuilderViewModel>
 	{

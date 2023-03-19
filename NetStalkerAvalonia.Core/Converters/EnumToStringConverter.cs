@@ -1,5 +1,5 @@
 ﻿using Avalonia.Data.Converters;
-using NetStalkerAvalonia.Rules;
+using NetStalkerAvalonia.Core.Rules;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Converters
+namespace NetStalkerAvalonia.Core.Converters
 {
 	public class EnumToStringConverter : IValueConverter
 	{

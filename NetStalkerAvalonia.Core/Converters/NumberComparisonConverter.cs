@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 
-namespace NetStalkerAvalonia.Converters
+namespace NetStalkerAvalonia.Core.Converters
 {
 	public class NumberComparisonConverter : IValueConverter
 	{

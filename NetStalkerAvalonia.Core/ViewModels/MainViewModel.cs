@@ -2,16 +2,14 @@ using Avalonia;
 using Avalonia.Controls;
 using DynamicData;
 using DynamicData.Binding;
-using NetStalkerAvalonia.Compairers;
-using NetStalkerAvalonia.Components.DeviceList;
-using NetStalkerAvalonia.Configuration;
+using NetStalkerAvalonia.Core.Compairers;
+using NetStalkerAvalonia.Core.Configuration;
+using NetStalkerAvalonia.Core.Core.Views.Components;
 using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Models;
 using NetStalkerAvalonia.Core.Services;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
-using NetStalkerAvalonia.ViewModels.RoutedViewModels;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
+using NetStalkerAvalonia.Core.ViewModels.RoutedViewModels;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -22,7 +20,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.ViewModels
+namespace NetStalkerAvalonia.Core.ViewModels
 {
 	public class MainViewModel : ViewModelBase, IDisposable
 	{

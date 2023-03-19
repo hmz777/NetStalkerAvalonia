@@ -1,8 +1,8 @@
 using System.Reactive;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 using ReactiveUI;
 
-namespace NetStalkerAvalonia.ViewModels;
+namespace NetStalkerAvalonia.Core.ViewModels;
 
 public class StatusMessageViewModel : ViewModelBase
 {

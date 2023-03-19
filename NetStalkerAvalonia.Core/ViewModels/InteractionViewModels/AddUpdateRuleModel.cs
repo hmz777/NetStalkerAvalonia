@@ -1,8 +1,8 @@
-﻿using NetStalkerAvalonia.Rules;
+﻿using NetStalkerAvalonia.Core.Rules;
 using ReactiveUI;
 using System;
 
-namespace NetStalkerAvalonia.ViewModels.InteractionViewModels
+namespace NetStalkerAvalonia.Core.ViewModels.InteractionViewModels
 {
 	public class AddUpdateRuleModel : ReactiveObject
 	{

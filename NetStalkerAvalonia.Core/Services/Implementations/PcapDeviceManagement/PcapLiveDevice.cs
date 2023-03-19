@@ -2,7 +2,7 @@
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace NetStalkerAvalonia.Services.Implementations.PcapDeviceManagement
+namespace NetStalkerAvalonia.Core.Services.Implementations.PcapDeviceManagement
 {
 	public class PcapLiveDevice : IPcapLiveDevice
 	{

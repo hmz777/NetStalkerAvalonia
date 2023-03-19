@@ -1,7 +1,7 @@
 using DynamicData;
-using NetStalkerAvalonia.Configuration;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.Core.Configuration;
+using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Models;
 using PacketDotNet;
 using ReactiveUI;
 using Serilog;
@@ -12,7 +12,7 @@ using System.Net;
 using System.Threading;
 using Timer = System.Threading.Timer;
 
-namespace NetStalkerAvalonia.Services.Implementations.DeviceScanning;
+namespace NetStalkerAvalonia.Core.Services.Implementations.DeviceScanning;
 
 public class DeviceScanner : IDeviceScanner
 {

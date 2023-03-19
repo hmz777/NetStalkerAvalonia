@@ -1,7 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="using:NetStalkerAvalonia.Components"
-		xmlns:convos="using:NetStalkerAvalonia.Converters">
+        xmlns:controls="using:NetStalkerAvalonia.Core.Views.Components"
+		xmlns:convos="using:NetStalkerAvalonia.Core.Converters">
 	<Design.PreviewWith>
 		<StackPanel Orientation="Horizontal" Spacing="5">
 			<controls:NavButton />

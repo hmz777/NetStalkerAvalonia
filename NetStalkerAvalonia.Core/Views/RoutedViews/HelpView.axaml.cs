@@ -1,9 +1,9 @@
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.ViewModels.RoutedViewModels;
+using NetStalkerAvalonia.Core.ViewModels.RoutedViewModels;
 using ReactiveUI;
 
-namespace NetStalkerAvalonia.Views.RoutedViews
+namespace NetStalkerAvalonia.Core.Views.RoutedViews
 {
     public partial class HelpView : ReactiveUserControl<HelpViewModel>
     {

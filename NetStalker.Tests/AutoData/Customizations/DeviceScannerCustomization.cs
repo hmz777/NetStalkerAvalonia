@@ -1,5 +1,5 @@
-﻿using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.DeviceScanning;
+﻿using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations.DeviceScanning;
 
 namespace NetStalker.Tests.AutoData.Customizations
 {

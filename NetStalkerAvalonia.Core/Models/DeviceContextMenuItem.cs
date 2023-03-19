@@ -1,7 +1,7 @@
 using System.Reactive;
 using ReactiveUI;
 
-namespace NetStalkerAvalonia.Models;
+namespace NetStalkerAvalonia.Core.Models;
 
 public class DeviceContextMenuItem : ReactiveObject
 {

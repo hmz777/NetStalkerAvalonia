@@ -1,11 +1,11 @@
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels;
 using ReactiveUI;
 using System;
 using System.Reactive.Disposables;
 
-namespace NetStalkerAvalonia.Views;
+namespace NetStalkerAvalonia.Core.Views;
 
 public partial class SetNameView : ReactiveWindow<SetNameViewModel>
 {

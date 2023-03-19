@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using NetStalker.Tests.AutoData;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.ViewModels;
-using NetStalkerAvalonia.ViewModels.RoutedViewModels;
+using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels.RoutedViewModels;
 
 namespace NetStalker.Tests.ViewModelTests
 {
@@ -13,7 +13,7 @@ namespace NetStalker.Tests.ViewModelTests
 		[Theory, AutoServiceData]
 		public void CanNavigateToRules(IRouter router, RuleBuilderViewModel ruleBuilderViewModel)
 		{
-			var sut = new MainViewModel(router, null, null, null, null, null, ruleBuilderViewModel, null, null, null);
+			var sut = new MainViewModel(router, null, null, null, null, null, null, ruleBuilderViewModel, null, null, null);
 
 			sut.GoToRules.Execute();
 

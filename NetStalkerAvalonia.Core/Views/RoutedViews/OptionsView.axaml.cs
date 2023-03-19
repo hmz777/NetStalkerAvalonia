@@ -1,12 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.Configuration;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.ViewModels.RoutedViewModels;
+using NetStalkerAvalonia.Core.Configuration;
+using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.ViewModels.RoutedViewModels;
 using ReactiveUI;
 
-namespace NetStalkerAvalonia.Views.RoutedViews
+namespace NetStalkerAvalonia.Core.Views.RoutedViews
 {
     public partial class OptionsView : ReactiveUserControl<OptionsViewModel>
 	{

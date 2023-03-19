@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
-using NetStalkerAvalonia.Configuration;
+using NetStalkerAvalonia.Core.Configuration;
 using NetStalkerAvalonia.Core.Helpers;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.BlockingRedirection;
-using NetStalkerAvalonia.Services.Implementations.DeviceNameResolving;
-using NetStalkerAvalonia.Services.Implementations.DeviceScanning;
-using NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification;
-using NetStalkerAvalonia.Services.Implementations.Notifications;
-using NetStalkerAvalonia.Services.Implementations.PcapDeviceManagement;
-using NetStalkerAvalonia.Services.Implementations.RulesService;
-using NetStalkerAvalonia.Services.Implementations.ViewRouting;
-using NetStalkerAvalonia.ViewModels;
-using NetStalkerAvalonia.ViewModels.RoutedViewModels;
+using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection;
+using NetStalkerAvalonia.Core.Services.Implementations.DeviceNameResolving;
+using NetStalkerAvalonia.Core.Services.Implementations.DeviceScanning;
+using NetStalkerAvalonia.Core.Services.Implementations.DeviceTypeIdentification;
+using NetStalkerAvalonia.Core.Services.Implementations.Notifications;
+using NetStalkerAvalonia.Core.Services.Implementations.PcapDeviceManagement;
+using NetStalkerAvalonia.Core.Services.Implementations.RulesService;
+using NetStalkerAvalonia.Core.Services.Implementations.ViewRouting;
+using NetStalkerAvalonia.Core.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels.RoutedViewModels;
 using Serilog;
 using Splat;
 using System;
@@ -20,7 +20,7 @@ using System.IO.Abstractions;
 using System.Net.Http;
 using System.Reflection;
 
-namespace NetStalkerAvalonia.Helpers
+namespace NetStalkerAvalonia.Core.Helpers
 {
 	public class DependencyInjectionHelpers
 	{

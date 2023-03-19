@@ -2,12 +2,12 @@
 using DynamicData;
 using DynamicData.Binding;
 using NetStalkerAvalonia.Core.Services;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.Rules;
-using NetStalkerAvalonia.Rules.Implementations;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Models;
+using NetStalkerAvalonia.Core.Rules;
+using NetStalkerAvalonia.Core.Rules.Implementations;
+using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
+namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 {
 	public class RuleBuilderViewModel : ViewModelBase, IRoutableViewModel
 	{

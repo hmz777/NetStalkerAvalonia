@@ -1,7 +1,7 @@
-﻿using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.Rules;
-using NetStalkerAvalonia.Rules.Implementations;
-using NetStalkerAvalonia.Services.Implementations.RulesService;
+﻿using NetStalkerAvalonia.Core.Models;
+using NetStalkerAvalonia.Core.Rules;
+using NetStalkerAvalonia.Core.Rules.Implementations;
+using NetStalkerAvalonia.Core.Services.Implementations.RulesService;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Services
+namespace NetStalkerAvalonia.Core.Services
 {
 	public interface IRuleService : IService
 	{

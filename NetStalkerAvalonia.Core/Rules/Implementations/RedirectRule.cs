@@ -1,4 +1,4 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Rules.Implementations
+namespace NetStalkerAvalonia.Core.Rules.Implementations
 {
 	public class RedirectRule : RuleBase
 	{

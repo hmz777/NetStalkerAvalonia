@@ -1,8 +1,8 @@
 using Microsoft.Win32;
 using NetStalkerAvalonia.Core.Helpers;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.Services;
+using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Models;
+using NetStalkerAvalonia.Core.Services;
 using ReactiveUI;
 using Serilog;
 using System;
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.ViewModels;
+namespace NetStalkerAvalonia.Core.ViewModels;
 
 public class AdapterSelectViewModel : ViewModelBase
 {

@@ -4,12 +4,12 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
 		     xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-			 xmlns:vm="using:NetStalkerAvalonia.ViewModels.RoutedViewModels"
-			 xmlns:ru="using:NetStalkerAvalonia.Rules"
-			 xmlns:convos="using:NetStalkerAvalonia.Converters"
-			 xmlns:cmpts="using:NetStalkerAvalonia.Components"
+			 xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels.RoutedViewModels"
+			 xmlns:ru="using:NetStalkerAvalonia.Core.Rules"
+			 xmlns:convos="using:NetStalkerAvalonia.Core.Converters"
+			 xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-			 x:Class="NetStalkerAvalonia.Views.RoutedViews.RuleBuilderView">
+			 x:Class="NetStalkerAvalonia.Core.Views.RoutedViews.RuleBuilderView">
 
 	<Design.DataContext>
 		<vm:RuleBuilderViewModel />

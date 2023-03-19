@@ -1,10 +1,10 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Core.Models;
 using System;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text.Json.Serialization;
 
-namespace NetStalkerAvalonia.Rules.Implementations
+namespace NetStalkerAvalonia.Core.Rules.Implementations
 {
 	public class BlockRule : RuleBase
 	{

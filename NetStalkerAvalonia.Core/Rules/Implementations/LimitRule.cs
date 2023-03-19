@@ -1,9 +1,9 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Core.Models;
 using ReactiveUI;
 using System;
 using System.Text.Json.Serialization;
 
-namespace NetStalkerAvalonia.Rules.Implementations
+namespace NetStalkerAvalonia.Core.Rules.Implementations
 {
 	public class LimitRule : RuleBase
 	{

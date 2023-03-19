@@ -1,5 +1,5 @@
-﻿using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.Rules.Implementations;
+﻿using NetStalkerAvalonia.Core.Models;
+using NetStalkerAvalonia.Core.Rules.Implementations;
 using ReactiveUI;
 using System;
 using System.Net;
@@ -7,7 +7,7 @@ using System.Net.NetworkInformation;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace NetStalkerAvalonia.Rules
+namespace NetStalkerAvalonia.Core.Rules
 {
 	[JsonDerivedType(typeof(BlockRule), typeDiscriminator: "block")]
 	[JsonDerivedType(typeof(RedirectRule), typeDiscriminator: "redirect")]

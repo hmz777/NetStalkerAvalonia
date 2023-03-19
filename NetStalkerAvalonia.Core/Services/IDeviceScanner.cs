@@ -1,6 +1,6 @@
 using System;
 
-namespace NetStalkerAvalonia.Services;
+namespace NetStalkerAvalonia.Core.Services;
 
 public interface IDeviceScanner : IService, IDisposable
 {

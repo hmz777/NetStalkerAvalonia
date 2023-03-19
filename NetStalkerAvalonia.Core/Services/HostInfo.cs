@@ -1,12 +1,12 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Core.Models;
 using System.Net;
 using System.Net.NetworkInformation;
-using NetStalkerAvalonia.Helpers;
+using NetStalkerAvalonia.Core.Helpers;
 using System;
 using Splat;
 using NetStalkerAvalonia.Core.Helpers;
 
-namespace NetStalkerAvalonia.Services
+namespace NetStalkerAvalonia.Core.Services
 {
 	public static class HostInfo
 	{

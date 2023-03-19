@@ -1,10 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using NetStalkerAvalonia.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels;
 using ReactiveUI;
 using System;
 
-namespace NetStalkerAvalonia.Helpers
+namespace NetStalkerAvalonia.Core.Helpers
 {
     public class ViewLocator : IDataTemplate
     {

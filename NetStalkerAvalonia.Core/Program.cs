@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.Configuration;
-using NetStalkerAvalonia.Helpers;
+using NetStalkerAvalonia.Core.Configuration;
+using NetStalkerAvalonia.Core.Helpers;
 using ReactiveUI;
 using Serilog;
 using Splat;

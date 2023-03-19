@@ -1,9 +1,9 @@
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels;
 using ReactiveUI;
 
-namespace NetStalkerAvalonia.Views.RoutedViews
+namespace NetStalkerAvalonia.Core.Views.RoutedViews
 {
     public partial class HomeView : ReactiveUserControl<MainViewModel>
     {

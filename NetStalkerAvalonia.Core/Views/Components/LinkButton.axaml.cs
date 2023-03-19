@@ -1,10 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
-using NetStalkerAvalonia.Helpers;
+using NetStalkerAvalonia.Core.Helpers;
 using ReactiveUI;
 using System.Reactive;
 
-namespace NetStalkerAvalonia.Components
+namespace NetStalkerAvalonia.Core.Views.Components
 {
 	public partial class LinkButton : UserControl
 	{

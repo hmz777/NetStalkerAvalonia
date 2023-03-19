@@ -1,9 +1,8 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using System.Windows.Input;
 
-namespace NetStalkerAvalonia.Components
+namespace NetStalkerAvalonia.Core.Views.Components
 {
 	public class NavButton : TemplatedControl
 	{

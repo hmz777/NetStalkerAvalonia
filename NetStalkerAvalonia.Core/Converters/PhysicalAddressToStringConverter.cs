@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
 
-namespace NetStalkerAvalonia.Converters
+namespace NetStalkerAvalonia.Core.Converters
 {
     public class PhysicalAddressToStringConverter : IValueConverter
     {

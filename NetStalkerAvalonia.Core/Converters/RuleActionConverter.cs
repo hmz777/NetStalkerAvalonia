@@ -1,9 +1,9 @@
 ﻿using Avalonia.Data.Converters;
-using NetStalkerAvalonia.Rules;
+using NetStalkerAvalonia.Core.Rules;
 using System;
 using System.Globalization;
 
-namespace NetStalkerAvalonia.Converters
+namespace NetStalkerAvalonia.Core.Converters
 {
 	public class RuleActionConverter : IValueConverter
 	{

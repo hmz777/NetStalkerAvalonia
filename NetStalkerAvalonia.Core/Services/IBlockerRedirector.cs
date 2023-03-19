@@ -1,8 +1,8 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Core.Models;
 using System;
 using System.Collections.ObjectModel;
 
-namespace NetStalkerAvalonia.Services
+namespace NetStalkerAvalonia.Core.Services
 {
 	public interface IBlockerRedirector : IService, IDisposable
 	{

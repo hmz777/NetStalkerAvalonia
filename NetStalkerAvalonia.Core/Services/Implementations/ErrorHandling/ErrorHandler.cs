@@ -1,5 +1,5 @@
-﻿using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+﻿using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 using Serilog;
 using System;
 

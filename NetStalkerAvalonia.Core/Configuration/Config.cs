@@ -1,7 +1,7 @@
-﻿using NetStalkerAvalonia.Services;
+﻿using NetStalkerAvalonia.Core.Services;
 using System.Text.Json;
 
-namespace NetStalkerAvalonia.Configuration
+namespace NetStalkerAvalonia.Core.Configuration
 {
     public class Config
     {

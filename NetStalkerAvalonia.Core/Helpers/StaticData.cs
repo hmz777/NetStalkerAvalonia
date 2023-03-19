@@ -1,9 +1,9 @@
 ﻿using Avalonia.Controls;
-using NetStalkerAvalonia.ViewModels;
-using NetStalkerAvalonia.ViewModels.RoutedViewModels;
+using NetStalkerAvalonia.Core.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels.RoutedViewModels;
 using System.Collections.Generic;
 
-namespace NetStalkerAvalonia.Helpers
+namespace NetStalkerAvalonia.Core.Helpers
 {
     public class StaticData
     {

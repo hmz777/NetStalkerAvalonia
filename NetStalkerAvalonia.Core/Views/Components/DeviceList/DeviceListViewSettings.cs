@@ -1,4 +1,4 @@
-﻿namespace NetStalkerAvalonia.Components.DeviceList
+﻿namespace NetStalkerAvalonia.Core.Core.Views.Components
 {
     public class DeviceListViewSettings
     {

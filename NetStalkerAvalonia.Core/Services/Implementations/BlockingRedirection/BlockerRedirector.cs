@@ -1,8 +1,8 @@
 ﻿using DynamicData;
 using DynamicData.Binding;
-using NetStalkerAvalonia.Configuration;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.Core.Configuration;
+using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Models;
 using PacketDotNet;
 using ReactiveUI;
 using Serilog;
@@ -15,7 +15,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection
+namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 {
     public class BlockerRedirector : IBlockerRedirector
 	{

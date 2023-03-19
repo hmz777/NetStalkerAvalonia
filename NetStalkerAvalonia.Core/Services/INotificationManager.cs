@@ -1,6 +1,6 @@
-﻿using NetStalkerAvalonia.Services.Implementations.Notifications;
+﻿using NetStalkerAvalonia.Core.Services.Implementations.Notifications;
 
-namespace NetStalkerAvalonia.Services
+namespace NetStalkerAvalonia.Core.Services
 {
     public interface INotificationManager
     {

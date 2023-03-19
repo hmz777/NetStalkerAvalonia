@@ -2,10 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:cmpts="using:NetStalkerAvalonia.Components"
-        xmlns:vm="using:NetStalkerAvalonia.ViewModels"
+        xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
+        xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels"
         mc:Ignorable="d"
-        x:Class="NetStalkerAvalonia.Views.AdapterSelectView"
+        x:Class="NetStalkerAvalonia.Core.Views.AdapterSelectView"
 		d:DesignWidth="1000" d:DesignHeight="1000"
         Title="Adapter Select">
 

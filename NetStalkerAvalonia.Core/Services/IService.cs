@@ -1,4 +1,4 @@
-namespace NetStalkerAvalonia.Services;
+namespace NetStalkerAvalonia.Core.Services;
 
 public interface IService
 {

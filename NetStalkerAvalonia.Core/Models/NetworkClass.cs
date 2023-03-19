@@ -1,4 +1,4 @@
-﻿namespace NetStalkerAvalonia.Models
+﻿namespace NetStalkerAvalonia.Core.Models
 {
     public enum NetworkClass
     {

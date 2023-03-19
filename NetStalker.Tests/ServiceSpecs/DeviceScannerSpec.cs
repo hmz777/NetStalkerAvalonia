@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using NetStalker.Tests.AutoData;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.DeviceScanning;
+using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations.DeviceScanning;
 
 namespace NetStalker.Tests.ServiceSpecs
 {

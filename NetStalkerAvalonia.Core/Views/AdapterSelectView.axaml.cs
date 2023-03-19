@@ -1,11 +1,11 @@
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.ViewModels;
+using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.ViewModels;
 using ReactiveUI;
 using System.Reactive.Disposables;
 
-namespace NetStalkerAvalonia.Views;
+namespace NetStalkerAvalonia.Core.Views;
 
 public partial class AdapterSelectView : ReactiveWindow<AdapterSelectViewModel>
 {

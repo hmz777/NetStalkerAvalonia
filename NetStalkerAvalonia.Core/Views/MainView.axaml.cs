@@ -2,14 +2,14 @@ using Avalonia;
 using Avalonia.Controls.Mixins;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.ViewModels;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System.Reactive;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Views
+namespace NetStalkerAvalonia.Core.Views
 {
 	public partial class MainView : ReactiveWindow<MainViewModel>
 	{

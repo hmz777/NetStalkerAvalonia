@@ -1,6 +1,6 @@
-﻿using NetStalkerAvalonia.Configuration;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Core.Configuration;
+using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Models;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification
+namespace NetStalkerAvalonia.Core.Services.Implementations.DeviceTypeIdentification
 {
     public class DeviceTypeIdentifier : IDeviceTypeIdentifier
 	{

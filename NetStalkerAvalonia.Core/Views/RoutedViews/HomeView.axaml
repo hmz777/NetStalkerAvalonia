@@ -2,11 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:cmpts="using:NetStalkerAvalonia.Components"
-             xmlns:cmptsDev="using:NetStalkerAvalonia.Components.DeviceList"
-             xmlns:vm="using:NetStalkerAvalonia.ViewModels"
+             xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
+             xmlns:cmptsDev="using:NetStalkerAvalonia.Core.Views.Components.DeviceList"
+             xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels"
              mc:Ignorable="d" d:DesignWidth="1000"
-             x:Class="NetStalkerAvalonia.Views.RoutedViews.HomeView"
+             x:Class="NetStalkerAvalonia.Core.Views.RoutedViews.HomeView"
              Background="Transparent">
 
 	<Design.DataContext>

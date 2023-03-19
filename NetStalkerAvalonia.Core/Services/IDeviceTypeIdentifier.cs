@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.Core.Models;
 
-namespace NetStalkerAvalonia.Services
+namespace NetStalkerAvalonia.Core.Services
 {
     public interface IDeviceTypeIdentifier : IDisposable
     {

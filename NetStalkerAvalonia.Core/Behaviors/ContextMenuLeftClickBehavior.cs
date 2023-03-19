@@ -5,7 +5,7 @@ using Avalonia.Data;
 using Avalonia.Interactivity;
 using RoutedEventArgs = Avalonia.Interactivity.RoutedEventArgs;
 
-namespace NetStalkerAvalonia.Behaviors;
+namespace NetStalkerAvalonia.Core.Behaviors;
 
 public class ContextMenuLeftClickBehavior : AvaloniaObject
 {

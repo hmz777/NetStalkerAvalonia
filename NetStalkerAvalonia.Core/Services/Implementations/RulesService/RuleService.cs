@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using NetStalkerAvalonia.Configuration;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.Rules;
-using NetStalkerAvalonia.Rules.Implementations;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+using NetStalkerAvalonia.Core.Configuration;
+using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Models;
+using NetStalkerAvalonia.Core.Rules;
+using NetStalkerAvalonia.Core.Rules.Implementations;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text.Json;
 
-namespace NetStalkerAvalonia.Services.Implementations.RulesService
+namespace NetStalkerAvalonia.Core.Services.Implementations.RulesService
 {
     public class RuleService : ReactiveObject, IRuleService
 	{

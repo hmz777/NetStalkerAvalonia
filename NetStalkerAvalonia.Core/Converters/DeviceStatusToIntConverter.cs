@@ -1,9 +1,9 @@
 using System;
 using System.Globalization;
 using Avalonia.Data.Converters;
-using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.Core.Models;
 
-namespace NetStalkerAvalonia.Converters;
+namespace NetStalkerAvalonia.Core.Converters;
 
 public class DeviceStatusToIntConverter : IValueConverter
 {

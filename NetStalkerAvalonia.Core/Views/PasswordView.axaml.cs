@@ -2,10 +2,10 @@ using System;
 using Avalonia.Controls.Mixins;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels;
 using ReactiveUI;
 
-namespace NetStalkerAvalonia.Views
+namespace NetStalkerAvalonia.Core.Views
 {
     public partial class PasswordView : ReactiveWindow<PasswordViewModel>
     {

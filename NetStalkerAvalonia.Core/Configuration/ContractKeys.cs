@@ -1,4 +1,4 @@
-namespace NetStalkerAvalonia.Configuration;
+namespace NetStalkerAvalonia.Core.Configuration;
 
 public enum ContractKeys
 {

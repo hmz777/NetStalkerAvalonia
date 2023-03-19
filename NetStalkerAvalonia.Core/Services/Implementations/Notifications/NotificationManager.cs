@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetStalkerAvalonia.Services.Implementations.Notifications
+namespace NetStalkerAvalonia.Core.Services.Implementations.Notifications
 {
     public class NotificationManager : INotificationManager
     {

@@ -1,6 +1,6 @@
-﻿using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+﻿using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Models;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Services.Implementations.DeviceNameResolving
+namespace NetStalkerAvalonia.Core.Services.Implementations.DeviceNameResolving
 {
 	public class DeviceNameResolver : IDeviceNameResolver
 	{

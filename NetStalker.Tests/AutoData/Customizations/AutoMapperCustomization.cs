@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using NetStalkerAvalonia.Core.Helpers;
-using NetStalkerAvalonia.Helpers;
 
 namespace NetStalker.Tests.AutoData.Customizations
 {

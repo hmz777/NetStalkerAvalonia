@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using NetStalkerAvalonia.Rules;
-using NetStalkerAvalonia.Rules.Implementations;
-using NetStalkerAvalonia.ViewModels.InteractionViewModels;
+using NetStalkerAvalonia.Core.Rules;
+using NetStalkerAvalonia.Core.Rules.Implementations;
+using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 
 namespace NetStalkerAvalonia.Core.Helpers
 {

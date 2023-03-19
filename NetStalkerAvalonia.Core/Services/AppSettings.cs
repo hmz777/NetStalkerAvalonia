@@ -1,4 +1,4 @@
-﻿using NetStalkerAvalonia.Configuration;
+﻿using NetStalkerAvalonia.Core.Configuration;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.Services
+namespace NetStalkerAvalonia.Core.Services
 {
 	public class AppSettings : ReactiveObject
 	{

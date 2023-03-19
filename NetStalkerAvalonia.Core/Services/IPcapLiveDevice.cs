@@ -2,7 +2,7 @@
 using SharpPcap;
 using System;
 
-namespace NetStalkerAvalonia.Services
+namespace NetStalkerAvalonia.Core.Services
 {
 	public interface IPcapLiveDevice : IDisposable
 	{

@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace NetStalkerAvalonia.Components
+namespace NetStalkerAvalonia.Core.Views.Components
 {
 	public partial class ComingSoonLabel : UserControl
 	{

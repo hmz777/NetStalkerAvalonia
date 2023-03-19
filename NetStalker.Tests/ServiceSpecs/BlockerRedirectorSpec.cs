@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using NetStalker.Tests.AutoData;
-using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.BlockingRedirection;
+using NetStalkerAvalonia.Core.Models;
+using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection;
 
 namespace NetStalker.Tests.ServiceSpecs
 {

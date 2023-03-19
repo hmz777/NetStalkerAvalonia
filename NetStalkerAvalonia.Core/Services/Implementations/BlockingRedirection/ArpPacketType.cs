@@ -1,4 +1,4 @@
-namespace NetStalkerAvalonia.Services.Implementations.BlockingRedirection;
+namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection;
 
 public enum ArpPacketType
 {

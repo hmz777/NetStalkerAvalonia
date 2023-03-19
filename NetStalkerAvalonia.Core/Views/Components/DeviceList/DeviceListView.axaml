@@ -2,14 +2,14 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:convs="using:NetStalkerAvalonia.Converters"
-			 xmlns:cmpts="using:NetStalkerAvalonia.Components"
-			 xmlns:vm="using:NetStalkerAvalonia.ViewModels"
-			 xmlns:ap="using:NetStalkerAvalonia.Behaviors"
+			 xmlns:convs="using:NetStalkerAvalonia.Core.Converters"
+			 xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
+			 xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels"
+			 xmlns:ap="using:NetStalkerAvalonia.Core.Behaviors"
 			 mc:Ignorable="d"
-			 xmlns:models="using:NetStalkerAvalonia.Models"
-			 xmlns:behaviors="clr-namespace:NetStalkerAvalonia.Behaviors"
-			 x:Class="NetStalkerAvalonia.Components.DeviceList.DeviceListView">
+			 xmlns:models="using:NetStalkerAvalonia.Core.Models"
+			 xmlns:behaviors="clr-namespace:NetStalkerAvalonia.Core.Behaviors"
+			 x:Class="NetStalkerAvalonia.Core.Views.Components.DeviceList.DeviceListView">
 
 	<Design.DataContext>
 		<vm:MainViewModel />

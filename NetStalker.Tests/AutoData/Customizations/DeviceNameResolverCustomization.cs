@@ -1,11 +1,6 @@
-﻿using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.DeviceNameResolving;
-using System;
-using System.Collections.Generic;
+﻿using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations.DeviceNameResolving;
 using System.IO.Abstractions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetStalker.Tests.AutoData.Customizations
 {

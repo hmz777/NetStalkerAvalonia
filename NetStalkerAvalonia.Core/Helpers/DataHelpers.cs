@@ -1,4 +1,4 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Core.Models;
 using System;
 using System.Linq;
 using System.Net;

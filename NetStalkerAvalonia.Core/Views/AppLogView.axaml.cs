@@ -1,8 +1,8 @@
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels;
 
-namespace NetStalkerAvalonia.Views
+namespace NetStalkerAvalonia.Core.Views
 {
 	public partial class AppLogView : ReactiveWindow<AppLogViewModel>
 	{

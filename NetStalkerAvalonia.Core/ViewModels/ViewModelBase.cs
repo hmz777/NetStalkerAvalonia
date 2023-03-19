@@ -1,7 +1,7 @@
 using NetStalkerAvalonia.Core.Theme;
 using ReactiveUI;
 
-namespace NetStalkerAvalonia.ViewModels
+namespace NetStalkerAvalonia.Core.ViewModels
 {
 	public class ViewModelBase : ReactiveObject
 	{

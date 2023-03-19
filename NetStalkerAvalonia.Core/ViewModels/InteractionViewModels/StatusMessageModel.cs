@@ -1,6 +1,6 @@
-using NetStalkerAvalonia.Models;
+using NetStalkerAvalonia.Core.Models;
 
-namespace NetStalkerAvalonia.ViewModels.InteractionViewModels;
+namespace NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 
 public class StatusMessageModel
 {

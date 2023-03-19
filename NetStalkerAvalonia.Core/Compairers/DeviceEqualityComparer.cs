@@ -1,9 +1,9 @@
-﻿using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace NetStalkerAvalonia.Compairers
+namespace NetStalkerAvalonia.Core.Compairers
 {
     public class DeviceEqualityComparer : IEqualityComparer<Device>
     {

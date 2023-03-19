@@ -7,7 +7,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 
-namespace NetStalkerAvalonia.Converters
+namespace NetStalkerAvalonia.Core.Converters
 {
 	public class RuleStatusToImageConverter : IValueConverter
 	{

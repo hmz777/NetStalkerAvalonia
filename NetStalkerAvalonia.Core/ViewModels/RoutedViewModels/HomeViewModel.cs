@@ -1,4 +1,4 @@
-﻿using NetStalkerAvalonia.Services;
+﻿using NetStalkerAvalonia.Core.Services;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetStalkerAvalonia.ViewModels.RoutedViewModels
+namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 {
 	public class HomeViewModel : ViewModelBase, IRoutableViewModel
 	{

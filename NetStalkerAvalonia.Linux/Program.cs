@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.ReactiveUI;
+using NetStalkerAvalonia.Core;
 using System;
 
 namespace NetStalkerAvalonia.Linux

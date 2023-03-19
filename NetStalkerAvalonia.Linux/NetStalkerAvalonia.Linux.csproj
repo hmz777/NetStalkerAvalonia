@@ -39,4 +39,7 @@
 		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
 		<PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\NetStalkerAvalonia.Core\NetStalkerAvalonia.Core.csproj" />
+	</ItemGroup>
 </Project>
