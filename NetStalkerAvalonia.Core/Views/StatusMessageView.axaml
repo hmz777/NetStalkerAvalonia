@@ -14,14 +14,8 @@
     <Window.Styles>
         <StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
         <Style Selector="Window">
-            <Setter Property="Width" Value="500" />
-            <Setter Property="MinWidth" Value="500" />
-            <Setter Property="MaxWidth" Value="500" />
-            <Setter Property="Height" Value="100" />
-            <Setter Property="MinHeight" Value="100" />
-            <Setter Property="SizeToContent" Value="Height" />
+			<Setter Property="CanResize" Value="False" />
             <Setter Property="ShowInTaskbar" Value="False" />
-            <Setter Property="WindowStartupLocation" Value="CenterOwner" />
             <Setter Property="ExtendClientAreaChromeHints" Value="NoChrome" />
         </Style>
     </Window.Styles>

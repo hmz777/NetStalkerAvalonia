@@ -31,8 +31,6 @@
 	<Window.Styles>
 		<StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
 		<Style Selector="Window">
-			<Setter Property="Width" Value="{Binding Theme.WindowWidth}" />
-			<Setter Property="Height" Value="{Binding Theme.WindowHeight}" />
 			<Setter Property="MinWidth" Value="{Binding Theme.WindowMinWidth}" />
 			<Setter Property="MinHeight" Value="{Binding Theme.WindowMinHeight}" />
 		</Style>

@@ -24,8 +24,7 @@
 			<Setter Property="Cursor" Value="Hand"/>
 		</Style>
 		<Style Selector="StackPanel.socialLinks">
-			<Setter Property="Margin" Value="0,20,0,20"/>
-
+			<Setter Property="Margin" Value="0,5,0,20"/>
 		</Style>
 		<Style Selector="Image.social">
 			<Setter Property="Width" Value="30"/>
@@ -46,7 +45,7 @@
 					<ColumnDefinition Width="*"/>
 				</Grid.ColumnDefinitions>
 				<StackPanel Grid.Row="0" Grid.Column="0">
-					<StackPanel Classes="infoPanel" Margin="0,15,0,15">
+					<StackPanel Classes="infoPanel" Margin="0,0,0,10">
 						<StackPanel Orientation="Horizontal">
 							<TextBlock Classes="label" FontSize="40" Text="Net"/>
 							<TextBlock Classes="label" FontSize="40" Foreground="#FBB03B" Text="Stalker"/>
@@ -90,8 +89,8 @@
 					</StackPanel>
 				</StackPanel>
 				<StackPanel Grid.Row="0" Grid.Column="1">
-					<Image Width="300"
-						   Height="300"
+					<Image Width="200"
+						   Height="200"
 						   VerticalAlignment="Center"
 						   HorizontalAlignment="Center"
 						   Source="avares://NetStalkerAvalonia.Core/Assets/Images/app_logo.png"/>

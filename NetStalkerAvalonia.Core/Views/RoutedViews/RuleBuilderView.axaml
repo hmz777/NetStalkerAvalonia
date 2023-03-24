@@ -80,7 +80,7 @@
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="4*"/>
+				<ColumnDefinition Width="3*"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
 			<ListBox Name="RuleList"

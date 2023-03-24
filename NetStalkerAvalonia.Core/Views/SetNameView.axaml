@@ -15,13 +15,8 @@
     <Window.Styles>
         <StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
         <Style Selector="Window">
+			<Setter Property="CanResize" Value="False" />
             <Setter Property="Width" Value="500" />
-            <Setter Property="Height" Value="270" />
-            <Setter Property="MaxWidth" Value="500" />
-            <Setter Property="MinWidth" Value="500" />
-            <Setter Property="MaxHeight" Value="270" />
-            <Setter Property="MinHeight" Value="270" />
-            <Setter Property="WindowStartupLocation" Value="CenterOwner" />
         </Style>
     </Window.Styles>
 

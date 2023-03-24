@@ -6,7 +6,7 @@
         xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels"
         mc:Ignorable="d"
         x:Class="NetStalkerAvalonia.Core.Views.AdapterSelectView"
-		d:DesignWidth="1000" d:DesignHeight="1000"
+		d:DesignWidth="500" d:DesignHeight="500"
         Title="Adapter Select">
 
 	<Design.DataContext>
@@ -16,14 +16,7 @@
 	<Window.Styles>
 		<StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
 		<Style Selector="Window">
-			<Setter Property="Width" Value="450" />
-			<Setter Property="Height" Value="430" />
-			<Setter Property="MaxWidth" Value="800"/>
-			<Setter Property="MinWidth" Value="800"/>
-			<Setter Property="MaxHeight" Value="430"/>
-			<Setter Property="MinHeight" Value="430"/>
-			<Setter Property="WindowStartupLocation" Value="CenterOwner" />
-			<Setter Property="SizeToContent" Value="Height" />
+			<Setter Property="CanResize" Value="False" />
 		</Style>
 		<Style Selector="DockPanel.horizontalPanel">
 			<Setter Property="Margin" Value="0,0,0,20" />
@@ -45,12 +38,19 @@
 
 	<Grid HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
-          RowDefinitions="Auto,*"
-		  ColumnDefinitions="1.5*,*">
-		<cmpts:PageTitle VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0" Text="{Binding $parent[Window].Title}" />
-		<Border Grid.Row="1" Grid.Column="0" Padding="15">
-			<StackPanel>
-				<DockPanel Classes="horizontalPanel">
+          RowDefinitions="auto,auto"
+		  ColumnDefinitions="*,*">
+		<cmpts:PageTitle VerticalAlignment="Stretch"
+						 Grid.Row="0"
+						 Grid.Column="0"
+						 Text="{Binding $parent[Window].Title}" />
+		<Border Grid.Row="1"
+				Grid.Column="0"
+				Width="500"
+				Padding="15">
+			<Grid RowDefinitions="auto,auto,auto,auto,auto,auto,auto"
+				  VerticalAlignment="Stretch">
+				<DockPanel Grid.Row="0" Classes="horizontalPanel">
 					<TextBlock>Network Adapter:</TextBlock>
 					<ComboBox
 						Name="AdapterSelectBox"
@@ -60,29 +60,29 @@
 						Width="250">
 					</ComboBox>
 				</DockPanel>
-				<DockPanel Classes="horizontalPanel">
+				<DockPanel Grid.Row="1" Classes="horizontalPanel">
 					<TextBlock>NIC Type:</TextBlock>
 					<TextBlock Text="{Binding NicType}" />
 				</DockPanel>
-				<DockPanel Classes="horizontalPanel">
+				<DockPanel Grid.Row="2" Classes="horizontalPanel">
 					<TextBlock>IP Address:</TextBlock>
 					<TextBlock Text="{Binding HostIp}" />
 				</DockPanel>
-				<DockPanel Classes="horizontalPanel">
+				<DockPanel Grid.Row="3" Classes="horizontalPanel">
 					<TextBlock>MAC Address:</TextBlock>
 					<TextBlock Text="{Binding HostMac}" />
 				</DockPanel>
-				<DockPanel Classes="horizontalPanel">
+				<DockPanel Grid.Row="4" Classes="horizontalPanel">
 					<TextBlock>Gateway IP:</TextBlock>
 					<TextBlock Text="{Binding GatewayIp}" />
 				</DockPanel>
-				<DockPanel Classes="horizontalPanel">
+				<DockPanel Grid.Row="5" Classes="horizontalPanel">
 					<TextBlock>Driver Version:</TextBlock>
 					<TextBlock Text="{Binding DriverVersion}" />
 				</DockPanel>
-				<Grid 		HorizontalAlignment="Stretch"
-                            VerticalAlignment="Bottom"
-							ColumnDefinitions="*,*">
+				<Grid 		Grid.Row="6"
+							ColumnDefinitions="*,*"
+							VerticalAlignment="Bottom">
 					<Button Name="Exit"
 							Grid.Column="0"
 							Padding="10"
@@ -104,14 +104,16 @@
 							Background="Green"
 							CornerRadius="0,5,5,0"/>
 				</Grid>
-			</StackPanel>
+			</Grid>
 		</Border>
-		<StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center">
-			<Image Source="/Assets/Images/app_logo.png" Width="100" Height="100"/>
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-				<TextBlock Classes="label" FontSize="40" Text="Net"/>
-				<TextBlock Classes="label" FontSize="40" Foreground="#FBB03B" Text="Stalker"/>
-			</StackPanel>
+		<StackPanel Grid.Row="1" Grid.Column="1"
+					Orientation="Horizontal"
+					RenderTransform="rotate(-90deg)"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					Width="100">
+			<TextBlock Classes="label" FontSize="40" Text="Net"/>
+			<TextBlock Classes="label" FontSize="40" Foreground="#FBB03B" Text="Stalker"/>
 		</StackPanel>
 	</Grid>
 </Window>

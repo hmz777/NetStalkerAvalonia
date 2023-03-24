@@ -10,11 +10,8 @@
 	<Window.Styles>
 		<StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
 		<Style Selector="Window">
-			<Setter Property="MaxWidth" Value="800" />
-			<Setter Property="MinWidth" Value="800" />
-			<Setter Property="MinHeight" Value="500" />
-			<Setter Property="MaxHeight" Value="500" />
-			<Setter Property="WindowStartupLocation" Value="CenterOwner" />
+			<Setter Property="CanResize" Value="False" />
+			<Setter Property="Width" Value="800" />
 		</Style>
 	</Window.Styles>
 

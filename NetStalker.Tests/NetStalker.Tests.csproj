@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NetStalkerAvalonia.Core\NetStalkerAvalonia.Core.csproj" />
+    <ProjectReference Include="..\NetStalkerAvalonia.Windows\NetStalkerAvalonia.Windows.csproj" />
   </ItemGroup>
 
 </Project>

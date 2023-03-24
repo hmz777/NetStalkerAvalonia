@@ -24,6 +24,6 @@ namespace NetStalker.Tests.Avalonia
 		public static IClassicDesktopStyleApplicationLifetime? GetApp() =>
 			Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
 
-		public static AppBuilder BuildAvaloniaApp() => NetStalkerAvalonia.Core.Program.BuildAvaloniaApp();
+		public static AppBuilder BuildAvaloniaApp() => NetStalkerAvalonia.Windows.Program.BuildAvaloniaApp();
 	}
 }

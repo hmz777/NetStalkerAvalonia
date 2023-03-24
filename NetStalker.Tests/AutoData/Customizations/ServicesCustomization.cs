@@ -13,6 +13,8 @@
 			fixture.Customize(new DeviceTypeIdentifierCustomization());
 			fixture.Customize(new DeviceScannerCustomization());
 			fixture.Customize(new BlockerRedirectorCustomization());
+			fixture.Customize(new AppLockCustomization());
+			fixture.Customize(new ErrorHandlerCustomization());
 		}
 	}
 }

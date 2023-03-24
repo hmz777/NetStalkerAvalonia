@@ -12,6 +12,8 @@
 	<Style Selector="Window">
 		<!--<Setter Property="ExtendClientAreaChromeHints" Value="NoChrome"/>-->
 		<!--<Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1"/>-->
+		<Setter Property="SizeToContent" Value="WidthAndHeight" />
+		<Setter Property="WindowStartupLocation" Value="CenterOwner" />
 		<Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
 		<Setter Property="Background" Value="{Binding Theme.WindowBackground}" />
 		<Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
