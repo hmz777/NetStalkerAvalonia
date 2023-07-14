@@ -7,7 +7,6 @@ using PacketDotNet;
 using ReactiveUI;
 using Serilog;
 using SharpPcap;
-using SharpPcap.LibPcap;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 {
-    public class BlockerRedirector : IBlockerRedirector
+	public class BlockerRedirector : IBlockerRedirector
 	{
 		#region Subscriptions
 
@@ -29,7 +28,7 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 
 		#region Members
 
-		private Task serviceTask;
+		private Task? serviceTask;
 		private CancellationTokenSource? _cancellationTokenSource;
 		private bool _isStarted;
 		private IPcapLiveDevice _device;
@@ -37,6 +36,7 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 
 		private readonly IRuleService _ruleService;
 		private readonly IPcapDeviceManager _pcapDeviceManager;
+		private readonly IMessageBusService _messageBusService;
 
 		// Collection projected from the scanner via the message bus
 		private ReadOnlyObservableCollection<Device> _clients = new(new ObservableCollection<Device>());
@@ -45,10 +45,14 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 
 		#region Constructor
 
-		public BlockerRedirector(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager)
+		public BlockerRedirector(
+			IRuleService ruleService,
+			IPcapDeviceManager pcapDeviceManager,
+			IMessageBusService messageBusService)
 		{
 			_ruleService = ruleService;
 			_pcapDeviceManager = pcapDeviceManager;
+			_messageBusService = messageBusService;
 
 			InitDevice();
 			ListenToTheScanner();
@@ -79,13 +83,25 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 		private void ListenToTheScanner()
 		{
 			// Subscribe to the scanner device stream
-			_deviceListener = MessageBus
-					.Current
-					.Listen<IChangeSet<Device, string>>(ContractKeys.ScannerStream.ToString())
-					.ObserveOn(RxApp.MainThreadScheduler)
-					.Bind(out _clients)
-					.DisposeMany()
-					.Subscribe();
+
+			//_deviceListener = MessageBus
+			//		.Current
+			//		.Listen<IChangeSet<Device, string>>(ContractKeys.ScannerStream.ToString())
+			//		.ObserveOn(RxApp.MainThreadScheduler)
+			//		.Bind(out _clients)
+			//		.DisposeMany()
+			//		.Subscribe();
+
+			_deviceListener = _messageBusService.Listen<IChangeSet<Device, string>>(observable =>
+			{
+				var disposable = observable.ObserveOn(RxApp.MainThreadScheduler)
+						.Bind(out _clients)
+						.DisposeMany()
+						.Subscribe();
+
+				return disposable;
+
+			}, ContractKeys.ScannerStream.ToString());
 		}
 
 		private void InitOrToggleByteCounterTimer(bool state)
@@ -403,8 +419,8 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 			if (_isStarted)
 			{
 				_cancellationTokenSource?.Cancel();
-				serviceTask.Wait();
-				serviceTask.Dispose();
+				serviceTask?.Wait();
+				serviceTask?.Dispose();
 				InitOrToggleByteCounterTimer(false);
 				_isStarted = false;
 
