@@ -15,6 +15,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using NetStalkerAvalonia.Core.Services.Implementations.StatusMessages;
 
 namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 {
@@ -25,6 +26,7 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 		private readonly IRuleService? ruleService;
 		private readonly IMapper mapper;
 		private readonly IErrorHandler errorHandler;
+		private readonly IStatusMessageService statusMessageService;
 
 		#endregion
 
@@ -61,7 +63,8 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 			IRouter screen,
 			IRuleService ruleService,
 			IMapper mapper,
-			IErrorHandler errorHandler)
+			IErrorHandler errorHandler,
+			IStatusMessageService statusMessageService)
 		{
 			#region Services
 
@@ -69,6 +72,7 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 			this.ruleService = ruleService;
 			this.mapper = mapper;
 			this.errorHandler = errorHandler;
+			this.statusMessageService = statusMessageService;
 
 			#endregion
 
@@ -79,7 +83,7 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 
 			AddRule = ReactiveCommand.CreateFromTask(AddRuleImpl);
 			UpdateRule = ReactiveCommand.CreateFromTask(UpdateRuleImpl, isAnItemSelected);
-			RemoveRule = ReactiveCommand.Create(RemoveRuleImpl, isAnItemSelected);
+			RemoveRule = ReactiveCommand.CreateFromTask(RemoveRuleImpl, isAnItemSelected);
 			MoveUp = ReactiveCommand.Create(MoveUpImpl, isAnItemSelected);
 			MoveDown = ReactiveCommand.Create(MoveDownImpl, isAnItemSelected);
 
@@ -133,12 +137,12 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 
 		#region Handlers
 
-		private async Task<Unit> AddRuleImpl()
+		private async Task AddRuleImpl()
 		{
 			var result = await ShowAddRuleDialog.Handle(Unit.Default);
 
 			if (result == null)
-				return Unit.Default;
+				return;
 
 			result.Order = Rules!.OrderBy(x => x.Order).Select(x => x.Order).LastOrDefault() + 1;
 
@@ -174,19 +178,19 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 
 			if (opResult == false)
 			{
-				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, $"Rule for target: {result.Target} already exists"));
+				await statusMessageService.ShowMessage(new StatusMessageModel(MessageType.Error, $"Rule for target: {result.Target} already exists"));
 			}
 
-			return Unit.Default;
+			return;
 		}
 
-		private async Task<Unit> UpdateRuleImpl()
+		private async Task UpdateRuleImpl()
 		{
 			var addUpdateModel = mapper.Map<AddUpdateRuleModel>(SelectedRule);
 			var result = await ShowUpdateRuleDialog.Handle(addUpdateModel);
 
 			if (result == null)
-				return Unit.Default;
+				return;
 
 			var opResult = false;
 
@@ -213,19 +217,19 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 
 			if (opResult == false)
 			{
-				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, $"Rule for target: {result.Target} doesn't exists"));
+				await statusMessageService.ShowMessage(new StatusMessageModel(MessageType.Error, $"Rule for target: {result.Target} doesn't exists"));
 			}
 
-			return Unit.Default;
+			return;
 		}
 
-		private void RemoveRuleImpl()
+		private async Task RemoveRuleImpl()
 		{
 			var opResult = ruleService!.TryRemoveRule(SelectedRule!);
 
 			if (opResult == false)
 			{
-				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, $"Rule for target: {SelectedRule!.Target} doesn't exists"));
+				await statusMessageService.ShowMessage(new StatusMessageModel(MessageType.Error, $"Rule for target: {SelectedRule!.Target} doesn't exists"));
 			}
 		}
 
