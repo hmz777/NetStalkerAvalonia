@@ -69,7 +69,7 @@ namespace NetStalkerAvalonia.Core.Helpers
         /// <summary>
         /// <see cref="CommandProperty"/> changed event handler.
         /// </summary>
-        private static void HandleCommandChanged(IAvaloniaObject element, ICommand commandValue)
+        private static void HandleCommandChanged(AvaloniaObject element, ICommand commandValue)
         {
             if (element is Interactive interactElem)
             {

@@ -1,7 +1,8 @@
 <Application xmlns="https://github.com/avaloniaui"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:helpers="using:NetStalkerAvalonia.Core.Helpers"
-			 x:Class="NetStalkerAvalonia.Core.App">
+			 x:Class="NetStalkerAvalonia.Core.App"
+			 RequestedThemeVariant="Dark">
 	<Application.DataTemplates>
 		<helpers:ViewLocator/>
 	</Application.DataTemplates>
@@ -11,10 +12,11 @@
 	</Application.Resources>
 
 	<Application.Styles>
-		<FluentTheme Mode="Dark"/>
-		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+		<FluentTheme />
 		<StyleInclude Source="/Views/Components/GenericIconButton.axaml"/>
+		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 		<StyleInclude Source="/Views/Components/NavButton.axaml"/>
+		<StyleInclude Source="/Views/Components/InformationBubble.axaml"/>
 	</Application.Styles>
 
 	<TrayIcon.Icons>

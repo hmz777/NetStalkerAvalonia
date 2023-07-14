@@ -17,6 +17,7 @@
 		<StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
 		<Style Selector="Window">
 			<Setter Property="CanResize" Value="False" />
+			<Setter Property="Width" Value="600" />
 		</Style>
 		<Style Selector="DockPanel.horizontalPanel">
 			<Setter Property="Margin" Value="0,0,0,20" />
@@ -32,21 +33,19 @@
 			<Setter Property="HorizontalAlignment" Value="Right" />
 			<Setter Property="VerticalAlignment" Value="Center" />
 			<Setter Property="FontSize" Value="14" />
-			<Setter Property="Width" Value="210" />
 		</Style>
 	</Window.Styles>
 
 	<Grid HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
           RowDefinitions="auto,auto"
-		  ColumnDefinitions="*,*">
+		  ColumnDefinitions="*,Auto">
 		<cmpts:PageTitle VerticalAlignment="Stretch"
 						 Grid.Row="0"
 						 Grid.Column="0"
 						 Text="{Binding $parent[Window].Title}" />
 		<Border Grid.Row="1"
 				Grid.Column="0"
-				Width="500"
 				Padding="15">
 			<Grid RowDefinitions="auto,auto,auto,auto,auto,auto,auto"
 				  VerticalAlignment="Stretch">
@@ -56,8 +55,8 @@
 						Name="AdapterSelectBox"
                         PlaceholderText="Select an adapter"
                         SelectedItem="{Binding SelectedItem}"
-                        Items="{Binding ComboBoxInterfaceData}"
-						Width="250">
+                        ItemsSource="{Binding ComboBoxInterfaceData}"
+						Width="300">
 					</ComboBox>
 				</DockPanel>
 				<DockPanel Grid.Row="1" Classes="horizontalPanel">
@@ -106,14 +105,17 @@
 				</Grid>
 			</Grid>
 		</Border>
-		<StackPanel Grid.Row="1" Grid.Column="1"
+		<Border Grid.Row="1" Grid.Column="1"
+				Padding="0,0,15,50">
+			<StackPanel 
 					Orientation="Horizontal"
 					RenderTransform="rotate(-90deg)"
-					VerticalAlignment="Center"
+					VerticalAlignment="Bottom"
 					HorizontalAlignment="Center"
-					Width="100">
-			<TextBlock Classes="label" FontSize="40" Text="Net"/>
-			<TextBlock Classes="label" FontSize="40" Foreground="#FBB03B" Text="Stalker"/>
-		</StackPanel>
+					Width="60">
+				<TextBlock Classes="label" FontSize="40" Text="Net"/>
+				<TextBlock Classes="label" FontSize="40" Foreground="#FBB03B" Text="Stalker"/>
+			</StackPanel>
+		</Border>
 	</Grid>
 </Window>

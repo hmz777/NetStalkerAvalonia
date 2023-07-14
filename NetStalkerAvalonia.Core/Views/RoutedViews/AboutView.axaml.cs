@@ -20,10 +20,5 @@ namespace NetStalkerAvalonia.Core.Views.RoutedViews
 
 			InitializeComponent();
 		}
-
-		private void InitializeComponent()
-		{
-			AvaloniaXamlLoader.Load(this);
-		}
 	}
 }

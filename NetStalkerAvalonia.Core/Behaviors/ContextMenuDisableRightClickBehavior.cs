@@ -31,7 +31,7 @@ public class ContextMenuDisableRightClickBehavior : AvaloniaObject
         return (bool)element.GetValue(IsContextMenuRightClickDisabledProperty);
     }
 
-    private static void OnIsContextMenuRightClickDisabledChanged(IAvaloniaObject sender, bool e)
+    private static void OnIsContextMenuRightClickDisabledChanged(AvaloniaObject sender, bool e)
     {
         var element = sender as Control;
 

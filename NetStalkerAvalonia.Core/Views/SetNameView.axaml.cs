@@ -15,9 +15,4 @@ public partial class SetNameView : ReactiveWindow<SetNameViewModel>
 
 		InitializeComponent();
 	}
-
-	private void InitializeComponent()
-	{
-		AvaloniaXamlLoader.Load(this);
-	}
 }

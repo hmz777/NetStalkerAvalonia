@@ -85,7 +85,7 @@
 			</Grid.ColumnDefinitions>
 			<ListBox Name="RuleList"
 					 CornerRadius="5" Grid.Row="0" Grid.Column="0"
-					 Items="{Binding Rules}"
+					 ItemsSource="{Binding Rules}"
 					 SelectionMode="Single"
 					 SelectedItem="{Binding SelectedRule, Mode=TwoWay}">
 				<ListBox.Styles>

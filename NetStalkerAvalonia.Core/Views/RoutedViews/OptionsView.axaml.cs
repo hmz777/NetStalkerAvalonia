@@ -17,7 +17,7 @@ namespace NetStalkerAvalonia.Core.Views.RoutedViews
 				ViewModel!.AppSettings = Config.AppSettings!;
 			});
 
-			AvaloniaXamlLoader.Load(this);
+			InitializeComponent();
 		}
 	}
 }

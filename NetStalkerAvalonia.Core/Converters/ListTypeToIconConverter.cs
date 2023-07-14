@@ -17,11 +17,9 @@ namespace NetStalkerAvalonia.Core.Converters
 
             var type = (DeviceType)value;
 
-            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-
             var fileName = $"/Assets/DeviceListIcons/{type.ToString().ToLower()}.png";
 
-            return new Bitmap(assets.Open(
+            return new Bitmap(AssetLoader.Open(
                      new Uri(string.Format("avares://{0}{1}", Assembly.GetExecutingAssembly().GetName().Name, fileName))));
         }
 

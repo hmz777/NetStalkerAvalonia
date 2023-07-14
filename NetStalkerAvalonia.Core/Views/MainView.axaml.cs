@@ -38,7 +38,7 @@ namespace NetStalkerAvalonia.Core.Views
 					.DisposeWith(disposables);
 			});
 
-			AvaloniaXamlLoader.Load(this);
+			InitializeComponent();
 		}
 
 		private void DoShowAppLogDialog(

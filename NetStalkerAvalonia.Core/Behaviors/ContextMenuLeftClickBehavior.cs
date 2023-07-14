@@ -30,7 +30,7 @@ public class ContextMenuLeftClickBehavior : AvaloniaObject
             .RegisterAttached<ContextMenuLeftClickBehavior, Interactive, bool>(
                 "IsLeftClickEnabled", default(bool), false, BindingMode.OneTime);
 
-    private static void OnIsLeftClickEnabledChanged(IAvaloniaObject sender, bool e)
+    private static void OnIsLeftClickEnabledChanged(AvaloniaObject sender, bool e)
     {
         var uiElement = sender as Control;
 

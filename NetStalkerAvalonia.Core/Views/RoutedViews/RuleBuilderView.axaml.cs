@@ -8,6 +8,7 @@ using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 using NetStalkerAvalonia.Core.ViewModels.RoutedViewModels;
 using ReactiveUI;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia.Core.Views.RoutedViews
@@ -33,11 +34,6 @@ namespace NetStalkerAvalonia.Core.Views.RoutedViews
 			});
 
 			InitializeComponent();
-		}
-
-		private void InitializeComponent()
-		{
-			AvaloniaXamlLoader.Load(this);
 		}
 
 		private async Task DoShowAddDialogAsync(InteractionContext<Unit, AddUpdateRuleModel?> interaction)

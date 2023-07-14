@@ -37,8 +37,7 @@ namespace NetStalkerAvalonia.Core.Converters
 					uri = new Uri($"avares://{assemblyName}/{rawUri}");
 				}
 
-				var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-				var asset = assets.Open(uri);
+				var asset = AssetLoader.Open(uri);
 
 				return new Bitmap(asset);
 			}

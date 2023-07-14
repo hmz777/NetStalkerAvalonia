@@ -19,7 +19,7 @@ namespace NetStalkerAvalonia.Core.Views
                 });
             });
 
-            AvaloniaXamlLoader.Load(this);
+            InitializeComponent();
         }
     }
 }
