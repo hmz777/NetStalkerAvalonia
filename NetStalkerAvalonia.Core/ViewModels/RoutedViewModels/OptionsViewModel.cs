@@ -4,6 +4,7 @@ using NetStalkerAvalonia.Core.Services;
 using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System.Reactive;
+using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 {
@@ -18,7 +19,8 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 
 		#region Services
 
-		private IAppLockService _appLockService;
+		private readonly IAppLockService _appLockService;
+		private readonly IStatusMessageService _statusMessageService;
 
 		#endregion
 
@@ -34,13 +36,17 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 #endif
 
 		[Splat.DependencyInjectionConstructor]
-		public OptionsViewModel(IRouter screen, IAppLockService appLockService)
+		public OptionsViewModel(
+			IRouter screen,
+			IAppLockService appLockService,
+			IStatusMessageService statusMessageService)
 		{
 			HostScreen = screen;
 			_appLockService = appLockService;
+			_statusMessageService = statusMessageService;
 
-			SetPassword = ReactiveCommand.Create(SetPasswordImpl);
-			ClearPassword = ReactiveCommand.Create(ClearPasswordImpl);
+			SetPassword = ReactiveCommand.CreateFromTask(SetPasswordImpl);
+			ClearPassword = ReactiveCommand.CreateFromTask(ClearPasswordImpl);
 
 			_isAppLocked = this.WhenAnyValue(x => x._appLockService.IsLocked)
 						   .ToProperty(this, x => x.IsAppLocked);
@@ -51,8 +57,6 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 		#region Password Section
 
 		private readonly ObservableAsPropertyHelper<bool> _isAppLocked;
-		private readonly IAppLockService appLockService;
-
 		public bool IsAppLocked => _isAppLocked.Value;
 
 		public ReactiveCommand<Unit, Unit> SetPassword { get; set; }
@@ -80,37 +84,37 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 			NewPassword = null;
 		}
 
-		public void SetPasswordImpl()
+		public async Task SetPasswordImpl()
 		{
 			if (IsAppLocked && string.IsNullOrWhiteSpace(CurrentPassword))
-				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, "Current password is incorrect!"));
+				await _statusMessageService.ShowMessage(new StatusMessageModel(MessageType.Error, "Current password is incorrect!"));
 			else if (string.IsNullOrWhiteSpace(NewPassword))
-				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, "New password is invalid!"));
+				await _statusMessageService.ShowMessage(new StatusMessageModel(MessageType.Error, "New password is invalid!"));
 			else
 			{
 				var result = _appLockService.SetPassword(NewPassword, CurrentPassword);
 
 				if (result == false)
-					Tools.ShowMessage(new StatusMessageModel(MessageType.Error, "Unable to set the password!"));
+					await _statusMessageService.ShowMessage(new StatusMessageModel(MessageType.Error, "Unable to set the password!"));
 				else
-					Tools.ShowMessage(new StatusMessageModel(MessageType.Success, "Password has been set!"));
+					await _statusMessageService.ShowMessage(new StatusMessageModel(MessageType.Success, "Password has been set!"));
 			}
 
 			ClearPasswordFields();
 		}
 
-		public void ClearPasswordImpl()
+		public async Task ClearPasswordImpl()
 		{
 			if (string.IsNullOrWhiteSpace(CurrentPassword))
-				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, "Current password is incorrect!"));
+				await _statusMessageService.ShowMessage(new StatusMessageModel(MessageType.Error, "Current password is incorrect!"));
 			else
 			{
 				var result = _appLockService.ClearPassword(CurrentPassword);
 
 				if (result == false)
-					Tools.ShowMessage(new StatusMessageModel(MessageType.Error, "Unable to clear the password!"));
+					await _statusMessageService.ShowMessage(new StatusMessageModel(MessageType.Error, "Unable to clear the password!"));
 				else
-					Tools.ShowMessage(new StatusMessageModel(MessageType.Success, "Password has been cleared!"));
+					await _statusMessageService.ShowMessage(new StatusMessageModel(MessageType.Success, "Password has been cleared!"));
 			}
 
 			ClearPasswordFields();
