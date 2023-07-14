@@ -4,7 +4,7 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:convs="using:NetStalkerAvalonia.Core.Converters"
 			 xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
-			 xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels"
+			 xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels.RoutedViewModels"
 			 xmlns:ap="using:NetStalkerAvalonia.Core.Behaviors"
 			 mc:Ignorable="d"
 			 xmlns:models="using:NetStalkerAvalonia.Core.Models"
@@ -12,7 +12,7 @@
 			 x:Class="NetStalkerAvalonia.Core.Views.Components.DeviceList.DeviceListView">
 
 	<Design.DataContext>
-		<vm:MainViewModel />
+		<vm:HomeViewModel />
 	</Design.DataContext>
 
 	<UserControl.Resources>
@@ -44,7 +44,7 @@
 		  RowDefinitions="*">
 		<DataGrid Grid.Row="0"
 				  Name="DeviceList"
-				  Items="{Binding Devices}"
+				  ItemsSource="{Binding Devices}"
 				  SelectedItem="{Binding SelectedDevice,Mode=TwoWay}"
 				  AutoGenerateColumns="False"
 				  SelectionMode="Single"
@@ -127,7 +127,7 @@
 								<Button.ContextMenu>
 									<ContextMenu FontFamily="{Binding $parent[Window].FontFamily}">
 										<MenuItem Header="Block/Unblock"
-												  Command="{Binding $parent[Window].DataContext.BlockUnblock}"
+												  Command="{Binding $parent[UserControl].DataContext.BlockUnblock}"
 												  CommandParameter="{Binding Mac}"
 												  IsEnabled="True">
 											<MenuItem.Icon>
@@ -135,7 +135,7 @@
 											</MenuItem.Icon>
 										</MenuItem>
 										<MenuItem Header="Redirect/Undo Redirection"
-												  Command="{Binding $parent[Window].DataContext.RedirectUnRedirect}"
+												  Command="{Binding $parent[UserControl].DataContext.RedirectUnRedirect}"
 												  CommandParameter="{Binding Mac}"
 												  IsEnabled="True">
 											<MenuItem.Icon>
@@ -143,7 +143,7 @@
 											</MenuItem.Icon>
 										</MenuItem>
 										<MenuItem Header="Limit Speed"
-												  Command="{Binding $parent[Window].DataContext.Limit}"
+												  Command="{Binding $parent[UserControl].DataContext.Limit}"
 												  CommandParameter="{Binding Mac}"
 												  IsEnabled="True">
 											<MenuItem.Icon>
@@ -152,7 +152,7 @@
 										</MenuItem>
 										<Separator />
 										<MenuItem Header="Set friendly name"
-												  Command="{Binding $parent[Window].DataContext.SetFriendlyName}"
+												  Command="{Binding $parent[UserControl].DataContext.SetFriendlyName}"
 												  CommandParameter="{Binding Mac}"
 												  IsEnabled="True">
 											<MenuItem.Icon>
@@ -160,7 +160,7 @@
 											</MenuItem.Icon>
 										</MenuItem>
 										<MenuItem Header="Clear name"
-												  Command="{Binding $parent[Window].DataContext.ClearFriendlyName}"
+												  Command="{Binding $parent[UserControl].DataContext.ClearFriendlyName}"
 												  CommandParameter="{Binding Mac}"
 												  IsEnabled="True">
 											<MenuItem.Icon>

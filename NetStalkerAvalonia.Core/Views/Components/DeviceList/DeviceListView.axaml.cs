@@ -9,10 +9,5 @@ namespace NetStalkerAvalonia.Core.Views.Components.DeviceList
         {
             InitializeComponent();
         }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
     }
 }

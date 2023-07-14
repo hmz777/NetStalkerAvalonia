@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Views;
 using Serilog;
 using System;
 

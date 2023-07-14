@@ -3,7 +3,11 @@
 		xmlns:controls="using:NetStalkerAvalonia.Core.Views.Components"
 		xmlns:convos="using:NetStalkerAvalonia.Core.Converters">
 	<Design.PreviewWith>
-		<!--<controls:GenericIconButton />-->
+		<controls:GenericIconButton   Name="Scan"
+					   Icon="Assets/NavIcons/scan.png"
+					   Text="Scan"
+					   Background="{Binding Theme.NavElementBackground}">
+		</controls:GenericIconButton>
 	</Design.PreviewWith>
 
 	<Style Selector="controls|GenericIconButton">

@@ -23,6 +23,8 @@ namespace NetStalkerAvalonia.Core.ViewModels
 			timer.Elapsed += Timer_Elapsed;
 
 			timer.Start();
+
+			//TODO: Add an export button
 		}
 
 		private void Timer_Elapsed(object? sender, ElapsedEventArgs e)

@@ -15,6 +15,7 @@ namespace NetStalkerAvalonia.Linux.Helpers
 		private static void RegisterRequiredServices()
 		{
 			// Source generation not working from this assembly, we'll register via the locator for now
+			//SplatRegistrations.RegisterLazySingleton<IAppLockService, AppLockManagerLinux>();
 			Locator.CurrentMutable.RegisterLazySingleton(() => new AppLockManagerLinux(Locator.Current.GetService<IFileSystem>()), typeof(IAppLockService));
 		}
 	}

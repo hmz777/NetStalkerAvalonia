@@ -14,6 +14,7 @@ namespace NetStalkerAvalonia.Windows.Helpers
 		private static void RegisterRequiredServices()
 		{
 			// Source generation not working from this assembly, we'll register via the locator for now
+			//SplatRegistrations.RegisterLazySingleton<IAppLockService, AppLockManagerWindows>();
 			Locator.CurrentMutable.RegisterLazySingleton(() => new AppLockManagerWindows(), typeof(IAppLockService));
 		}
 	}

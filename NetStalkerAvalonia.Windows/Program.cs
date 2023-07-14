@@ -3,9 +3,7 @@ using Avalonia.ReactiveUI;
 using NetStalkerAvalonia.Core;
 using NetStalkerAvalonia.Core.Configuration;
 using NetStalkerAvalonia.Core.Helpers;
-using NetStalkerAvalonia.Core.Services;
 using Serilog;
-using Splat;
 using System;
 
 namespace NetStalkerAvalonia.Windows
@@ -40,10 +38,10 @@ namespace NetStalkerAvalonia.Windows
 			// Read app config
 			Config.ReadConfiguration();
 
+			DependencyInjectionHelpers.RegisterAppDependencies();
+
 			// Register platform specific deps
 			Helpers.DependencyInjectionHelpers.RegisterAppDependencies();
-
-			DependencyInjectionHelpers.RegisterAppDependencies();
 
 			return AppBuilder.Configure<App>()
 				.UsePlatformDetect()
