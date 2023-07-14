@@ -9,6 +9,6 @@ namespace NetStalkerAvalonia.Core.Services
 {
 	public interface IStatusMessageService
 	{
-		void ShowMessage(StatusMessageModel statusMessageModel);
+		Task ShowMessage(StatusMessageModel statusMessage);
 	}
 }

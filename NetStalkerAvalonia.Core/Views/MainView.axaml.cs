@@ -1,12 +1,10 @@
-using Avalonia;
-using Avalonia.Controls.Mixins;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Services.Implementations.StatusMessages;
 using NetStalkerAvalonia.Core.ViewModels;
 using NetStalkerAvalonia.Core.ViewModels.InteractionViewModels;
 using ReactiveUI;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 
 namespace NetStalkerAvalonia.Core.Views
@@ -17,21 +15,11 @@ namespace NetStalkerAvalonia.Core.Views
 		{
 			this.WhenActivated(disposables =>
 			{
-				ViewModel!
-					.ShowLimitDialogInteraction!
-					.RegisterHandler(DoShowLimitDialogAsync)
-					.DisposeWith(disposables);
-
-				ViewModel!
-					.ShowStatusMessageInteraction!
+				StatusMessageService
+					.MessageInteraction
 					.RegisterHandler(DoShowMessageDialogAsync)
 					.DisposeWith(disposables);
-
-				ViewModel!
-					.SetFriendlyNameInteraction!
-					.RegisterHandler(DoShowSetFriendlyDeviceNameDialogAsync)
-					.DisposeWith(disposables);
-
+	
 				ViewModel!
 					.ShowAppLogInteraction!
 					.RegisterHandler(DoShowAppLogDialog)
@@ -53,35 +41,12 @@ namespace NetStalkerAvalonia.Core.Views
 			interaction.SetOutput(Unit.Default);
 		}
 
-		private async Task DoShowLimitDialogAsync(
-			InteractionContext<DeviceLimitsModel?, DeviceLimitsModel?> interaction)
-		{
-			var dialog = new LimitView
-			{
-				DataContext = new LimitViewModel() { DeviceLimits = interaction.Input }
-			};
-
-			var result = await dialog.ShowDialog<DeviceLimitsModel>(this);
-			interaction.SetOutput(result);
-		}
-
 		private async Task DoShowMessageDialogAsync(InteractionContext<StatusMessageModel, Unit> interaction)
 		{
 			var statusMessageDialog = new StatusMessageView();
 			statusMessageDialog.DataContext = new StatusMessageViewModel() { StatusMessage = interaction.Input };
 
 			var result = await statusMessageDialog.ShowDialog<Unit>(this);
-			interaction.SetOutput(result);
-		}
-
-		private async Task DoShowSetFriendlyDeviceNameDialogAsync(InteractionContext<string?, string?> interaction)
-		{
-			var setNameDialogWindow = new SetNameView
-			{
-				DataContext = new SetNameViewModel() { Name = interaction.Input }
-			};
-
-			var result = await setNameDialogWindow.ShowDialog<string?>(this);
 			interaction.SetOutput(result);
 		}
 	}
