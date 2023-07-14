@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Reactive.Linq;
@@ -18,21 +17,26 @@ using System.Text.Json;
 
 namespace NetStalkerAvalonia.Core.Services.Implementations.RulesService
 {
-    public class RuleService : ReactiveObject, IRuleService
+	public class RuleService : ReactiveObject, IRuleService
 	{
 		private const string RulesFileName = "Rules.json";
 
 		private readonly IMapper mapper;
 		private readonly IFileSystem fileSystem;
+		private readonly IStatusMessageService statusMessageService;
 
 		private bool _status = false;
 
 		private readonly ObservableCollection<RuleBase> rules;
 
-		public RuleService(IMapper mapper, IFileSystem fileSystem)
+		public RuleService(
+			IMapper mapper,
+			IFileSystem fileSystem,
+			IStatusMessageService statusMessageService)
 		{
 			this.mapper = mapper;
 			this.fileSystem = fileSystem;
+			this.statusMessageService = statusMessageService;
 
 			rules = new ObservableCollection<RuleBase>(LoadRules());
 			Rules = new ReadOnlyObservableCollection<RuleBase>(rules);
@@ -60,7 +64,7 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.RulesService
 			}
 			catch
 			{
-				Tools.ShowMessage(new StatusMessageModel(MessageType.Error, "Rules file is corrupted. It will be skipped."));
+				statusMessageService.ShowMessage(new StatusMessageModel(MessageType.Error, "Rules file is corrupted. It will be skipped."));
 			}
 
 			return Enumerable.Empty<RuleBase>();
