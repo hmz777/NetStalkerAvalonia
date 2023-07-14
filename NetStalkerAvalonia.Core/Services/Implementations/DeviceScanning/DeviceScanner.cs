@@ -3,10 +3,8 @@ using NetStalkerAvalonia.Core.Configuration;
 using NetStalkerAvalonia.Core.Helpers;
 using NetStalkerAvalonia.Core.Models;
 using PacketDotNet;
-using ReactiveUI;
 using Serilog;
 using SharpPcap;
-using SharpPcap.LibPcap;
 using System;
 using System.Net;
 using System.Threading;
@@ -17,6 +15,8 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.DeviceScanning;
 public class DeviceScanner : IDeviceScanner
 {
 	#region Members
+
+	IDisposable? _deviceMessageSource;
 
 	private CancellationTokenSource? _cancellationTokenSource;
 	private IPcapLiveDevice _device;
@@ -29,6 +29,7 @@ public class DeviceScanner : IDeviceScanner
 	private readonly IPcapDeviceManager _pcapDeviceManager;
 	private readonly IDeviceNameResolver _deviceNameResolver;
 	private readonly IDeviceTypeIdentifier _deviceTypeIdentifier;
+	private readonly IMessageBusService _messageBusService;
 
 	// This is the original source of clients and all other collections are projections from this
 	private SourceCache<Device, string> _clients = new(x => x.Mac!.ToString());
@@ -40,11 +41,13 @@ public class DeviceScanner : IDeviceScanner
 	public DeviceScanner(
 		IPcapDeviceManager pcapDeviceManager,
 		IDeviceNameResolver deviceNameResolver,
-		IDeviceTypeIdentifier deviceTypeIdentifier)
+		IDeviceTypeIdentifier deviceTypeIdentifier,
+		IMessageBusService messageBusService)
 	{
 		_pcapDeviceManager = pcapDeviceManager;
 		_deviceNameResolver = deviceNameResolver;
 		_deviceTypeIdentifier = deviceTypeIdentifier;
+		_messageBusService = messageBusService;
 
 		Init();
 		SetupBindings();
@@ -72,9 +75,10 @@ public class DeviceScanner : IDeviceScanner
 		}
 	}
 
-	private void SetupBindings() => MessageBus
-		.Current
-		.RegisterMessageSource(_clients.Connect(), ContractKeys.ScannerStream.ToString());
+	private void SetupBindings()
+	{
+		_deviceMessageSource = _messageBusService.RegisterMessageSource(_clients.Connect(), ContractKeys.ScannerStream.ToString());
+	}
 
 	private void InitOrToggleDiscoveryTimer(bool state)
 	{
@@ -299,6 +303,7 @@ public class DeviceScanner : IDeviceScanner
 
 		if (_device != null)
 		{
+			_deviceMessageSource?.Dispose();
 			_discoveryTimer?.Dispose();
 			_aliveTimer?.Dispose();
 			_device.Dispose(OnPacketArrival);
