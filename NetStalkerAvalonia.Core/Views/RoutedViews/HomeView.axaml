@@ -4,13 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
              xmlns:cmptsDev="using:NetStalkerAvalonia.Core.Views.Components.DeviceList"
-             xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels"
+             xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels.RoutedViewModels"
              mc:Ignorable="d" d:DesignWidth="1000"
              x:Class="NetStalkerAvalonia.Core.Views.RoutedViews.HomeView"
              Background="Transparent">
 
 	<Design.DataContext>
-		<vm:MainViewModel />
+		<vm:HomeViewModel />
 	</Design.DataContext>
 
 	<UserControl.Styles>
@@ -29,22 +29,8 @@
 			<RowDefinition Height="auto" />
 		</Grid.RowDefinitions>
 		<cmptsDev:DeviceListView Grid.Row="0" />
-		<Border Grid.Row="1"
-                Background="{Binding Theme.WindowBackground}"
-                Padding="15,0,15,0"
-                BorderBrush="{Binding Theme.NavBorderColor}"
-                BorderThickness="0,3,0,0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
-			<DockPanel HorizontalAlignment="Stretch">
-				<Border DockPanel.Dock="Left" Classes="nav-item">
-					<cmpts:Navbar Name="Navbar" />
-				</Border>
-				<Border DockPanel.Dock="Right" HorizontalAlignment="Right" Classes="nav-item">
-					<cmpts:ListControls />
-				</Border>
-				<Button Width="0" Height="0" Opacity="0" Command="{Binding ShowAppLog}" HotKey="F11"/>
-			</DockPanel>
+		<Border Grid.Row="1" Classes="nav-item">
+			<cmpts:ListControls/>
 		</Border>
 	</Grid>
 </UserControl>
