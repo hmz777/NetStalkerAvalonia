@@ -9,7 +9,7 @@
                 Margin="0,40,0,10">
         <Border Background="{Binding Theme.AccentColor}">
             <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding GoBackHandler}" IsVisible="{Binding CanGoBack, FallbackValue=false}"
+                <Button Command="{Binding GoBack}" IsVisible="{Binding CanGoBack, FallbackValue=false}"
                         Background="Transparent"
                         Margin="15,0,5,0"
                         VerticalAlignment="Center">

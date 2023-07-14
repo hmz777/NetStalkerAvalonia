@@ -2,28 +2,71 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:viewModels="clr-namespace:NetStalkerAvalonia.Core.ViewModels"
+			 xmlns:viewModels="clr-namespace:NetStalkerAvalonia.Core.ViewModels.RoutedViewModels"
 			 xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="NetStalkerAvalonia.Core.Views.Components.ListControls">
 
 	<Design.DataContext>
-		<viewModels:MainViewModel />
+		<viewModels:HomeViewModel />
 	</Design.DataContext>
 
+	<UserControl.Styles>
+		<Style Selector="cmpts|GenericIconButton">
+			<Setter Property="Background" Value="{Binding Theme.NavBackground}"/>
+		</Style>
+	</UserControl.Styles>
+
 	<Border Classes="control-group">
-		<StackPanel Orientation="Horizontal" Spacing="15">
-			<CheckBox Content="Block All"
-					  Command="{Binding BlockAll}"
-					  CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-					  IsChecked="{Binding AllBlocked, Mode=TwoWay}"
-					  ToolTip.Tip="Blocks all devices and future detections"/>
-			<CheckBox Content="Redirect All"
-					  Command="{Binding RedirectAll}"
-					  CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
-					  IsChecked="{Binding AllRedirected, Mode=TwoWay}"
-					  ToolTip.Tip="Redirects all devices and future detections"/>
-			<cmpts:StatsBox />
-		</StackPanel>
+		<Grid ColumnDefinitions="*,*" RowDefinitions="Auto">
+			<StackPanel Grid.Column="0" Orientation="Horizontal"
+						Spacing="10"
+						HorizontalAlignment="Left">
+				<cmpts:GenericIconButton Name="Scan"
+				   Icon="Assets/NavIcons/scan.png"
+				   Text="Scan"
+				   Command="{Binding Scan}"
+				   IsEnabled="{Binding ScanEnabled}">
+					<ToolTip.Tip>
+						<StackPanel>
+							<TextBlock Classes="h1">Scan Network</TextBlock>
+							<TextBlock Classes="p">
+								Scans for active devices on the network. You only need to press this once, then the app will continuously scan for active devices.
+							</TextBlock>
+						</StackPanel>
+					</ToolTip.Tip>
+				</cmpts:GenericIconButton>
+				<cmpts:GenericIconButton Name="Refresh"
+					Icon="Assets/NavIcons/refresh.png"
+					Text="Refresh"
+					Command="{Binding Refresh}">
+					<ToolTip.Tip>
+						<StackPanel>
+							<TextBlock Classes="h1">Refresh Devices</TextBlock>
+							<TextBlock Classes="p">
+								Refreshes the list of devices by manually initiating a scan. You can use this when you want devices to be discovered faster or when not all devices are discovered on the initial scan.&#10;(The app scans the network continuously, so you can always just wait a few seconds for all devices to be discovered)
+							</TextBlock>
+						</StackPanel>
+					</ToolTip.Tip>
+				</cmpts:GenericIconButton>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Spacing="20"
+						Grid.Column="1"
+						HorizontalAlignment="Right">
+				<CheckBox
+					Content="Block All"
+					Command="{Binding BlockAll}"
+					CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+					IsChecked="{Binding AllBlocked, Mode=TwoWay}"
+					ToolTip.Tip="Blocks all devices and future detections"/>
+				<CheckBox
+					Content="Redirect All"
+					Command="{Binding RedirectAll}"
+					CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}"
+					IsChecked="{Binding AllRedirected, Mode=TwoWay}"
+					ToolTip.Tip="Redirects all devices and future detections"/>
+				<cmpts:StatsBox HorizontalAlignment="Right"/>
+			</StackPanel>
+		</Grid>
 	</Border>
 </UserControl>

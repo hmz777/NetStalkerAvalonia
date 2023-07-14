@@ -1,9 +1,9 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using NetStalkerAvalonia.Core.Configuration;
-using NetStalkerAvalonia.Core.Helpers;
 using NetStalkerAvalonia.Core.Services;
 using NetStalkerAvalonia.Core.ViewModels;
+using NetStalkerAvalonia.Core.ViewModels.RoutedViewModels;
 using NetStalkerAvalonia.Core.Views;
 using System;
 
@@ -25,12 +25,16 @@ namespace NetStalkerAvalonia.Core.Helpers
 			adapterSelectWindow.ViewModel!.Accept.Subscribe(x =>
 			{
 				var mainViewModel = DependencyInjectionHelpers.ResolveIfNull<MainViewModel>(null!);
+				application.DataContext = mainViewModel;
 
 				desktop.ShutdownRequested += (sender, args) =>
 				{
+					var homeViewModel = DependencyInjectionHelpers.ResolveIfNull<HomeViewModel>(null!);
+
 					// Save device friendly names before exiting
 					var deviceNameResolver = DependencyInjectionHelpers.ResolveIfNull<IDeviceNameResolver>(null!);
-					deviceNameResolver.SaveDeviceNamesAsync(mainViewModel.GetUiDeviceCollection());
+					deviceNameResolver.SaveDeviceNamesAsync(homeViewModel.GetUiDeviceCollection()); 
+					// TODO: Abstract the device list into its own service
 
 					// Save app settings to disk
 					Config.AppSettings?.SaveChanges();
@@ -40,14 +44,13 @@ namespace NetStalkerAvalonia.Core.Helpers
 					rulesService.SaveRules();
 				};
 
-				// Switch the main viewmodel after the initial adapter setup
+				// Switch the main view model after the initial adapter setup
 
 				desktop.MainWindow = new MainView
 				{
-					DataContext = mainViewModel
+					DataContext = mainViewModel,
+					ViewModel = mainViewModel
 				};
-
-				application.DataContext = mainViewModel;
 
 				StaticData.MainWindow = desktop.MainWindow;
 

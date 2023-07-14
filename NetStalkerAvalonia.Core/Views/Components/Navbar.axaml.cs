@@ -28,11 +28,6 @@ namespace NetStalkerAvalonia.Core.Views.Components
             InitializeComponent();
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
-
         private void ToggleNavbar(bool state)
         {
             navbar.IsVisible = state;

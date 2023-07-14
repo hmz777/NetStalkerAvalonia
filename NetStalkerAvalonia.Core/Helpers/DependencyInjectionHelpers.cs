@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
 using NetStalkerAvalonia.Core.Configuration;
 using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations;
 using NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection;
 using NetStalkerAvalonia.Core.Services.Implementations.DeviceNameResolving;
 using NetStalkerAvalonia.Core.Services.Implementations.DeviceScanning;
 using NetStalkerAvalonia.Core.Services.Implementations.DeviceTypeIdentification;
+using NetStalkerAvalonia.Core.Services.Implementations.ErrorHandling;
+using NetStalkerAvalonia.Core.Services.Implementations.MessageBus;
 using NetStalkerAvalonia.Core.Services.Implementations.Notifications;
 using NetStalkerAvalonia.Core.Services.Implementations.PcapDeviceManagement;
 using NetStalkerAvalonia.Core.Services.Implementations.RulesService;
+using NetStalkerAvalonia.Core.Services.Implementations.StatusMessages;
 using NetStalkerAvalonia.Core.Services.Implementations.ViewRouting;
 using NetStalkerAvalonia.Core.ViewModels;
 using NetStalkerAvalonia.Core.ViewModels.RoutedViewModels;
@@ -69,6 +73,7 @@ namespace NetStalkerAvalonia.Core.Helpers
 		{
 			SplatRegistrations.SetupIOC(Locator.GetLocator());
 
+			SplatRegistrations.RegisterLazySingleton<IRouter, ViewRouter>();
 			SplatRegistrations.RegisterLazySingleton<IFileSystem, FileSystem>();
 			SplatRegistrations.RegisterLazySingleton<IDeviceTypeIdentifier, DeviceTypeIdentifier>();
 			SplatRegistrations.RegisterLazySingleton<IDeviceNameResolver, DeviceNameResolver>();
@@ -77,6 +82,9 @@ namespace NetStalkerAvalonia.Core.Helpers
 			SplatRegistrations.RegisterLazySingleton<IBlockerRedirector, BlockerRedirector>();
 			SplatRegistrations.RegisterLazySingleton<INotificationManager, NotificationManager>();
 			SplatRegistrations.RegisterLazySingleton<IRuleService, RuleService>();
+			SplatRegistrations.RegisterLazySingleton<IErrorHandler, ErrorHandler>();
+			SplatRegistrations.RegisterLazySingleton<IMessageBusService, MessageBusService>();
+			SplatRegistrations.RegisterLazySingleton<IStatusMessageService, StatusMessageService>();
 
 			ConfigureAndRegisterAutoMapper();
 		}
@@ -107,8 +115,6 @@ namespace NetStalkerAvalonia.Core.Helpers
 
 		private static void RegisterViewModels()
 		{
-			SplatRegistrations.RegisterLazySingleton<IRouter, ViewRouter>();
-			SplatRegistrations.RegisterLazySingleton<MainViewModel>();
 			SplatRegistrations.RegisterLazySingleton<SnifferViewModel>();
 			SplatRegistrations.RegisterLazySingleton<OptionsViewModel>();
 			SplatRegistrations.RegisterLazySingleton<RuleBuilderViewModel>();
@@ -117,6 +123,8 @@ namespace NetStalkerAvalonia.Core.Helpers
 			SplatRegistrations.RegisterLazySingleton<AppLogViewModel>();
 			SplatRegistrations.RegisterLazySingleton<AdapterSelectViewModel>();
 			SplatRegistrations.RegisterLazySingleton<PasswordViewModel>();
+			SplatRegistrations.Register<HomeViewModel>();
+			SplatRegistrations.Register<MainViewModel>();
 		}
 
 		private static void RegisterViewsForViewModels()

@@ -25,7 +25,7 @@
 		<KeyBinding Gesture="Ctrl+a" Command="{Binding GoToAbout}"/>
 		<KeyBinding Gesture="Ctrl+b" Command="{Binding BlockAll}"/>
 		<KeyBinding Gesture="Ctrl+d" Command="{Binding RedirectAll}"/>
-		<KeyBinding Gesture="Ctrl+q" Command="{Binding GoBackHandler}"/>
+		<KeyBinding Gesture="Ctrl+q" Command="{Binding GoBack}"/>
 	</Window.KeyBindings>
 
 	<Window.Styles>
@@ -38,7 +38,7 @@
 
 	<Grid HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
-          RowDefinitions="Auto,*">
+          RowDefinitions="Auto,*,Auto">
 		<cmpts:PageTitle VerticalAlignment="Stretch" Grid.Row="0" Text="{Binding PageTitle}" />
 		<rxui:RoutedViewHost
 			Name="RoutedViewHost"
@@ -58,5 +58,19 @@
 				<rvws:HomeView />
 			</rxui:RoutedViewHost.DefaultContent>
 		</rxui:RoutedViewHost>
+		<Border Grid.Row="2"
+                Background="{Binding Theme.WindowBackground}"
+                Padding="15,0,15,0"
+                BorderBrush="{Binding Theme.NavBorderColor}"
+                BorderThickness="0,3,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+			<DockPanel HorizontalAlignment="Stretch">
+				<Border DockPanel.Dock="Left" Classes="nav-item">
+					<cmpts:Navbar Name="Navbar" />
+				</Border>				
+				<Button Width="0" Height="0" Opacity="0" Command="{Binding ShowAppLog}" HotKey="F11"/>
+			</DockPanel>
+		</Border>
 	</Grid>
 </Window>

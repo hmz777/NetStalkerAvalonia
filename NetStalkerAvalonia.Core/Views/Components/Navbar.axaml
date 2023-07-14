@@ -12,33 +12,6 @@
 					HorizontalAlignment="Left"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal">
-			<cmpts:NavButton   Name="Scan"
-							   Icon="Assets/NavIcons/scan.png"
-							   Text="Scan"
-							   Command="{Binding Scan}"
-							   IsEnabled="{Binding ScanEnabled}">
-				<ToolTip.Tip>
-					<StackPanel>
-						<TextBlock Classes="h1">Scan Network</TextBlock>
-						<TextBlock Classes="p">
-							Scans for active devices on the network. You only need to press this once, then the app will continuously scan for active devices.
-						</TextBlock>
-					</StackPanel>
-				</ToolTip.Tip>
-			</cmpts:NavButton>
-			<cmpts:NavButton Name="Refresh" 
-							Icon="Assets/NavIcons/refresh.png"
-							   Text="Refresh"
-							   Command="{Binding Refresh}">
-				<ToolTip.Tip>
-					<StackPanel>
-						<TextBlock Classes="h1">Refresh Devices</TextBlock>
-						<TextBlock Classes="p">
-							Refreshes the list of devices by manually initiating a scan. You can use this when you want devices to be discovered faster or when not all devices are discovered on the initial scan.&#10;(The app scans the network continuously, so you can always just wait a few seconds for all devices to be discovered)
-						</TextBlock>
-					</StackPanel>
-				</ToolTip.Tip>
-			</cmpts:NavButton>
 			<cmpts:NavButton Name="Rules"
 								Icon="Assets/NavIcons/rules.png"
 							   Text="Rules"

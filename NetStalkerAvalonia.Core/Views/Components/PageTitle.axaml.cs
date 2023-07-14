@@ -19,10 +19,5 @@ namespace NetStalkerAvalonia.Core.Views.Components
         {
             InitializeComponent();
         }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
     }
 }
