@@ -255,7 +255,7 @@ public class DeviceScanner : IDeviceScanner
 		{
 			if (client.IsGateway() == false &&
 				client.IsLocalDevice() == false &&
-				DateTime.Now.Second - client.TimeSinceLastArp.Second > 30)
+				(DateTime.Now - client.TimeSinceLastArp).Seconds > 30)
 			{
 				_clients.Remove(client);
 			}
