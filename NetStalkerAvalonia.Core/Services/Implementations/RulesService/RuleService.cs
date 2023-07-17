@@ -156,7 +156,15 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.RulesService
 		public void ApplyIfMatch(Device device)
 		{
 			var lastRuleThatMatch = rules.Where(r => r.Match(device)).OrderBy(r => r.Order).LastOrDefault();
-			lastRuleThatMatch?.Apply(device);
+
+			if (lastRuleThatMatch != null)
+			{
+				lastRuleThatMatch.Apply(device);
+			}
+			else
+			{
+				device.ResetState();
+			}
 		}
 
 		public void MoveRuleUp(RuleBase rule)
