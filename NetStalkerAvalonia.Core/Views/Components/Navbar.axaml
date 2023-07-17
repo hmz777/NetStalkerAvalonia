@@ -2,33 +2,59 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:viewModels="clr-namespace:NetStalkerAvalonia.Core.ViewModels"
+			 xmlns:convs="using:NetStalkerAvalonia.Core.Converters"
 			 xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
 			 mc:Ignorable="d"
 			 x:Class="NetStalkerAvalonia.Core.Views.Components.Navbar"
 			 x:Name="navbar">
+
+	<Design.DataContext>
+		<viewModels:MainViewModel />
+	</Design.DataContext>
+
+	<UserControl.Resources>
+		<convs:StringEqualsConverter x:Key="stringEqualsConverter" />
+	</UserControl.Resources>
 
 	<Border Height="80">
 		<StackPanel Spacing="5"
 					HorizontalAlignment="Left"
 					VerticalAlignment="Stretch"
 					Orientation="Horizontal">
+			<cmpts:NavButton Name="DeviceList"
+							 Icon="Assets/NavIcons/home.png"
+							 Text="Device List"
+							 Command="{Binding GoToDeviceList}"
+							 IsEnabled="{Binding PageTitle, Converter={StaticResource stringEqualsConverter}, ConverterParameter='!=|Device List'}" >
+				<ToolTip.Tip>
+					<StackPanel>
+						<TextBlock Classes="h1">Device List</TextBlock>
+						<TextBlock Classes="p">
+							Target management
+						</TextBlock>
+					</StackPanel>
+				</ToolTip.Tip>
+			</cmpts:NavButton>
 			<cmpts:NavButton Name="Rules"
-								Icon="Assets/NavIcons/rules.png"
-							   Text="Rules"
-							   Command="{Binding GoToRules}">
+							 Icon="Assets/NavIcons/rules.png"
+							 Text="Rules"
+							 Command="{Binding GoToRules}"
+							 IsEnabled="{Binding PageTitle, Converter={StaticResource stringEqualsConverter}, ConverterParameter='!=|Rule Builder'}" >
 				<ToolTip.Tip>
 					<StackPanel>
 						<TextBlock Classes="h1">Target Rules</TextBlock>
-						<TextBlock Classes="p" xml:space="preserve">
+						<TextBlock Classes="p">
 							Apply custom rules for automatic targeting of devices that match a specific criteria.
 						</TextBlock>
 					</StackPanel>
 				</ToolTip.Tip>
 			</cmpts:NavButton>
-			<cmpts:NavButton	Name="Sniffer"
-								Icon="Assets/NavIcons/sniffer.png"
-							   Text="Sniffer"
-							   Command="{Binding GoToSniffer}">
+			<cmpts:NavButton Name="Sniffer"
+							 Icon="Assets/NavIcons/sniffer.png"
+							 Text="Sniffer"
+							 Command="{Binding GoToSniffer}"
+							 IsEnabled="{Binding PageTitle, Converter={StaticResource stringEqualsConverter}, ConverterParameter='!=|Packet Sniffer'}" >
 				<ToolTip.Tip>
 					<StackPanel>
 						<TextBlock Classes="h1">Packet Sniffer</TextBlock>
@@ -38,10 +64,11 @@
 					</StackPanel>
 				</ToolTip.Tip>
 			</cmpts:NavButton>
-			<cmpts:NavButton Name="Options"	
-							Icon="Assets/NavIcons/options.png"
-							   Text="Options"
-							   Command="{Binding GoToOptions}">
+			<cmpts:NavButton Name="Options"
+							 Icon="Assets/NavIcons/options.png"
+							 Text="Options"
+							 Command="{Binding GoToOptions}"
+							 IsEnabled="{Binding PageTitle, Converter={StaticResource stringEqualsConverter}, ConverterParameter='!=|Options'}" >
 				<ToolTip.Tip>
 					<StackPanel>
 						<TextBlock Classes="h1">Options</TextBlock>
@@ -51,10 +78,11 @@
 					</StackPanel>
 				</ToolTip.Tip>
 			</cmpts:NavButton>
-			<cmpts:NavButton Name="Help" 
-							Icon="Assets/NavIcons/help.png"
-							   Text="Help"
-							   Command="{Binding GoToHelp}">
+			<cmpts:NavButton Name="Help"
+							 Icon="Assets/NavIcons/help.png"
+							 Text="Help"
+							 Command="{Binding GoToHelp}"
+							 IsEnabled="{Binding PageTitle, Converter={StaticResource stringEqualsConverter}, ConverterParameter='!=|Help'}" >
 				<ToolTip.Tip>
 					<StackPanel>
 						<TextBlock Classes="h1">Help Section</TextBlock>
@@ -64,10 +92,11 @@
 					</StackPanel>
 				</ToolTip.Tip>
 			</cmpts:NavButton>
-			<cmpts:NavButton Name="About"	
-							Icon="Assets/NavIcons/about.png"
-							   Text="About"
-							   Command="{Binding GoToAbout}">
+			<cmpts:NavButton Name="About"
+							 Icon="Assets/NavIcons/about.png"
+							 Text="About"
+							 Command="{Binding GoToAbout}"
+							 IsEnabled="{Binding PageTitle, Converter={StaticResource stringEqualsConverter}, ConverterParameter='!=|About'}" >
 				<ToolTip.Tip>
 					<StackPanel>
 						<TextBlock Classes="h1">About Section</TextBlock>

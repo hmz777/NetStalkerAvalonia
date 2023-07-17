@@ -58,12 +58,7 @@ namespace NetStalkerAvalonia.Core.ViewModels
 		public ReactiveCommand<Unit, IRoutableViewModel> GoToOptions { get; }
 		public ReactiveCommand<Unit, IRoutableViewModel> GoToHelp { get; }
 		public ReactiveCommand<Unit, IRoutableViewModel> GoToAbout { get; }
-
-		// The command that navigates a user back.
-		public ReactiveCommand<Unit, IRoutableViewModel> GoBack { get; }
-
-		private readonly ObservableAsPropertyHelper<bool> _canGoBack;
-		public bool CanGoBack => _canGoBack.Value;
+		public ReactiveCommand<Unit, IRoutableViewModel> GoToDeviceList { get; }
 
 		public ReactiveCommand<Unit, Unit>? ShowAppLog { get; }
 
@@ -133,7 +128,7 @@ namespace NetStalkerAvalonia.Core.ViewModels
 
 		}
 
-#endif	
+#endif
 
 		[Splat.DependencyInjectionConstructor]
 		public MainViewModel(
@@ -167,11 +162,7 @@ namespace NetStalkerAvalonia.Core.ViewModels
 
 			#region Navigation wiring
 
-			_canGoBack = this.WhenAnyValue(x => x.Router.NavigationStack.Count)
-				.Select(count => count > 0)
-				.ToProperty(this, x => x.CanGoBack);
-
-			GoBack = ReactiveCommand.CreateFromObservable(
+			GoToDeviceList = ReactiveCommand.CreateFromObservable(
 				() => Router.Navigate.Execute(homeViewModel));
 
 			GoToSniffer = ReactiveCommand.CreateFromObservable(
@@ -205,7 +196,7 @@ namespace NetStalkerAvalonia.Core.ViewModels
 
 			#endregion
 
-			GoBack.Execute();
+			Router.NavigateAndReset.Execute(homeViewModel);
 		}
 
 		#endregion
