@@ -472,7 +472,7 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 			ArgumentNullException.ThrowIfNull(device, nameof(device));
 
 			device.UnBlock();
-			TryPauseIfNoDevicesLeft();
+			//TryPauseIfNoDevicesLeft();
 
 			Log.Information(LogMessageTemplates.DeviceUnblock,
 				typeof(IBlockerRedirector),
@@ -485,7 +485,7 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 			ArgumentNullException.ThrowIfNull(device, nameof(device));
 
 			device.UnRedirect();
-			TryPauseIfNoDevicesLeft();
+			//TryPauseIfNoDevicesLeft();
 
 			Log.Information(LogMessageTemplates.DeviceUnRedirect,
 				typeof(IBlockerRedirector),
