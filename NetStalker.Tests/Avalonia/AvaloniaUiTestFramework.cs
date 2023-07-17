@@ -66,42 +66,44 @@ namespace NetStalker.Tests.Avalonia
 
 			protected override void SetupSyncContext(int maxParallelThreads)
 			{
-				var tcs = new TaskCompletionSource<SynchronizationContext>();
+				HostInfo.SetHostInfo(null, null, null, null, null, IpType.Ipv4, null, NetworkClass.C);
 
-				new Thread(() =>
-				{
-					try
-					{
-						var builder = AvaloniaApp
-							.BuildAvaloniaApp()
-							.UseHeadless()
-							.AfterSetup((b) =>
-							{
-								var lifeTime = b.Instance.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+				//var tcs = new TaskCompletionSource<SynchronizationContext>();
 
-								lifeTime.Startup += (sender, args) =>
-								{
-									HostInfo.SetHostInfo(null, null, null, null, null, IpType.Ipv4, null, NetworkClass.C);
+				//new Thread(() =>
+				//{
+				//	try
+				//	{
+				//		var builder = AvaloniaApp
+				//			.BuildAvaloniaApp()
+				//			.UseHeadless(new AvaloniaHeadlessPlatformOptions() { UseHeadlessDrawing = true })
+				//			.AfterSetup((b) =>
+				//			{
+				//				var lifeTime = b.Instance.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
 
-									// We wait until the framework and app are completely initialized and ready to run
-									tcs.SetResult(SynchronizationContext.Current);
+				//				lifeTime.Startup += (sender, args) =>
+				//				{
+				//					HostInfo.SetHostInfo(null, null, null, null, null, IpType.Ipv4, null, NetworkClass.C);
 
-									Dispatcher.UIThread.MainLoop(CancellationToken.None);
-								};
-							})
-							.StartWithClassicDesktopLifetime(Array.Empty<string>());
-					}
-					catch (Exception e)
-					{
-						tcs.SetException(e);
-					}
-				})
-				{
-					IsBackground = true
+				//					// We wait until the framework and app are completely initialized and ready to run
+				//					tcs.SetResult(SynchronizationContext.Current);
 
-				}.Start();
+				//					Dispatcher.UIThread.MainLoop(CancellationToken.None);
+				//				};
+				//			})
+				//			.StartWithClassicDesktopLifetime(Array.Empty<string>());
+				//	}
+				//	catch (Exception e)
+				//	{
+				//		tcs.SetException(e);
+				//	}
+				//})
+				//{
+				//	IsBackground = true
 
-				SynchronizationContext.SetSynchronizationContext(tcs.Task.Result);
+				//}.Start();
+
+				//SynchronizationContext.SetSynchronizationContext(tcs.Task.Result);
 			}
 		}
 	}
