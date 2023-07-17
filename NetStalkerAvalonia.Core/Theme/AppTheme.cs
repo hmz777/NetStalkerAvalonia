@@ -15,10 +15,10 @@
 			}
 		}
 
-		public string WindowWidth => "1000";
-		public string WindowMinWidth => "850";
-		public string WindowHeight => "500";
-		public string WindowMinHeight => "500";
+		public string WindowWidth => "750";
+		public string WindowMinWidth => "600";
+		public string WindowHeight => "580";
+		public string WindowMinHeight => "580";
 		public string NavBorderColor => "#2C2C2C";
 		public string NavBackground => "#1E1E1E";
 		public string NavElementBackground => "#2C2C2C";
