@@ -1,6 +1,5 @@
-﻿using Moq;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.ViewRouting;
+﻿using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations.ViewRouting;
 
 namespace NetStalker.Tests.AutoData.Customizations
 {

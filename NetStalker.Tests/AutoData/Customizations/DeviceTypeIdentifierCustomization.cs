@@ -1,5 +1,5 @@
-﻿using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.DeviceTypeIdentification;
+﻿using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations.DeviceTypeIdentification;
 using System.IO.Abstractions;
 
 namespace NetStalker.Tests.AutoData.Customizations

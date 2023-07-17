@@ -1,10 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Headless;
-using Avalonia.ReactiveUI;
 using Avalonia.Threading;
-using NetStalkerAvalonia.Views;
 
 namespace NetStalker.Tests.Avalonia
 {
@@ -27,6 +24,6 @@ namespace NetStalker.Tests.Avalonia
 		public static IClassicDesktopStyleApplicationLifetime? GetApp() =>
 			Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
 
-		public static AppBuilder BuildAvaloniaApp() => NetStalkerAvalonia.Program.BuildAvaloniaApp();
+		public static AppBuilder BuildAvaloniaApp() => NetStalkerAvalonia.Windows.Program.BuildAvaloniaApp();
 	}
 }

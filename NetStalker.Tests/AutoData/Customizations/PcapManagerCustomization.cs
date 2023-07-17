@@ -1,9 +1,7 @@
 ﻿using Moq;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.PcapDeviceManagement;
-using PacketDotNet;
+using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations.PcapDeviceManagement;
 using SharpPcap;
-using SharpPcap.LibPcap;
 
 namespace NetStalker.Tests.AutoData.Customizations
 {

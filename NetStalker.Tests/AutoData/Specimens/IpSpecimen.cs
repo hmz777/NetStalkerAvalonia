@@ -1,5 +1,5 @@
-﻿using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Models;
 using System.Net;
 using System.Reflection;
 
@@ -11,7 +11,7 @@ namespace NetStalker.Tests.AutoData.Specimens
 		{
 			if (request is ParameterInfo parameter && parameter.ParameterType == typeof(IPAddress) && parameter.Name == nameof(Device.Ip).ToLower())
 			{
-				return Tools.GetRandomIpAddress();
+				return DataHelpers.GetRandomIpAddress();
 			}
 
 			return new NoSpecimen();

@@ -2,8 +2,8 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Headless;
 using Avalonia.Threading;
-using NetStalkerAvalonia.Models;
-using NetStalkerAvalonia.Services;
+using NetStalkerAvalonia.Core.Models;
+using NetStalkerAvalonia.Core.Services;
 using System.Reflection;
 using Xunit.Abstractions;
 using Xunit.Sdk;

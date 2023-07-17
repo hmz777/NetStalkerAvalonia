@@ -1,9 +1,7 @@
-﻿using AutoFixture.Kernel;
-using NetStalkerAvalonia.Helpers;
-using NetStalkerAvalonia.Models;
+﻿using NetStalkerAvalonia.Core.Helpers;
+using NetStalkerAvalonia.Core.Models;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Reflection.Metadata;
 
 namespace NetStalker.Tests.AutoData.Specimens
 {
@@ -13,7 +11,7 @@ namespace NetStalker.Tests.AutoData.Specimens
 		{
 			if (request is ParameterInfo parameter && parameter.ParameterType == typeof(PhysicalAddress) && parameter.Name == nameof(Device.Mac).ToLower())
 			{
-				return Tools.GetRandomMacAddress();
+				return DataHelpers.GetRandomMacAddress();
 			}
 
 			return new NoSpecimen();

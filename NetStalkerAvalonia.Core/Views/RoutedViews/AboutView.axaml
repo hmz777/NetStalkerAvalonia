@@ -1,0 +1,93 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels.RoutedViewModels"
+			 xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="NetStalkerAvalonia.Core.Views.RoutedViews.AboutView"
+			 Classes="hasLinks">
+
+	<Design.DataContext>
+		<vm:AboutViewModel />
+	</Design.DataContext>
+
+	<UserControl.Styles>
+		<Style Selector="Separator.separator">
+			<Setter Property="CornerRadius" Value="20"/>
+			<Setter Property="Height" Value="4"/>
+			<Setter Property="Width" Value="200"/>
+			<Setter Property="Background" Value="Teal"/>
+		</Style>
+		<Style Selector="TextBlock.link">
+			<Setter Property="Foreground" Value="Cyan"/>
+			<Setter Property="Cursor" Value="Hand"/>
+		</Style>
+		<Style Selector="StackPanel.socialLinks">
+			<Setter Property="Margin" Value="0,5,0,20"/>
+		</Style>
+		<Style Selector="Button.link">
+			<Setter Property="Margin" Value="10,0,0,0"/>
+		</Style>
+	</UserControl.Styles>
+	
+	<ScrollViewer>
+		<Border Classes="wrapper">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<StackPanel Grid.Row="0" Grid.Column="0">
+					<StackPanel Classes="infoPanel" Margin="0,0,0,10">
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Classes="label" FontSize="40" Text="Net"/>
+							<TextBlock Classes="label" FontSize="40" Foreground="#FBB03B" Text="Stalker"/>
+						</StackPanel>
+						<TextBlock Classes="labelValue" Text="(Avalonia Edition)" />
+					</StackPanel>
+					<TextBlock Text="Info" Classes="title"/>
+					<StackPanel Classes="infoPanel">
+						<TextBlock Classes="label" Text="Developed By:"/>
+						<TextBlock Classes="labelValue" Text="Hamzi Alsheikh" />
+					</StackPanel>
+					<StackPanel Classes="infoPanel">
+						<TextBlock Classes="label" Text="Email:"/>
+						<TextBlock Classes="labelValue" Text="hamzi_alsheikh@hotmail.com" />
+					</StackPanel>
+					<StackPanel Classes="infoPanel">
+						<TextBlock Classes="label" Text="Version:"/>
+						<TextBlock Classes="labelValue" Text="{Binding AppVersion}" />
+					</StackPanel>
+					<StackPanel Name="sociallinks" Classes="socialLinks" Orientation="Horizontal">
+						<cmpts:LinkButton Text="GitHub" Link="https://github.com/hmz777"></cmpts:LinkButton>
+						<cmpts:LinkButton Text="Stack Overflow" Link="https://stackoverflow.com/users/6843077/hmz"></cmpts:LinkButton>
+						<cmpts:LinkButton Text="Website" Link="https://www.hamzialsheikh.tk/"></cmpts:LinkButton>
+					</StackPanel>
+					<TextBlock Text="Built With" Classes="title"/>
+					<StackPanel Name="links" Orientation="Vertical">
+						<StackPanel Classes="infoPanel">
+							<TextBlock Classes="label" Text="SharpPcap - Packet.Net"/>
+							<cmpts:LinkButton Classes="s_link" Text="GitHub" Link="https://github.com/chmorgan"></cmpts:LinkButton>
+						</StackPanel>
+						<StackPanel Classes="infoPanel">
+							<TextBlock Classes="label" Text="Avalonia"/>
+							<cmpts:LinkButton Classes="s_link" Text="Website" Link="https://avaloniaui.net"></cmpts:LinkButton>
+						</StackPanel>
+						<StackPanel Classes="infoPanel">
+							<TextBlock Classes="label" Text="ReactiveUI"/>
+							<cmpts:LinkButton Classes="s_link" Text="Website" Link="https://www.reactiveui.net"></cmpts:LinkButton>
+						</StackPanel>
+					</StackPanel>
+				</StackPanel>
+				<StackPanel Grid.Row="0" Grid.Column="1">
+					<Image Width="200"
+						   Height="200"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Center"
+						   Source="avares://NetStalkerAvalonia.Core/Assets/Images/app_logo.png"/>
+				</StackPanel>
+			</Grid>
+		</Border>
+	</ScrollViewer>
+</UserControl>

@@ -1,0 +1,179 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:convs="using:NetStalkerAvalonia.Core.Converters"
+			 xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
+			 xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels.RoutedViewModels"
+			 xmlns:ap="using:NetStalkerAvalonia.Core.Behaviors"
+			 mc:Ignorable="d"
+			 xmlns:models="using:NetStalkerAvalonia.Core.Models"
+			 xmlns:behaviors="clr-namespace:NetStalkerAvalonia.Core.Behaviors"
+			 x:Class="NetStalkerAvalonia.Core.Views.Components.DeviceList.DeviceListView">
+
+	<Design.DataContext>
+		<vm:HomeViewModel />
+	</Design.DataContext>
+
+	<UserControl.Resources>
+		<convs:ListTypeToIconConverter x:Key="TypeToIconConv" />
+		<convs:PhysicalAddressToStringConverter x:Key="MacToStringConv" />
+		<convs:IpAddressToStringConverter x:Key="IpToStringConv" />
+	</UserControl.Resources>
+
+	<UserControl.Styles>
+		<Style Selector="DataGrid#DeviceList DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+			<Setter Property="Fill" Value="{Binding $parent[Window].DataContext.Theme.AccentColor}" />
+		</Style>
+		<Style Selector="DataGridColumnHeader">
+			<Setter Property="Background" Value="{Binding Theme.ListColumnHeaderBackColor}" />
+		</Style>
+		<Style Selector="Separator.row-status">
+			<Setter Property="Height" Value="5" />
+			<Setter Property="Background" Value="red" />
+		</Style>
+		<Style Selector="Rectangle.statusIndicator">
+			<Setter Property="Width" Value="10"/>
+			<Setter Property="HorizontalAlignment" Value="Left"/>
+			<Setter Property="VerticalAlignment" Value="Stretch"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Grid HorizontalAlignment="Stretch"
+		  VerticalAlignment="Stretch"
+		  RowDefinitions="*">
+		<DataGrid Grid.Row="0"
+				  Name="DeviceList"
+				  ItemsSource="{Binding Devices}"
+				  SelectedItem="{Binding SelectedDevice,Mode=TwoWay}"
+				  AutoGenerateColumns="False"
+				  SelectionMode="Single"
+				  CanUserReorderColumns="{Binding DeviceListViewSettings.UserCanReorderColumns}"
+				  CanUserResizeColumns="{Binding DeviceListViewSettings.UserCanResizeColumns}"
+				  CanUserSortColumns="{Binding DeviceListViewSettings.UserCanSortColumns}"
+				  RowDetailsVisibilityMode="Visible">
+			<DataGrid.Columns>
+				<DataGridTemplateColumn Width="10">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate DataType="models:Device">
+							<Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+								<Rectangle Classes="statusIndicator" IsVisible="{Binding Blocked}" Fill="red" />
+								<Rectangle Classes="statusIndicator" IsVisible="{Binding Redirected}" Fill="yellow" />
+								<Rectangle Classes="statusIndicator" Fill="blue">
+									<Rectangle.IsVisible>
+										<MultiBinding Converter="{x:Static BoolConverters.Or}">
+											<Binding Path="!!DownloadCap" />
+											<Binding Path="!!UploadCap" />
+										</MultiBinding>
+									</Rectangle.IsVisible>
+								</Rectangle>
+							</Panel>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTemplateColumn Header="Type">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate DataType="models:Device">
+							<Image Source="{Binding Type, Converter={StaticResource TypeToIconConv}}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTextColumn Header="IP"
+									Binding="{Binding Ip, Converter={StaticResource IpToStringConv}}"
+									IsReadOnly="True" />
+				<DataGridTextColumn Header="Mac"
+									Binding="{Binding Mac, Converter={StaticResource MacToStringConv}}"
+									IsReadOnly="True" />
+				<DataGridTextColumn Header="Vendor"
+									Binding="{Binding Vendor}"
+									IsReadOnly="True" />
+				<DataGridTextColumn Header="Download (KB)"
+									Binding="{Binding DownloadSpeed}"
+									IsReadOnly="True" />
+				<DataGridTextColumn Header="Upload (KB)"
+									Binding="{Binding UploadSpeed}"
+									IsReadOnly="True" />
+				<DataGridTemplateColumn Header="Name">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate DataType="models:Device">
+							<StackPanel Orientation="Horizontal"
+										VerticalAlignment="Center">
+								<cmpts:LoadingSpinner IsVisible="{Binding IsResolving}" />
+								<TextBlock Margin="10,0,0,0"
+										   VerticalAlignment="Center"
+										   Text="{Binding Name}" />
+							</StackPanel>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTemplateColumn Header="Actions">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate DataType="models:Device">
+							<Button
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center"
+								Background="transparent"
+								Padding="10"
+								Width="25"
+								Height="30"
+								CornerRadius="50"
+								behaviors:ContextMenuLeftClickBehavior.IsLeftClickEnabled="True"
+								behaviors:ContextMenuDisableRightClickBehavior.IsContextMenuRightClickDisabled="True">
+								<Image Source="/Assets/NavIcons/context.png"
+									   Width="25"
+									   Height="50"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center" />
+								<Button.ContextMenu>
+									<ContextMenu FontFamily="{Binding $parent[Window].FontFamily}">
+										<MenuItem Header="Block/Unblock"
+												  Command="{Binding $parent[UserControl].DataContext.BlockUnblock}"
+												  CommandParameter="{Binding Mac}"
+												  IsEnabled="True">
+											<MenuItem.Icon>
+												<Image Source="/Assets/Misc/block.png"/>
+											</MenuItem.Icon>
+										</MenuItem>
+										<MenuItem Header="Redirect/Undo Redirection"
+												  Command="{Binding $parent[UserControl].DataContext.RedirectUnRedirect}"
+												  CommandParameter="{Binding Mac}"
+												  IsEnabled="True">
+											<MenuItem.Icon>
+												<Image Source="/Assets/Misc/redirect.png"/>
+											</MenuItem.Icon>
+										</MenuItem>
+										<MenuItem Header="Limit Speed"
+												  Command="{Binding $parent[UserControl].DataContext.Limit}"
+												  CommandParameter="{Binding Mac}"
+												  IsEnabled="True">
+											<MenuItem.Icon>
+												<Image Source="/Assets/Misc/limit.png"/>
+											</MenuItem.Icon>
+										</MenuItem>
+										<Separator />
+										<MenuItem Header="Set friendly name"
+												  Command="{Binding $parent[UserControl].DataContext.SetFriendlyName}"
+												  CommandParameter="{Binding Mac}"
+												  IsEnabled="True">
+											<MenuItem.Icon>
+												<Image Source="/Assets/Misc/name.png"/>
+											</MenuItem.Icon>
+										</MenuItem>
+										<MenuItem Header="Clear name"
+												  Command="{Binding $parent[UserControl].DataContext.ClearFriendlyName}"
+												  CommandParameter="{Binding Mac}"
+												  IsEnabled="True">
+											<MenuItem.Icon>
+												<Image Source="/Assets/Misc/remove.png"/>
+											</MenuItem.Icon>
+										</MenuItem>
+									</ContextMenu>
+								</Button.ContextMenu>
+							</Button>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+	</Grid>
+</UserControl>

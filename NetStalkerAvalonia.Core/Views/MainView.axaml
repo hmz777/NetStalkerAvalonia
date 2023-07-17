@@ -1,0 +1,77 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:rxui="clr-namespace:Avalonia.ReactiveUI;assembly=Avalonia.ReactiveUI"
+        xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
+        xmlns:rvws="using:NetStalkerAvalonia.Core.Views.RoutedViews"
+        mc:Ignorable="d"
+        d:DesignWidth="800" d:DesignHeight="100"
+        x:Class="NetStalkerAvalonia.Core.Views.MainView"
+        Title="NetStalker">
+
+	<Design.DataContext>
+		<vm:MainViewModel />
+	</Design.DataContext>
+
+	<Window.KeyBindings>
+		<KeyBinding Gesture="Ctrl+s" Command="{Binding Scan}"/>
+		<KeyBinding Gesture="Ctrl+r" Command="{Binding Refresh}"/>
+		<KeyBinding Gesture="Ctrl+u" Command="{Binding GoToRules}"/>
+		<KeyBinding Gesture="Ctrl+n" Command="{Binding GoToSniffer}"/>
+		<KeyBinding Gesture="Ctrl+o" Command="{Binding GoToOptions}"/>
+		<KeyBinding Gesture="Ctrl+h" Command="{Binding GoToHelp}"/>
+		<KeyBinding Gesture="Ctrl+a" Command="{Binding GoToAbout}"/>
+		<KeyBinding Gesture="Ctrl+b" Command="{Binding BlockAll}"/>
+		<KeyBinding Gesture="Ctrl+d" Command="{Binding RedirectAll}"/>
+		<KeyBinding Gesture="Ctrl+q" Command="{Binding GoBack}"/>
+	</Window.KeyBindings>
+
+	<Window.Styles>
+		<StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
+		<Style Selector="Window">
+			<Setter Property="MinWidth" Value="{Binding Theme.WindowMinWidth}" />
+			<Setter Property="Width" Value="{Binding Theme.WindowWidth}" />
+			<Setter Property="MinHeight" Value="{Binding Theme.WindowMinHeight}" />
+		</Style>
+	</Window.Styles>
+
+	<Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          RowDefinitions="Auto,*,Auto">
+		<cmpts:PageTitle VerticalAlignment="Stretch" Grid.Row="0" Text="{Binding PageTitle}" />
+		<rxui:RoutedViewHost
+			Name="RoutedViewHost"
+            Router="{Binding Router}"
+			ViewLocator="{StaticResource ViewLocator}"
+            VerticalAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            Grid.Row="1">
+			<rxui:RoutedViewHost.PageTransition>
+				<CompositePageTransition>
+					<CrossFade Duration="0:00:00.300"
+                               FadeInEasing="SineEaseInOut"
+                               FadeOutEasing="SineEaseInOut" />
+				</CompositePageTransition>
+			</rxui:RoutedViewHost.PageTransition>
+			<rxui:RoutedViewHost.DefaultContent>
+				<rvws:HomeView />
+			</rxui:RoutedViewHost.DefaultContent>
+		</rxui:RoutedViewHost>
+		<Border Grid.Row="2"
+                Background="{Binding Theme.WindowBackground}"
+                Padding="15,0,15,0"
+                BorderBrush="{Binding Theme.NavBorderColor}"
+                BorderThickness="0,3,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+			<DockPanel HorizontalAlignment="Stretch">
+				<Border DockPanel.Dock="Left" Classes="nav-item">
+					<cmpts:Navbar Name="Navbar" />
+				</Border>				
+				<Button Width="0" Height="0" Opacity="0" Command="{Binding ShowAppLog}" HotKey="F11"/>
+			</DockPanel>
+		</Border>
+	</Grid>
+</Window>

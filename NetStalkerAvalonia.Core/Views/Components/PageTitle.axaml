@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="NetStalkerAvalonia.Core.Views.Components.PageTitle">
+
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                Margin="0,40,0,10">
+        <Border Background="{Binding Theme.AccentColor}">
+            <StackPanel Margin="15,0,0,0"
+						Spacing="5"
+				        Orientation="Horizontal">
+                <!--<Button Command="{Binding GoBack}" IsVisible="{Binding CanGoBack, FallbackValue=false}"
+                        Background="Transparent"                      
+                        VerticalAlignment="Center">
+                    <Image Width="35" Height="35" Source="/Assets/NavIcons/back.png" />
+                </Button>-->
+                <TextBlock Name="PageTitleText"
+					       Text="{Binding $parent[UserControl].Text}"
+                           Foreground="{Binding Theme.PageTitleColor}"
+                           FontSize="{Binding Theme.PageTitleSize}"
+                           VerticalAlignment="Center"
+                           Padding="5,0,5,0" />
+            </StackPanel>
+        </Border>
+        <Polygon Points="0,0 55,0, 0,55" Stroke="{Binding Theme.AccentColor}"
+                 Fill="{Binding Theme.AccentColor}"
+                 Stretch="Fill" />
+    </StackPanel>
+</UserControl>

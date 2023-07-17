@@ -1,0 +1,121 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
+        xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels"
+        mc:Ignorable="d"
+        x:Class="NetStalkerAvalonia.Core.Views.AdapterSelectView"
+		d:DesignWidth="500" d:DesignHeight="500"
+        Title="Adapter Select">
+
+	<Design.DataContext>
+		<vm:AdapterSelectViewModel />
+	</Design.DataContext>
+
+	<Window.Styles>
+		<StyleInclude Source="/Assets/GlobalStyles/WindowStyles.axaml" />
+		<Style Selector="Window">
+			<Setter Property="CanResize" Value="False" />
+			<Setter Property="Width" Value="600" />
+		</Style>
+		<Style Selector="DockPanel.horizontalPanel">
+			<Setter Property="Margin" Value="0,0,0,20" />
+		</Style>
+		<Style Selector="DockPanel.horizontalPanel > TextBlock">
+			<Setter Property="FontSize" Value="16" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+		</Style>
+		<Style Selector="DockPanel.horizontalPanel > TextBlock:nth-child(2)">
+			<Setter Property="HorizontalAlignment" Value="Right" />
+		</Style>
+		<Style Selector="DockPanel.horizontalPanel > ComboBox">
+			<Setter Property="HorizontalAlignment" Value="Right" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="FontSize" Value="14" />
+		</Style>
+	</Window.Styles>
+
+	<Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          RowDefinitions="auto,auto"
+		  ColumnDefinitions="*,Auto">
+		<cmpts:PageTitle VerticalAlignment="Stretch"
+						 Grid.Row="0"
+						 Grid.Column="0"
+						 Text="{Binding $parent[Window].Title}" />
+		<Border Grid.Row="1"
+				Grid.Column="0"
+				Padding="15">
+			<Grid RowDefinitions="auto,auto,auto,auto,auto,auto,auto"
+				  VerticalAlignment="Stretch">
+				<DockPanel Grid.Row="0" Classes="horizontalPanel">
+					<TextBlock>Network Adapter:</TextBlock>
+					<ComboBox
+						Name="AdapterSelectBox"
+                        PlaceholderText="Select an adapter"
+                        SelectedItem="{Binding SelectedItem}"
+                        ItemsSource="{Binding ComboBoxInterfaceData}"
+						Width="300">
+					</ComboBox>
+				</DockPanel>
+				<DockPanel Grid.Row="1" Classes="horizontalPanel">
+					<TextBlock>NIC Type:</TextBlock>
+					<TextBlock Text="{Binding NicType}" />
+				</DockPanel>
+				<DockPanel Grid.Row="2" Classes="horizontalPanel">
+					<TextBlock>IP Address:</TextBlock>
+					<TextBlock Text="{Binding HostIp}" />
+				</DockPanel>
+				<DockPanel Grid.Row="3" Classes="horizontalPanel">
+					<TextBlock>MAC Address:</TextBlock>
+					<TextBlock Text="{Binding HostMac}" />
+				</DockPanel>
+				<DockPanel Grid.Row="4" Classes="horizontalPanel">
+					<TextBlock>Gateway IP:</TextBlock>
+					<TextBlock Text="{Binding GatewayIp}" />
+				</DockPanel>
+				<DockPanel Grid.Row="5" Classes="horizontalPanel">
+					<TextBlock>Driver Version:</TextBlock>
+					<TextBlock Text="{Binding DriverVersion}" />
+				</DockPanel>
+				<Grid 		Grid.Row="6"
+							ColumnDefinitions="*,*"
+							VerticalAlignment="Bottom">
+					<Button Name="Exit"
+							Grid.Column="0"
+							Padding="10"
+							HorizontalAlignment="Stretch"
+							HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							Content="Quit"
+							Command="{Binding Exit}"
+							Background="Red"
+							CornerRadius="5,0,0,5"/>
+					<Button Name="Ok"
+							Grid.Column="1"
+                            Content="Ok"
+							Padding="10"
+							HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+                            Command="{Binding Accept}"
+							Background="Green"
+							CornerRadius="0,5,5,0"/>
+				</Grid>
+			</Grid>
+		</Border>
+		<Border Grid.Row="1" Grid.Column="1"
+				Padding="0,0,15,50">
+			<StackPanel 
+					Orientation="Horizontal"
+					RenderTransform="rotate(-90deg)"
+					VerticalAlignment="Bottom"
+					HorizontalAlignment="Center"
+					Width="60">
+				<TextBlock Classes="label" FontSize="40" Text="Net"/>
+				<TextBlock Classes="label" FontSize="40" Foreground="#FBB03B" Text="Stalker"/>
+			</StackPanel>
+		</Border>
+	</Grid>
+</Window>

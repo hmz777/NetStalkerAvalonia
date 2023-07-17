@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NetStalker.Tests": {
+      "commandName": "Project"
+    },
+    "Profile 1": {
+      "commandName": "Project"
+    }
+  }
+}

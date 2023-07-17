@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:cmpts="using:NetStalkerAvalonia.Core.Views.Components"
+             xmlns:cmptsDev="using:NetStalkerAvalonia.Core.Views.Components.DeviceList"
+             xmlns:vm="using:NetStalkerAvalonia.Core.ViewModels.RoutedViewModels"
+             mc:Ignorable="d" d:DesignWidth="1000"
+             x:Class="NetStalkerAvalonia.Core.Views.RoutedViews.HomeView"
+             Background="Transparent">
+
+	<Design.DataContext>
+		<vm:HomeViewModel />
+	</Design.DataContext>
+
+	<UserControl.Styles>
+		<Style Selector="Border.nav-item">
+			<Setter Property="VerticalAlignment" Value="Center" />
+		</Style>
+		<Style Selector="Border.nav-item:nth-child(1)">
+			<Setter Property="Margin" Value="0,0,0,0" />
+			<Setter Property="Padding" Value="0,0,0,0" />
+		</Style>
+	</UserControl.Styles>
+
+	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="auto" />
+		</Grid.RowDefinitions>
+		<cmptsDev:DeviceListView Grid.Row="0" />
+		<Border Grid.Row="1" Classes="nav-item">
+			<cmpts:ListControls/>
+		</Border>
+	</Grid>
+</UserControl>

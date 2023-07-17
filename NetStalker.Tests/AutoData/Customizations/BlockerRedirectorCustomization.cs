@@ -1,6 +1,5 @@
-﻿using AutoFixture;
-using NetStalkerAvalonia.Services;
-using NetStalkerAvalonia.Services.Implementations.BlockingRedirection;
+﻿using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection;
 
 namespace NetStalker.Tests.AutoData.Customizations
 {
