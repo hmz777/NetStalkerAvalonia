@@ -44,7 +44,7 @@ namespace NetStalkerAvalonia.Core.ViewModels.RoutedViewModels
 
 		#region Routing
 
-		public string? UrlPathSegment { get; } = "Home";
+		public string? UrlPathSegment { get; } = "Device List";
 		public IScreen? HostScreen { get; }
 
 		#endregion
