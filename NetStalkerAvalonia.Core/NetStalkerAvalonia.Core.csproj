@@ -46,19 +46,11 @@
 		<AvaloniaResource Include="Assets\**" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Remove="Views\TestView.axaml" />
-	</ItemGroup>
-	<ItemGroup>
 		<EmbeddedResource Include="Assets\manuf.txt">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Views\DataTemplates\" />
-	</ItemGroup>
-	<ItemGroup>
-	  <AvaloniaXaml Update="Views\TestView.axaml">
-	    <SubType>Designer</SubType>
-	  </AvaloniaXaml>
 	</ItemGroup>
 </Project>

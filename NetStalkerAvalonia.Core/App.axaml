@@ -3,8 +3,9 @@
 			 xmlns:helpers="using:NetStalkerAvalonia.Core.Helpers"
 			 x:Class="NetStalkerAvalonia.Core.App"
 			 RequestedThemeVariant="Dark">
+	
 	<Application.DataTemplates>
-		<helpers:ViewLocator/>
+		<helpers:ViewLocator />
 	</Application.DataTemplates>
 
 	<Application.Resources>
@@ -16,7 +17,6 @@
 		<StyleInclude Source="/Views/Components/GenericIconButton.axaml"/>
 		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 		<StyleInclude Source="/Views/Components/NavButton.axaml"/>
-		<StyleInclude Source="/Views/Components/InformationBubble.axaml"/>
 	</Application.Styles>
 
 	<TrayIcon.Icons>
