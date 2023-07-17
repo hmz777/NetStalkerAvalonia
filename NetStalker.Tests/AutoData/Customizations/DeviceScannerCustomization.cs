@@ -1,4 +1,5 @@
 ﻿using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations;
 using NetStalkerAvalonia.Core.Services.Implementations.DeviceScanning;
 
 namespace NetStalker.Tests.AutoData.Customizations
@@ -8,7 +9,7 @@ namespace NetStalker.Tests.AutoData.Customizations
 		public void Customize(IFixture fixture)
 		{
 			fixture.Customizations.Add(new TypeRelay(typeof(IDeviceScanner), typeof(DeviceScanner)));
-			fixture.Register(() => new DeviceScanner(fixture.Create<IPcapDeviceManager>(), fixture.Create<IDeviceNameResolver>(), fixture.Create<IDeviceTypeIdentifier>()));
+			fixture.Register(() => new DeviceScanner(fixture.Create<IPcapDeviceManager>(), fixture.Create<IDeviceNameResolver>(), fixture.Create<IDeviceTypeIdentifier>(), fixture.Create<IMessageBusService>()));
 		}
 	}
 }

@@ -9,9 +9,10 @@ namespace NetStalker.Tests.AutoData.Customizations
 	{
 		public void Customize(IFixture fixture)
 		{
+			fixture.Register(() => new HomeViewModel(fixture.Create<IErrorHandler>(), fixture.Create<IStatusMessageService>(), fixture.Create<IDeviceScanner>(), fixture.Create<IBlockerRedirector>(), fixture.Create<IDeviceNameResolver>()));
 			fixture.Register(() => new SnifferViewModel(fixture.Create<IRouter>()));
-			fixture.Register(() => new OptionsViewModel(fixture.Create<IRouter>(), fixture.Create<IAppLockService>()));
-			fixture.Register(() => new RuleBuilderViewModel(fixture.Create<IRouter>(), fixture.Create<IRuleService>(), fixture.Create<IMapper>(), fixture.Create<IErrorHandler>()));
+			fixture.Register(() => new OptionsViewModel(fixture.Create<IRouter>(), fixture.Create<IAppLockService>(), fixture.Create<IStatusMessageService>()));
+			fixture.Register(() => new RuleBuilderViewModel(fixture.Create<IRouter>(), fixture.Create<IRuleService>(), fixture.Create<IMapper>(), fixture.Create<IErrorHandler>(), fixture.Create<IStatusMessageService>()));
 			fixture.Register(() => new HelpViewModel(fixture.Create<IRouter>()));
 			fixture.Register(() => new AboutViewModel(fixture.Create<IRouter>()));
 			fixture.Register(() => new AppLogViewModel());
