@@ -77,6 +77,8 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.DeviceTypeIdentificat
 						}
 
 						deviceToIdentify.SetVendor(string.IsNullOrWhiteSpace(data) ? "NA" : data);
+
+						deviceToIdentify.SetType(deviceToIdentify.IsGateway() ? DeviceType.Router : DeviceType.PC);
 					}
 				}
 				catch (Exception e)

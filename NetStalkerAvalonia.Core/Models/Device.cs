@@ -160,6 +160,7 @@ namespace NetStalkerAvalonia.Core.Models
 		}
 
 		public void SetVendor(string vendor) => Vendor = vendor;
+		public void SetType(DeviceType deviceType) => Type = deviceType;
 		public void Block() => Blocked = true;
 		public void UnBlock() => Blocked = false;
 		public void Redirect() => Redirected = true;
