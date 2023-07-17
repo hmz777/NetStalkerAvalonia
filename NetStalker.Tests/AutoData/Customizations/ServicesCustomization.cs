@@ -15,6 +15,8 @@
 			fixture.Customize(new BlockerRedirectorCustomization());
 			fixture.Customize(new AppLockCustomization());
 			fixture.Customize(new ErrorHandlerCustomization());
+			fixture.Customize(new MessageBusCustomization());
+			fixture.Customize(new StatusMessageCustomization());
 		}
 	}
 }

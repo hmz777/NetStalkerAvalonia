@@ -1,10 +1,6 @@
-﻿using NetStalkerAvalonia.Core.Services.Implementations.ErrorHandling;
-using NetStalkerAvalonia.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations;
+using NetStalkerAvalonia.Core.Services.Implementations.StatusMessages;
 
 namespace NetStalker.Tests.AutoData.Customizations
 {

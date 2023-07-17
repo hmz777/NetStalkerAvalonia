@@ -2,6 +2,7 @@
 using NetStalker.Tests.AutoData;
 using NetStalkerAvalonia.Core.Models;
 using NetStalkerAvalonia.Core.Services;
+using NetStalkerAvalonia.Core.Services.Implementations;
 using NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection;
 
 namespace NetStalker.Tests.ServiceSpecs
@@ -9,9 +10,9 @@ namespace NetStalker.Tests.ServiceSpecs
 	public class BlockerRedirectorSpec
 	{
 		[Theory, AutoServiceData]
-		public void Can_Block_A_Device(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager, Device device)
+		public void Can_Block_A_Device(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager, IMessageBusService messageBusService, Device device)
 		{
-			var sut = new BlockerRedirector(ruleService, pcapDeviceManager);
+			var sut = new BlockerRedirector(ruleService, pcapDeviceManager, messageBusService);
 
 			sut.Block(device);
 
@@ -22,9 +23,9 @@ namespace NetStalker.Tests.ServiceSpecs
 		}
 
 		[Theory, AutoServiceData]
-		public void Can_UnBlock_A_Device(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager, Device device)
+		public void Can_UnBlock_A_Device(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager, IMessageBusService messageBusService, Device device)
 		{
-			var sut = new BlockerRedirector(ruleService, pcapDeviceManager);
+			var sut = new BlockerRedirector(ruleService, pcapDeviceManager, messageBusService);
 
 			sut.UnBlock(device);
 
@@ -35,9 +36,9 @@ namespace NetStalker.Tests.ServiceSpecs
 		}
 
 		[Theory, AutoServiceData]
-		public void Can_Redirect_A_Device(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager, Device device)
+		public void Can_Redirect_A_Device(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager, IMessageBusService messageBusService, Device device)
 		{
-			var sut = new BlockerRedirector(ruleService, pcapDeviceManager);
+			var sut = new BlockerRedirector(ruleService, pcapDeviceManager, messageBusService);
 
 			sut.Redirect(device);
 
@@ -48,9 +49,9 @@ namespace NetStalker.Tests.ServiceSpecs
 		}
 
 		[Theory, AutoServiceData]
-		public void Can_UnRedirect_A_Device(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager, Device device)
+		public void Can_UnRedirect_A_Device(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager, IMessageBusService messageBusService, Device device)
 		{
-			var sut = new BlockerRedirector(ruleService, pcapDeviceManager);
+			var sut = new BlockerRedirector(ruleService, pcapDeviceManager, messageBusService);
 
 			sut.UnRedirect(device);
 
@@ -61,9 +62,9 @@ namespace NetStalker.Tests.ServiceSpecs
 		}
 
 		[Theory, AutoServiceData]
-		public void Can_Limit_A_Device(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager, Device device)
+		public void Can_Limit_A_Device(IRuleService ruleService, IPcapDeviceManager pcapDeviceManager, IMessageBusService messageBusService, Device device)
 		{
-			var sut = new BlockerRedirector(ruleService, pcapDeviceManager);
+			var sut = new BlockerRedirector(ruleService, pcapDeviceManager, messageBusService);
 
 			sut.Limit(device, 15, 12);
 

@@ -15,7 +15,8 @@ namespace NetStalker.Tests.AutoData.Customizations
 				var pcapDeviceManagerMock = new Mock<IPcapDeviceManager>();
 				var pcapLiveDeviceMock = new Mock<IPcapLiveDevice>();
 
-				pcapDeviceManagerMock.Setup(p => p.CreateDevice(It.IsAny<string>(), It.IsAny<PacketArrivalEventHandler?>(), It.IsAny<int>(), It.IsAny<string>())).Returns(pcapLiveDeviceMock.Object);
+				pcapDeviceManagerMock.Setup(p => p.CreateDevice(It.IsAny<string>(), It.IsAny<PacketArrivalEventHandler?>(), It.IsAny<int>(), It.IsAny<string>()))
+				.Returns(pcapLiveDeviceMock.Object);
 
 				return pcapDeviceManagerMock.Object;
 			});
