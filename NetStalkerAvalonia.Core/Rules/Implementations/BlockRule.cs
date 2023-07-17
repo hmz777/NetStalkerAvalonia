@@ -1,7 +1,5 @@
 ﻿using NetStalkerAvalonia.Core.Models;
 using System;
-using System.Net;
-using System.Net.NetworkInformation;
 using System.Text.Json.Serialization;
 
 namespace NetStalkerAvalonia.Core.Rules.Implementations
@@ -24,6 +22,14 @@ namespace NetStalkerAvalonia.Core.Rules.Implementations
 
 			device.ResetState();
 			device.Block();
+		}
+
+		public override void UnApply(Device device)
+		{
+			if (Match(device) == false)
+				return;
+
+			device.ResetState();
 		}
 
 		public override string ToString()

@@ -28,6 +28,14 @@ namespace NetStalkerAvalonia.Core.Rules.Implementations
 			device.Redirect();
 		}
 
+		public override void UnApply(Device device)
+		{
+			if (Match(device) == false)
+				return;
+
+			device.ResetState();
+		}
+
 		public override string ToString()
 		{
 			return $"Order:{Order} - Apply On:{SourceValue} - Type:{Action} - Target:{Target} - Regex:{IsRegex} - Status:{(Active ? "Enabled" : "Disabled")}";

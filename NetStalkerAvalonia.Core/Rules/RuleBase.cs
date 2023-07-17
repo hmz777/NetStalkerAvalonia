@@ -138,6 +138,7 @@ namespace NetStalkerAvalonia.Core.Rules
 		}
 
 		public abstract void Apply(Device device);
+		public abstract void UnApply(Device device);
 
 		#region Overrides
 

@@ -44,6 +44,14 @@ namespace NetStalkerAvalonia.Core.Rules.Implementations
 			device.SetDownloadCap(Download);
 		}
 
+		public override void UnApply(Device device)
+		{
+			if (Match(device) == false)
+				return;
+
+			device.ResetState();
+		}
+
 		public override string ToString()
 		{
 			return $"Order:{Order} - Apply On:{SourceValue} - Type:{Action} - Target:{Target} - U:{Upload}Kb/s D:{Download}Kb/s - Regex:{IsRegex} - Status:{(Active ? "Enabled" : "Disabled")}";
