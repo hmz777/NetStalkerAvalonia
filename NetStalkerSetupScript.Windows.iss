@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "NetStalker"
-#define MyAppVersion "1.0"
+#define MyAppVersion "2.0-alpha"
 #define MyAppPublisher "Hamzi Alsheikh"
 #define MyAppURL "https://github.com/hmz777/NetStalker.Avalonia"
 #define MyAppExeName "NetStalkerAvalonia.exe"
