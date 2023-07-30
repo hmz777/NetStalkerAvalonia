@@ -111,7 +111,7 @@ jobs:
         args: install InnoSetup
 
     - name: Package application
-      run: iscc ../NetStalkerSetupScript.Windows.iss
+      run: iscc NetStalkerSetupScript.Windows.iss
       working-directory: /
     
     - name: Create a release with a setup file
