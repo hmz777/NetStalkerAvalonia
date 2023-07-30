@@ -118,7 +118,7 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 			{
 				_byteCounterTimer.Change(
 					TimeSpan.Zero,
-					TimeSpan.FromSeconds(1));
+					TimeSpan.FromSeconds(2));
 			}
 			else
 			{
@@ -168,7 +168,9 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 
 		private void ByteCounterTimerOnElapsed(object? stateInfo)
 		{
-			foreach (var client in _clients.Where(c => c.DownloadCap > 0 || c.UploadCap > 0))
+			var targets = _clients.Where(c => c.Redirected == true).ToList();
+
+			foreach (var client in targets)
 			{
 				client?.ResetSentBytes();
 				client?.ResetReceivedBytes();
