@@ -59,6 +59,7 @@ jobs:
 
     env:
       Solution_Name: NetStalkerAvalonia.sln                  # Replace with your solution name, i.e. MyWpfApp.sln.
+      Windows_Project: NetStalkerAvalonia.Windows.csproj
       Test_Project_Path: NetStalker.Tests.csproj             # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
       Release_Version: ${{ github.ref_name }}
       Assembly_Version: 0
@@ -81,8 +82,8 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
-      run: dotnet restore $Solution_Name
-      working-directory: NetStalkerAvalonia
+      run: dotnet restore $Windows_Project
+      working-directory: NetStalkerAvalonia.Windows
       env:
         Configuration: ${{ matrix.configuration }}
 
