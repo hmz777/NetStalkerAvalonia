@@ -25,13 +25,13 @@ namespace NetStalkerAvalonia.Core.Models
 				.ToProperty(this, x => x.IsResolving);
 
 			_uploadSpeed = this.WhenAnyValue(x => x.BytesSentSinceLastReset)
-				.Throttle(TimeSpan.FromMilliseconds(50))
+				//.Throttle(TimeSpan.FromMilliseconds(250))
 				.Select(bytes => Math.Round(bytes / 1024f, 2))
 				.ObserveOn(RxApp.MainThreadScheduler)
 				.ToProperty(this, x => x.UploadSpeed);
 
 			_downloadSpeed = this.WhenAnyValue(x => x.BytesReceivedSinceLastReset)
-				.Throttle(TimeSpan.FromMilliseconds(50))
+				//.Throttle(TimeSpan.FromMilliseconds(250))
 				.Select(bytes => Math.Round(bytes / 1024f, 2))
 				.ObserveOn(RxApp.MainThreadScheduler)
 				.ToProperty(this, x => x.DownloadSpeed);
