@@ -100,8 +100,8 @@ jobs:
     
     # Publish application
     - name: Publish the application
-      run: dotnet publish $Solution_Name --no-restore --output ../Output.Windows /p:FileVersion=$Release_Version /p:AssemblyVersion=$Assembly_Version
-      working-directory: NetStalkerAvalonia
+      run: dotnet publish $Windows_Project --no-restore --output ../Output.Windows /p:FileVersion=$Release_Version /p:AssemblyVersion=$Assembly_Version
+      working-directory: NetStalkerAvalonia.Windows
       env:
         Configuration: ${{ matrix.configuration }}
     
@@ -112,7 +112,7 @@ jobs:
 
     - name: Package application
       run: iscc ../NetStalkerSetupScript.Windows.iss
-      working-directory: NetStalkerAvalonia
+      working-directory: /
     
     - name: Create a release with a setup file
       uses: ncipollo/release-action@v1
