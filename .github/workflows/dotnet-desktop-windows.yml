@@ -112,7 +112,6 @@ jobs:
 
     - name: Package application
       run: iscc NetStalkerSetupScript.Windows.iss
-      working-directory: /
     
     - name: Create a release with a setup file
       uses: ncipollo/release-action@v1
