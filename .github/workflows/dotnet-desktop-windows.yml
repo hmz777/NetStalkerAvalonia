@@ -36,7 +36,7 @@
 # For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
 # refer to https://github.com/microsoft/github-actions-for-desktop-apps
 
-name: .NET Core Desktop
+name: .NET Core Desktop (Windows)
 
 on: 
   push:
@@ -99,7 +99,7 @@ jobs:
     
     # Publish application
     - name: Publish the application
-      run: dotnet publish $Solution_Name --no-restore --output ../Output /p:FileVersion=$Release_Version /p:AssemblyVersion=$Assembly_Version
+      run: dotnet publish $Solution_Name --no-restore --output ../Output.Windows /p:FileVersion=$Release_Version /p:AssemblyVersion=$Assembly_Version
       working-directory: NetStalkerAvalonia
       env:
         Configuration: ${{ matrix.configuration }}
@@ -110,7 +110,7 @@ jobs:
         args: install InnoSetup
 
     - name: Package application
-      run: iscc ../NetStalkerSetupScript.iss
+      run: iscc ../NetStalkerSetupScript.Windows.iss
       working-directory: NetStalkerAvalonia
     
     - name: Create a release with a setup file
