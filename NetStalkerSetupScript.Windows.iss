@@ -5,7 +5,7 @@
 #define MyAppVersion "2.0-alpha"
 #define MyAppPublisher "Hamzi Alsheikh"
 #define MyAppURL "https://github.com/hmz777/NetStalker.Avalonia"
-#define MyAppExeName "NetStalkerAvalonia.exe"
+#define MyAppExeName "NetStalker.exe"
 #define OutputFiles "Output.Windows\*"
 #define InstallerOutput "InstallerOutput"
 #define IconFile "netstalker-logo.ico"
