@@ -24,7 +24,12 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/hmz777/NetStalker.Avalonia</RepositoryUrl>
 		<Product>NetStalker</Product>
+		<AssemblyName>NetStalker</AssemblyName>
+		<ApplicationIcon>netstalker-logo.ico</ApplicationIcon>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Content Include="netstalker-logo.ico" />
+	</ItemGroup>
 	<ItemGroup>
 		<TrimmerRootDescriptor Include="Roots.xml" />
 	</ItemGroup>
