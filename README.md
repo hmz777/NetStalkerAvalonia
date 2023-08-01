@@ -2,6 +2,9 @@
 [NetStalker](https://github.com/hmz777/NetStalker) re-written in MVVM, Avalonia and Reactive UI.
 
 # Downloads
+***Make sure you have the latest Npcap driver before installing NetStalker.***
+[Npcap](https://nmap.org/download.html).
+
 See [Releases](https://github.com/hmz777/NetStalker.Avalonia/releases) for binaries.
 
 
