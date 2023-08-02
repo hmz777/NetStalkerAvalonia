@@ -44,7 +44,7 @@
 		  RowDefinitions="*">
 		<DataGrid Grid.Row="0"
 				  Name="DeviceList"
-				  ItemsSource="{Binding Devices}"
+				  ItemsSource="{Binding Devices, Mode=OneWay}"
 				  SelectedItem="{Binding SelectedDevice,Mode=TwoWay}"
 				  AutoGenerateColumns="False"
 				  SelectionMode="Single"
@@ -57,8 +57,8 @@
 					<DataGridTemplateColumn.CellTemplate>
 						<DataTemplate DataType="models:Device">
 							<Panel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-								<Rectangle Classes="statusIndicator" IsVisible="{Binding Blocked}" Fill="red" />
-								<Rectangle Classes="statusIndicator" IsVisible="{Binding Redirected}" Fill="yellow" />
+								<Rectangle Classes="statusIndicator" IsVisible="{Binding Blocked, Mode=OneWay}" Fill="red" />
+								<Rectangle Classes="statusIndicator" IsVisible="{Binding Redirected, Mode=OneWay}" Fill="yellow" />
 								<Rectangle Classes="statusIndicator" Fill="blue">
 									<Rectangle.IsVisible>
 										<MultiBinding Converter="{x:Static BoolConverters.Or}">
@@ -79,29 +79,29 @@
 					</DataGridTemplateColumn.CellTemplate>
 				</DataGridTemplateColumn>
 				<DataGridTextColumn Header="IP"
-									Binding="{Binding Ip, Converter={StaticResource IpToStringConv}}"
+									Binding="{Binding Ip, Mode=OneWay, Converter={StaticResource IpToStringConv}}"
 									IsReadOnly="True" />
 				<DataGridTextColumn Header="Mac"
-									Binding="{Binding Mac, Converter={StaticResource MacToStringConv}}"
+									Binding="{Binding Mac, Mode=OneWay, Converter={StaticResource MacToStringConv}}"
 									IsReadOnly="True" />
 				<DataGridTextColumn Header="Vendor"
-									Binding="{Binding Vendor}"
+									Binding="{Binding Vendor, Mode=OneWay}"
 									IsReadOnly="True" />
 				<DataGridTextColumn Header="Download (KB)"
-									Binding="{Binding DownloadSpeed}"
+									Binding="{Binding DownloadSpeed, Mode=OneWay}"
 									IsReadOnly="True" />
 				<DataGridTextColumn Header="Upload (KB)"
-									Binding="{Binding UploadSpeed}"
+									Binding="{Binding UploadSpeed, Mode=OneWay}"
 									IsReadOnly="True" />
 				<DataGridTemplateColumn Header="Name">
 					<DataGridTemplateColumn.CellTemplate>
 						<DataTemplate DataType="models:Device">
 							<StackPanel Orientation="Horizontal"
 										VerticalAlignment="Center">
-								<cmpts:LoadingSpinner IsVisible="{Binding IsResolving}" />
+								<cmpts:LoadingSpinner IsVisible="{Binding IsResolving, Mode=OneWay}" />
 								<TextBlock Margin="10,0,0,0"
 										   VerticalAlignment="Center"
-										   Text="{Binding Name}" />
+										   Text="{Binding Name, Mode=OneWay}" />
 							</StackPanel>
 						</DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
