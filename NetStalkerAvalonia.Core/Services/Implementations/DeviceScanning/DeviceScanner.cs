@@ -154,7 +154,7 @@ public class DeviceScanner : IDeviceScanner
 		// Setup the discovery timer
 		InitOrToggleDiscoveryTimer(true);
 
-		// Setup the device timout timer
+		// Setup the device timeout timer
 		InitOrToggleAliveTimer(true);
 	}
 
