@@ -62,6 +62,7 @@ jobs:
       Windows_Project: NetStalkerAvalonia.Windows.csproj
       Test_Project_Path: NetStalker.Tests.csproj             # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
       Release_Version: ${{ github.ref_name }}
+      File_Version: 0
       Assembly_Version: 0
       
     steps:
@@ -96,11 +97,13 @@ jobs:
       if: contains(env.Release_Version, '-')
       run: |
         $AssemblyVersion=$env:Release_Version.split('-')[0]
+        $FileVersion=$env:Release_Version.split('-')[0]
         echo "Assembly_Version=$AssemblyVersion" >> $env:GITHUB_ENV
+        echo "File_Version=$FileVersion" >> $env:GITHUB_ENV
     
     # Publish application
     - name: Publish the application
-      run: dotnet publish $Windows_Project --no-restore --output ../Output.Windows --runtime win10-x86 --self-contained false /p:DebugType=None /p:DebugSymbols=false /p:FileVersion=$Release_Version /p:AssemblyVersion=$Assembly_Version
+      run: dotnet publish $Windows_Project --no-restore --output ../Output.Windows --runtime win10-x86 --self-contained false /p:DebugType=None /p:DebugSymbols=false /p:FileVersion=$File_Version /p:AssemblyVersion=$Assembly_Version /p:ProductVersion=$Release_Version
       working-directory: NetStalkerAvalonia.Windows
       env:
         Configuration: ${{ matrix.configuration }}
