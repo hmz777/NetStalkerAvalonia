@@ -103,7 +103,7 @@ jobs:
     
     # Publish application
     - name: Publish the application
-      run: dotnet publish $Windows_Project --no-restore --output ../Output.Windows --runtime win10-x86 --self-contained false /p:DebugType=None /p:DebugSymbols=false /p:AssemblyVersion=$Assembly_Version /p:Version=$Release_Version
+      run: dotnet publish $Windows_Project --no-restore --output ../Output.Windows --runtime win10-x86 --self-contained false /p:DebugType=None /p:DebugSymbols=false /p:AssemblyVersion=$Assembly_Version /p:FileVersion=$File_Version /p:Version=$Release_Version
       working-directory: NetStalkerAvalonia.Windows
       env:
         Configuration: ${{ matrix.configuration }}
