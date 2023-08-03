@@ -148,10 +148,11 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 		{
 			_clientsToRules = _clients
 			   .ToObservableChangeSet()
+			   .ObserveOn(RxApp.MainThreadScheduler)
 			   .DisposeMany()
 			   .Where(x => x.Adds > 0)
 			   .ToCollection()
-			   .Select(client => client.LastOrDefault())
+			   .Select(clients => clients.OrderBy(x => x.DateAdded).LastOrDefault())
 			   .Where(client => client != null)
 			   .Subscribe(client =>
 			   {
