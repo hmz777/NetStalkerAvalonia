@@ -1,54 +1,55 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
-		<TargetFramework>net7.0-windows10.0.17763.0</TargetFramework>
-		<RuntimeIdentifiers>win10-x86</RuntimeIdentifiers>
-		<Nullable>enable</Nullable>
-		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
-		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-	</PropertyGroup>
-	<PropertyGroup>
-		<NoWarn>CA1416</NoWarn>
-		<NoWarn>IO0006</NoWarn>
-		<Version>1.0.0</Version>
-		<FileVersion>1.0.0</FileVersion>
-		<AssemblyVersion>1.0.0</AssemblyVersion>
-	</PropertyGroup>
-	<PropertyGroup>
-		<Title>NetStalker</Title>
-		<ProductName>NetStalker</ProductName>
-		<Description>A network tool to control the bandwidth over your local network, it can block internet access form any selected device, or limit its speed using packet redirection, in addition, it can log web activity for the targeted device using a built in packet sniffer.</Description>
-		<Authors>Hamzi Alsheikh</Authors>
-		<Copyright>Copyright © Hamzi Alsheikh 2023</Copyright>
-		<PackageProjectUrl>https://github.com/hmz777/NetStalker.Avalonia</PackageProjectUrl>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<RepositoryUrl>https://github.com/hmz777/NetStalker.Avalonia</RepositoryUrl>
-		<Product>NetStalker</Product>
-		<AssemblyName>NetStalker</AssemblyName>
-		<ApplicationIcon>netstalker-logo.ico</ApplicationIcon>
-	</PropertyGroup>
-	<ItemGroup>
-	  <Content Include="netstalker-logo.ico" />
-	</ItemGroup>
-	<ItemGroup>
-		<TrimmerRootDescriptor Include="Roots.xml" />
-	</ItemGroup>
-	<ItemGroup>
-		<TrimmableAssembly Include="Avalonia.Themes.Fluent" />
-		<TrimmableAssembly Include="Avalonia.Themes.Default" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="11.0.0" />
-		<PackageReference Include="Avalonia.Desktop" Version="11.0.0" />
-		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0" />
-		<PackageReference Include="Splat.DependencyInjection.SourceGenerator" Version="1.1.93">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\NetStalkerAvalonia.Core\NetStalkerAvalonia.Core.csproj" />
-	</ItemGroup>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows10.0.17763.0</TargetFramework>
+    <RuntimeIdentifiers>win10-x86</RuntimeIdentifiers>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <InformationalVersion>2.0.0+7.Branch.master.Sha.707261789d8bdc69a7097b2fe2daa13ebcabe331</InformationalVersion>
+    <Version>2.0.0</Version>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>CA1416</NoWarn>
+    <NoWarn>IO0006</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Title>NetStalker</Title>
+    <ProductName>NetStalker</ProductName>
+    <Description>A network tool to control the bandwidth over your local network, it can block internet access form any selected device, or limit its speed using packet redirection, in addition, it can log web activity for the targeted device using a built in packet sniffer.</Description>
+    <Authors>Hamzi Alsheikh</Authors>
+    <Copyright>Copyright © Hamzi Alsheikh 2023</Copyright>
+    <PackageProjectUrl>https://github.com/hmz777/NetStalker.Avalonia</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/hmz777/NetStalker.Avalonia</RepositoryUrl>
+    <Product>NetStalker</Product>
+    <AssemblyName>NetStalker</AssemblyName>
+    <ApplicationIcon>netstalker-logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="netstalker-logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <TrimmerRootDescriptor Include="Roots.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+    <TrimmableAssembly Include="Avalonia.Themes.Default" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.5" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.5" />
+    <PackageReference Include="Splat.DependencyInjection.SourceGenerator" Version="1.1.93">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetStalkerAvalonia.Core\NetStalkerAvalonia.Core.csproj" />
+  </ItemGroup>
 </Project>
