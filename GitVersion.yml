@@ -1,5 +1,18 @@
-mode: ContinuousDelivery
-branches: {}
+assembly-versioning-scheme: MajorMinorPatchTag
+assembly-file-versioning-scheme: MajorMinorPatchTag
+branches:
+  main:
+    regex: ^master$|^main$
+    mode: ContinuousDelivery
+    tag: ""
+    increment: Patch
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: false
+    source-branches: ["develop"]
+    tracks-release-branches: false
+    is-release-branch: true
+    is-mainline: false
+    pre-release-weight: 55000
 ignore:
   sha: []
 merge-message-formats: {}
