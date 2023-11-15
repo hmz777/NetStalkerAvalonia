@@ -92,8 +92,13 @@ jobs:
     - name: Execute unit tests
       run: dotnet test $Test_Project_Path --no-restore
       working-directory: NetStalker.Tests
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0
+      with:
+        versionSpec: '5.x'
       
-    - name: Set assembly version
+    - name: Set assembly version environment variables
       if: contains(env.Release_Version, '-')
       run: |
         $AssemblyVersion=$env:Release_Version.split('-')[0]
@@ -103,7 +108,7 @@ jobs:
     
     # Publish application
     - name: Publish the application
-      run: dotnet publish $Windows_Project --no-restore --output ../Output.Windows --runtime win10-x86 --self-contained false /p:DebugType=None /p:DebugSymbols=false /p:AssemblyVersion=$Assembly_Version /p:FileVersion=$File_Version
+      run: dotnet publish $Windows_Project --no-restore --output ../Output.Windows --runtime win10-x86 --self-contained false /p:DebugType=None /p:DebugSymbols=false
       working-directory: NetStalkerAvalonia.Windows
       env:
         Configuration: ${{ matrix.configuration }}
