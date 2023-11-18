@@ -7,9 +7,9 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
-    <InformationalVersion>2.0.0+7.Branch.master.Sha.707261789d8bdc69a7097b2fe2daa13ebcabe331</InformationalVersion>
+    <AssemblyVersion>2.0.60000</AssemblyVersion>
+    <FileVersion>2.0-</FileVersion>
+    <InformationalVersion>2.0.0</InformationalVersion>
     <Version>2.0.0</Version>
   </PropertyGroup>
   <PropertyGroup>
