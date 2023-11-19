@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "NetStalker"
-#define MyAppVersion "2.0-alpha"
+#define MyAppVersion GetEnv('Release_Version')
 #define MyAppPublisher "Hamzi Alsheikh"
 #define MyAppURL "https://github.com/hmz777/NetStalker.Avalonia"
 #define MyAppExeName "NetStalker.exe"
@@ -16,7 +16,8 @@
 AppId={{FA402F0A-ED62-455F-9287-E066F8436781}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
+VersionInfoVersion={#MyAppVersion}
+AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
