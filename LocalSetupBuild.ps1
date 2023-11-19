@@ -1,7 +1,7 @@
 while($true){
 
     $installerOutputPath = Read-Host "Enter the output path for the setup file (enter '0' to exit)"
-    $installerOutputPath = $installerOutputPath -replace '(-|#|\||"|,|/|:|â|€|™|\?)', ''
+    $installerOutputPath = $installerOutputPath -replace '(-|#|\||"|,|/|:|\?)', ''
 
     if (Test-Path $installerOutputPath) {
 
@@ -25,3 +25,5 @@ while($true){
     }
 
 }
+
+pause

@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5367617-2DDC-47A4-A974-13AED04E6E3F}"
 	ProjectSection(SolutionItems) = preProject
 		GitVersion.yml = GitVersion.yml
+		LocalSetupBuild.ps1 = LocalSetupBuild.ps1
 		NetStalkerSetupScript.Linux.iss = NetStalkerSetupScript.Linux.iss
 		NetStalkerSetupScript.Windows.iss = NetStalkerSetupScript.Windows.iss
 	EndProjectSection
