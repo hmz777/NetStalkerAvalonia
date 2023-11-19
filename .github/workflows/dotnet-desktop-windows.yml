@@ -60,13 +60,13 @@ jobs:
       with:
         versionSpec: '5.x'
       
-    - name: Set assembly version environment variables
-      if: contains(env.Release_Version, '-')
-      run: |
-        $AssemblyVersion=$env:Release_Version.split('-')[0]
-        $FileVersion=$env:Release_Version.split('-')[0]
-        echo "Assembly_Version=$AssemblyVersion" >> $env:GITHUB_ENV
-        echo "File_Version=$FileVersion" >> $env:GITHUB_ENV
+    # - name: Set assembly version environment variables
+    #   if: contains(env.Release_Version, '-')
+    #   run: |
+    #     $AssemblyVersion=$env:Release_Version.split('-')[0]
+    #     $FileVersion=$env:Release_Version.split('-')[0]
+    #     echo "Assembly_Version=$AssemblyVersion" >> $env:GITHUB_ENV
+    #     echo "File_Version=$FileVersion" >> $env:GITHUB_ENV
 
     - name: Update assembly version with GitVersion
       run: dotnet-gitversion /updateprojectfiles
