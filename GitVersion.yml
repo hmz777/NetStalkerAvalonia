@@ -1,7 +1,8 @@
-assembly-file-versioning-format: '{Major}.{Minor}.{Patch}{PreReleaseLabelWithDash}'
+assembly-informational-format: '{Major}.{Minor}.{Patch}{PreReleaseLabelWithDash}'
 assembly-versioning-format: '{Major}.{Minor}.{Patch}.{WeightedPreReleaseNumber ?? 0}'
-assembly-informational-format:  '{Major}.{Minor}.{Patch}{PreReleaseLabelWithDash}'
+assembly-file-versioning-format: '{Major}.{Minor}.{Patch}{PreReleaseLabelWithDash}'
 mode: ContinuousDelivery
+branches: {}
 ignore:
   sha: []
 merge-message-formats: {}
