@@ -72,7 +72,7 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 		{
 			if (_device == null)
 			{
-				_device = _pcapDeviceManager.CreateDevice("ip", DeviceOnOnPacketArrival, 1000);
+				_device = _pcapDeviceManager.CreateDevice("ip", DeviceOnPacketArrival, 1000);
 
 				// The state parameter here doesn't matter since we're initializing the timer
 				// it will be later started when this service is started
@@ -178,7 +178,7 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 			}
 		}
 
-		private void DeviceOnOnPacketArrival(object sender, PacketCapture e)
+		private void DeviceOnPacketArrival(object sender, PacketCapture e)
 		{
 			if (_isStarted == false)
 				return;
@@ -411,7 +411,7 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 		{
 			if (_clients is not null && _clients.Any(client => client.Blocked || client.Redirected) == false)
 			{
-				// If no clients have active blocking or redirection we pause the service 
+				// If no clients have active blocking or redirection we pause the service
 				// so we don't do extra work on idle
 				Stop();
 			}
@@ -523,7 +523,7 @@ namespace NetStalkerAvalonia.Core.Services.Implementations.BlockingRedirection
 			if (_device != null)
 			{
 				_byteCounterTimer?.Dispose();
-				_device.Dispose(DeviceOnOnPacketArrival);
+				_device.Dispose(DeviceOnPacketArrival);
 				_device = null;
 				_cancellationTokenSource?.Dispose();
 				_cancellationTokenSource = null;
